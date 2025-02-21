@@ -12,7 +12,7 @@ class SplashScreenState extends State<SplashScreen>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    throw UnimplementedError();
+    throw UnimplementedError();  //testing
   }
   
 }
