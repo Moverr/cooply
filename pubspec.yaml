@@ -47,6 +47,9 @@ flutter:
   assets:
     - assets/splash_image.png
     - assets/icon/icon.png
+    - assets/home_screen_image.png
+    - assets/home_image.png
+    - assets/cooply_sm.png
 
 
 
