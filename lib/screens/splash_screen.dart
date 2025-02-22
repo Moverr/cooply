@@ -14,6 +14,17 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    Future.delayed( Duration(seconds: 5),(){
+
+      //todo: open the home screen 
+      Navigator.pushReplacement(context, 
+      MaterialPageRoute(builder: (context)=> HomeScreen())
+      );
+    }
+
+    );
+
+
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
