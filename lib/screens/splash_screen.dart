@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
+
+
  
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class SplashScreen extends StatelessWidget {
         children: [
           Container(
             child: SplashImageWidget(),
-            height: screenHeight * 0.85,
+            height: screenHeight * 0.86,
           ),
           Container(
 
@@ -66,20 +68,3 @@ class SplashScreen extends StatelessWidget {
 
 
 
-/*
-class SplashScreenState extends State<SplashScreen> {
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-
-        backgroundColor: Colors.yellow,
-        body: Center(
-          child: Text("Mmovers"),
-
-        ));
-  }
-}
-*/
