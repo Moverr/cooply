@@ -21,7 +21,10 @@ class SimpleTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(this.title,style: TextStyle(fontFamily:this.fontFamily,fontSize: this.fontSize, fontWeight:this.fontWeight,),);
+    return Text(this.title,style: TextStyle(fontFamily:this.fontFamily,fontSize: this.fontSize,
+      fontWeight:this.fontWeight,
+
+    ), );
   }
 }
 

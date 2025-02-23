@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cooply/screens/login_form_screen.dart';
 import 'package:cooply/screens/login_logout_screen.dart';
 import 'package:cooply/widgets/SimpleTextWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -66,20 +67,43 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Color(0xFFFFFFFF),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
                   ),
                   child: TabBar(
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white70,
-                    indicatorColor: Colors.white,
+                    labelColor: Color(0xFF000000), // Active tab color
+                    unselectedLabelColor: Colors.green.shade300, // Inactive tab color
+                    indicatorColor: Colors.white, // Color of the indicator line
+                    indicatorWeight: 3.0, // Thickness of the indicator line
+                    labelPadding: EdgeInsets.symmetric(horizontal: 20.0), // Padding for the label
                     tabs: [
-                      Tab(text: "LOGIN"),
-                      Tab(text: "SIGN UP"),
+                      Tab(
+                        child: SimpleTextWidget(
+                          title: "Login",
+                          fontFamily: "Inria Serif",
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16, // Adjust font size for better readability
+                          // color: Color(0xFF000000), // Text color
+                        ),
+                      ),
+                      Tab(
+                        child: SimpleTextWidget(
+                          title: "Sign up",
+                          fontFamily: "Inria Serif",
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                          // color: Color(0xFF000000),
+                        ),
+                      ),
                     ],
                   ),
+
                 ),
-                Expanded(child: TabBarView(children: [Text("teee"), Text("veeee")]))
+                Expanded(child: TabBarView(
+                    children: [
+                      LoginForm(),
+                      Text("veeee")
+                    ]))
               ],
             ),
           )
