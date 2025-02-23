@@ -1,7 +1,8 @@
 import 'dart:ui';
 
 import 'package:cooply/screens/login_form_screen.dart';
-import 'package:cooply/screens/login_logout_screen.dart';
+import 'package:cooply/screens/loginSignupScreen.dart';
+import 'package:cooply/utils/AppConstants.dart';
 import 'package:cooply/widgets/SimpleTextWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,13 +49,7 @@ class HomeScreen extends StatelessWidget {
               ],
             )
 
-                /*
-            Container(
-              height: 400,
-              child: Center( child: Text("SEEEE")),
-              color: Colors.yellow.shade100,
 
-            ),*/
           )
       )
 
@@ -79,8 +74,8 @@ class HomeScreen extends StatelessWidget {
                     tabs: [
                       Tab(
                         child: SimpleTextWidget(
-                          title: "Login",
-                          fontFamily: "Inria Serif",
+                          title: AppConstants.LOGIN,
+                          fontFamily: AppConstants.fontFamily,
                           fontWeight: FontWeight.w400,
                           fontSize: 16, // Adjust font size for better readability
                           // color: Color(0xFF000000), // Text color
@@ -88,8 +83,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                       Tab(
                         child: SimpleTextWidget(
-                          title: "Sign up",
-                          fontFamily: "Inria Serif",
+                          title: AppConstants.SIGNUP_LOGIN ,
+                          fontFamily: AppConstants.fontFamily,
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
                           // color: Color(0xFF000000),

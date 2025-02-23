@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LoginLogoutScreen extends StatelessWidget{
+class LoginSignupScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

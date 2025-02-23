@@ -7,7 +7,7 @@ class SplashImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset('assets/splash_image.png', width: 40);
+    return Image.asset('assets/cooplynbyline.png', width: 40);
   }
 }
 

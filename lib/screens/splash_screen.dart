@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cooply/screens/home_screen.dart';
+import 'package:cooply/utils/AppConstants.dart';
 import 'package:cooply/widgets/SimpleTextWidget.dart';
 import 'package:cooply/widgets/SplashImageWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,14 +36,14 @@ class SplashScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SimpleTextWidget(
-                  title: "gianna version 1.0.0 ",
-                  fontFamily: "Inria Serif",
+                  title: AppConstants.appVersion,
+                  fontFamily:  AppConstants.fontFamily,
                   fontWeight: FontWeight.normal,
                   fontSize: 25,
                 ),
                 SimpleTextWidget(
-                  title: "khoodilabs © 2025 ",
-                  fontFamily: "Inria Serif",
+                  title: AppConstants.companyName + " © "+AppConstants.currentYear,
+                  fontFamily: AppConstants.fontFamily,
                   fontWeight: FontWeight.normal,
                   fontSize: 10,
                 )
