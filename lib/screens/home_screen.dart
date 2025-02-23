@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:cooply/screens/login_form_screen.dart';
-import 'package:cooply/screens/loginSignupScreen.dart';
 import 'package:cooply/utils/AppConstants.dart';
 import 'package:cooply/widgets/SimpleTextWidget.dart';
 import 'package:flutter/cupertino.dart';

@@ -1,3 +1,5 @@
+import 'package:cooply/utils/AppConstants.dart';
+import 'package:cooply/widgets/SimpleTextWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -79,10 +81,139 @@ class _LoginFormState extends State<LoginForm> {
               },
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              child: const Text('Login'),
+
+            Center(
+              child: SizedBox(
+
+                width: double.infinity,
+
+                child:  OutlinedButton(
+                  onPressed: _login,
+
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0XFFE3D9A8),
+
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+
+                      // Removes border radius
+                    ),
+
+
+                  ),
+
+
+                  child:
+                  Row(
+                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                    children: [
+                      Text('Login',style:TextStyle(fontFamily: AppConstants.fontFamily,fontSize: 20,fontWeight: FontWeight.w300) ,),
+
+                      SizedBox(width: 8), // Space between icon and text
+                      Icon(Icons.login), // Replace with your desired icon
+
+                    ],
+                  ),
+
+
+
+                ),
+              )
+
             ),
+
+            const SizedBox(height: 20),
+
+            Row(
+               mainAxisAlignment: MainAxisAlignment.center, // Spaces items evenly
+              crossAxisAlignment: CrossAxisAlignment.center, // Centers items vertically
+              children: [
+                OutlinedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+
+                      // Removes border radius
+                    ),
+
+
+                  ),
+                  child:Row(
+                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                    children: [
+                    Image.asset("assets/google.png",
+                    height: 24,
+                    width: 24,),
+                      // Replace with your desired icon
+
+
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                OutlinedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+
+                      // Removes border radius
+                    ),
+
+
+                  ),
+                  child:Row(
+                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                    children: [
+                      Image.asset("assets/x.png",
+                        height: 24,
+                        width: 24,),
+                      // Replace with your desired icon
+
+
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                OutlinedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+
+                      // Removes border radius
+                    ),
+
+
+                  ),
+                  child:Row(
+                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                    children: [
+                      Image.asset("assets/facebook.png",
+                        height: 24,
+                        width: 24,),
+                      // Replace with your desired icon
+
+
+                    ],
+                  ),
+                ),
+
+              ],
+            )
+
           ],
         ),
       ),
