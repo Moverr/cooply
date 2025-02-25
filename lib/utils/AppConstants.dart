@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class AppConstants{
 
   static const String appName = "cooply";
@@ -12,5 +14,6 @@ class AppConstants{
   static const String SIGNUP_LOGIN = "signup";
 
 
+  static const Color DashboardSideVIewDefault =  Color(0XFFD9D9D9);
   // colors?
 }

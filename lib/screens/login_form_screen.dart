@@ -1,3 +1,4 @@
+import 'package:cooply/screens/dashboard/dashboard_screen.dart';
 import 'package:cooply/utils/AppConstants.dart';
 import 'package:cooply/widgets/SimpleTextWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,12 +17,25 @@ class _LoginFormState extends State<LoginForm> {
   bool _obscurePassword = true;
 
   void _login() {
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Logging in...')),
+    );
+
+    Navigator.pushReplacement(context,
+      MaterialPageRoute(builder: (context)=> Dashboard())
+    );
+
+
+    //todo: commented out this line, to finish the UI
+    /*
     if (_formKey.currentState!.validate()) {
       // Simulate login action
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Logging in...')),
       );
     }
+    */
   }
 
   @override

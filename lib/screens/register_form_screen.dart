@@ -111,7 +111,7 @@ class _RegisterState extends State<RegisterForm> {
                   child: OutlinedButton(
                     onPressed: _register,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0XFFE3D9A8),
+                      backgroundColor: AppConstants.DashboardSideVIewDefault,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
