@@ -1,1 +1,3 @@
 # cooply
+
+flutter pub get 

@@ -54,6 +54,10 @@ flutter:
     - assets/x.png
     - assets/facebook.png
     - assets/google.png
+    - assets/profile_icon.png
+    - assets/chicken.png
+    - assets/overview.png
+    - assets/farm.png
 
 
 
