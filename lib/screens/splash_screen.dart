@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:cooply/screens/home_screen.dart';
-import 'package:cooply/utils/AppConstants.dart';
-import 'package:cooply/widgets/SimpleTextWidget.dart';
-import 'package:cooply/widgets/SplashImageWidget.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/AppConstants.dart';
+import '../widgets/SimpleTextWidget.dart';
+import '../widgets/SplashImageWidget.dart';
+import 'home_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

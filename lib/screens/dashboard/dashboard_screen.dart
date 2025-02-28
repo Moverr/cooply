@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/MenuDto.dart';
+
 class Dashboard extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DashboardState();
@@ -8,6 +10,17 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   bool isExpanded = true;
+
+
+  final List<Menu> _menuList = [
+    const Menu(item: "Overview", asset: "assets/overview.png"),
+    const Menu(item: "Farm", asset: "assets/farm.png"),
+    const Menu(item: "Reports", asset: "assets/reports.png"),
+    const Menu(item: "Users", asset: "assets/users.png"),
+  ];
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +108,25 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),
-                  _MenuItem("assets/overview.png", "Overview"),
-                  _MenuItem("assets/farm.png", "Farm"),
+
+
+                  _Divider(),
+
+
+                  ... _menuList.map((item) => Column(
+                    children: [
+                      _MenuItem(item.asset, item.item),
+                      _Divider(),
+                    ],
+                  )).toList(),
+
+                  const Spacer(),
+                  _MenuItem("assets/profile_icon.png", "Profile"),
+                  _Divider(),
+                  _MenuItem("assets/logout.png", "Logout"),
+                //isLogout: true),
+
+
                 ],
               ),
             ),
@@ -115,6 +145,8 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+
+
 
   InkWell _MenuItem(String asset, String title) {
     return InkWell(
@@ -160,39 +192,18 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title) {
-    return InkWell(
-      onTap: () {},
-      child: Center(
-        // padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 24,
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
-                  },
-                  icon: Icon(
-                    icon,
-                    color: Colors.white,
-                  ),
-                )),
-            if (isExpanded) const SizedBox(width: 10),
-            if (isExpanded)
-              SizedBox(
-                width: 100,
-                child: Text(
-                  title,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-          ],
-        ),
-      ),
+
+  // Divider Widget
+  Widget _Divider() {
+    return (isExpanded ==false) ?
+     Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Divider(color: Colors.black12, thickness: 1),
+    ) :  Container(
+
     );
+
   }
+
+
 }

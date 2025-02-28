@@ -1,5 +1,7 @@
-import 'package:cooply/utils/AppConstants.dart';
+
 import 'package:flutter/material.dart';
+
+import '../utils/AppConstants.dart';
 
 class RegisterForm extends StatefulWidget {
   @override

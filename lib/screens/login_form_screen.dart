@@ -1,8 +1,9 @@
-import 'package:cooply/screens/dashboard/dashboard_screen.dart';
-import 'package:cooply/utils/AppConstants.dart';
-import 'package:cooply/widgets/SimpleTextWidget.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/AppConstants.dart';
+import 'dashboard/dashboard_screen.dart';
 
 class LoginForm extends StatefulWidget {
   @override
