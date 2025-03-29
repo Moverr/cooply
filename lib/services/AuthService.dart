@@ -61,6 +61,8 @@ class AuthService {
   }
 
   Future<void> logout() async {
+
+    //todo: register logout session for the user
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('login_response');
     print("Logged out successfully!");
