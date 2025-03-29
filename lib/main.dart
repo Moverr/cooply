@@ -1,7 +1,10 @@
 import 'package:Cooply/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'services/AuthService.dart';
+
 void main() {
+
   runApp(const MyApp());
 }
 
