@@ -1,9 +1,12 @@
 
+import 'package:Cooply/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
 import 'dashboard/dashboard_screen.dart';
+
+import '../services/AuthService.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -17,26 +20,36 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
-  void _login() {
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Logging in...')),
-    );
+  AuthService authService = new AuthService();
 
-    Navigator.pushReplacement(context,
-      MaterialPageRoute(builder: (context)=> Dashboard())
-    );
+  void LoginAction() {
+
+    LoadingDialog.show(context, "Logging in ");
 
 
     //todo: commented out this line, to finish the UI
-    /*
     if (_formKey.currentState!.validate()) {
+
+
+
+      //todo: bring the service, then work on sending items
       // Simulate login action
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Logging in...')),
       );
+
+
+      //todo: go to dashboard
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context)=> Dashboard())
+      );
+
+    //  LoadingDialog.hide(context);
+
+
     }
-    */
+
   }
 
   @override
@@ -103,7 +116,7 @@ class _LoginFormState extends State<LoginForm> {
                 width: double.infinity,
 
                 child:  OutlinedButton(
-                  onPressed: _login,
+                  onPressed: LoginAction,
 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0XFFE3D9A8),
@@ -146,7 +159,7 @@ class _LoginFormState extends State<LoginForm> {
               crossAxisAlignment: CrossAxisAlignment.center, // Centers items vertically
               children: [
                 OutlinedButton(
-                  onPressed: _login,
+                  onPressed: LoginAction,
                   style: ElevatedButton.styleFrom(
 
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
@@ -173,7 +186,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 const SizedBox(width: 20),
                 OutlinedButton(
-                  onPressed: _login,
+                  onPressed: LoginAction,
                   style: ElevatedButton.styleFrom(
 
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
@@ -200,7 +213,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 const SizedBox(width: 20),
                 OutlinedButton(
-                  onPressed: _login,
+                  onPressed: LoginAction,
                   style: ElevatedButton.styleFrom(
 
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed

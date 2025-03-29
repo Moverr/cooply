@@ -4,11 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/dtos/LoginResponse.dart';
 
+import '../utils/AppConstants.dart';
+
+
+
 class AuthService {
-  final String baseUrl = "http://52.207.255.31:8082/v1/auth";
+
+  final String baseUrl = "${AppConstants.BASE_URL}${AppConstants.AUTHENDPOINT}";
 
   Future<bool> register(String username, String password) async {
-    final url = Uri.parse('$baseUrl/register');
+    final url = Uri.parse('$baseUrl${AppConstants.REGISTER}');
 
     final response = await http.post(
       url,
