@@ -20,4 +20,7 @@ class AppConstants {
   static const String AUTHENDPOINT = "v1/auth";
 
   static const String REGISTER = "/register";
+
+
+  static const String APP_TITLE = 'cooply';
 }
