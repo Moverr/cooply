@@ -1,4 +1,3 @@
-
 import 'package:Cooply/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,36 +19,25 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
-
   AuthService authService = new AuthService();
 
   void LoginAction() {
-
     LoadingDialog.show(context, "Logging in ");
-
 
     //todo: commented out this line, to finish the UI
     if (_formKey.currentState!.validate()) {
-
-
-
       //todo: bring the service, then work on sending items
       // Simulate login action
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Logging in...')),
       );
 
-
       //todo: go to dashboard
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context)=> Dashboard())
-      );
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
 
-    //  LoadingDialog.hide(context);
-
-
+      //  LoadingDialog.hide(context);
     }
-
   }
 
   @override
@@ -109,78 +97,71 @@ class _LoginFormState extends State<LoginForm> {
               },
             ),
             const SizedBox(height: 20),
-
             Center(
-              child: SizedBox(
+                child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: LoginAction,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0XFFE3D9A8),
 
-                width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 20), // Adjust padding as needed
 
-                child:  OutlinedButton(
-                  onPressed: LoginAction,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0XFFE3D9A8),
-
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-
-                      // Removes border radius
+                    // Removes border radius
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize:
+                      MainAxisSize.min, // Prevents excessive button width
+                  children: [
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                          fontFamily: AppConstants.fontFamily,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w300),
                     ),
 
-
-                  ),
-
-
-                  child:
-                  Row(
-                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
-                    children: [
-                      Text('Login',style:TextStyle(fontFamily: AppConstants.fontFamily,fontSize: 20,fontWeight: FontWeight.w300) ,),
-
-                      SizedBox(width: 8), // Space between icon and text
-                      Icon(Icons.login), // Replace with your desired icon
-
-                    ],
-                  ),
-
-
-
+                    SizedBox(width: 8), // Space between icon and text
+                    Icon(Icons.login), // Replace with your desired icon
+                  ],
                 ),
-              )
-
-            ),
-
+              ),
+            )),
             const SizedBox(height: 20),
-
             Row(
-               mainAxisAlignment: MainAxisAlignment.center, // Spaces items evenly
-              crossAxisAlignment: CrossAxisAlignment.center, // Centers items vertically
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Spaces items evenly
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // Centers items vertically
               children: [
                 OutlinedButton(
                   onPressed: LoginAction,
                   style: ElevatedButton.styleFrom(
-
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20), // Adjust padding as needed
 
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
 
                       // Removes border radius
                     ),
-
-
                   ),
-                  child:Row(
-                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                  child: Row(
+                    mainAxisSize:
+                        MainAxisSize.min, // Prevents excessive button width
                     children: [
-                    Image.asset("assets/google.png",
-                    height: 24,
-                    width: 24,),
+                      Image.asset(
+                        "assets/google.png",
+                        height: 24,
+                        width: 24,
+                      ),
                       // Replace with your desired icon
-
-
                     ],
                   ),
                 ),
@@ -188,26 +169,26 @@ class _LoginFormState extends State<LoginForm> {
                 OutlinedButton(
                   onPressed: LoginAction,
                   style: ElevatedButton.styleFrom(
-
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20), // Adjust padding as needed
 
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
 
                       // Removes border radius
                     ),
-
-
                   ),
-                  child:Row(
-                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                  child: Row(
+                    mainAxisSize:
+                        MainAxisSize.min, // Prevents excessive button width
                     children: [
-                      Image.asset("assets/x.png",
+                      Image.asset(
+                        "assets/x.png",
                         height: 24,
-                        width: 24,),
+                        width: 24,
+                      ),
                       // Replace with your desired icon
-
-
                     ],
                   ),
                 ),
@@ -215,33 +196,31 @@ class _LoginFormState extends State<LoginForm> {
                 OutlinedButton(
                   onPressed: LoginAction,
                   style: ElevatedButton.styleFrom(
-
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Adjust padding as needed
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20), // Adjust padding as needed
 
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
 
                       // Removes border radius
                     ),
-
-
                   ),
-                  child:Row(
-                    mainAxisSize: MainAxisSize.min, // Prevents excessive button width
+                  child: Row(
+                    mainAxisSize:
+                        MainAxisSize.min, // Prevents excessive button width
                     children: [
-                      Image.asset("assets/facebook.png",
+                      Image.asset(
+                        "assets/facebook.png",
                         height: 24,
-                        width: 24,),
+                        width: 24,
+                      ),
                       // Replace with your desired icon
-
-
                     ],
                   ),
                 ),
-
               ],
             )
-
           ],
         ),
       ),
