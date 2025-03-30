@@ -91,7 +91,7 @@ class HomeScreen extends StatelessWidget {
               ),
               Expanded(
                   child: TabBarView(children: [
-                LoginForm(),
+                LoginScreen(),
                 RegisterForm(),
               ]))
             ],

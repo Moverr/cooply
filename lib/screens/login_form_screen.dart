@@ -1,48 +1,44 @@
+import 'package:Cooply/providers/auth_provider.dart';
 import 'package:Cooply/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/AppConstants.dart';
 import 'dashboard/dashboard_screen.dart';
 
-import '../services/AuthService.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _LoginFormState();
+  State<StatefulWidget> createState() => _LoginScreenState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
-  AuthService authService = new AuthService();
 
-  void LoginAction() {
-    LoadingDialog.show(context, "Logging in ");
+  late AuthProvider authProvider ;  // Global Instance
 
-    //todo: commented out this line, to finish the UI
-    if (_formKey.currentState!.validate()) {
-      //todo: bring the service, then work on sending items
-      // Simulate login action
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Logging in...')),
-      );
 
-      //todo: go to dashboard
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    authProvider =  Provider.of<AuthProvider>(context,listen: false);
 
-      //  LoadingDialog.hide(context);
-    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
+
+     // TODO: implement build
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(16.0),
@@ -226,4 +222,40 @@ class _LoginFormState extends State<LoginForm> {
       ),
     ));
   }
+
+
+
+
+
+  /**
+   * Login Action
+   */
+  void LoginAction() {
+
+    //todo: commented out this line, to finish the UI
+    if (_formKey.currentState!.validate()) {
+
+
+      //todo: service
+      //todo: bring the service, then work on sending items
+
+      LoadingDialog.show(context, "Logging in ");
+
+
+
+      // Simulate login action
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logging in...')),
+      );
+
+      //todo: go to dashboard
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
+
+      //  LoadingDialog.hide(context);
+    }
+  }
+
+
+
 }
