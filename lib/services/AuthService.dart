@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/dtos/LoginResponse.dart';
 
 import '../utils/AppConstants.dart';
+import '../utils/log_service.dart';
 
 
 
@@ -30,47 +31,54 @@ class AuthService {
     return response.statusCode == 201; // 201 means user registered successfully
   }
 
+
   Future<LoginResponse?> login(String username, String password) async {
-    final url = Uri.parse('$baseUrl/login');
+    final url = Uri.parse('http://52.207.255.31:8082/v1/auth/login');
 
-    final response = await http.post(
-      url,
-      headers: {
-        'accept': '*/*',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        "username": username,
-        "password": password,
-      }),
-    );
+    try {
+      final response = await http
+          .post(
+       url,
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "username": username,
+          "password": password,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
 
-      if (data['is_successful']) {
-        LoginResponse loginResponse = LoginResponse.fromJson(data);
+        if (data['is_successful']) {
+          LoginResponse loginResponse = LoginResponse.fromJson(data);
 
-        // Store the entire JSON response
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('login_response', jsonEncode(data));
+          // Store the entire JSON response
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('login_response', jsonEncode(data));
 
-
-        print("Login Success: ${loginResponse.authToken}");
-        return loginResponse;
+          LogService.info("Login Success: ${loginResponse.authToken}");
+          return loginResponse;
+        }
       }
-    }
 
-    print("Login Failed: ${response.body}");
-    return null;
+      LogService.error("Login Failed: ${response.body}");
+      return null;
+    } catch (e) {
+      LogService.error("Login Exception: $e");
+      return null;
+    }
   }
+
 
   Future<void> logout() async {
 
     //todo: register logout session for the user
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('login_response');
-    print("Logged out successfully!");
+    LogService.info("Logged out successfully!");
   }
 
   Future<LoginResponse?> getStoredLoginData() async {

@@ -12,45 +12,54 @@ class AuthProvider with ChangeNotifier {
   bool _isLoggedIn = false;
   bool get isLoggedIn => _isLoggedIn;
 
-  String _message;
-  String _authToken;
-  String _refreshToken;
-  List<Role> _roles;
+  String ? _message;
+  String ? _authToken;
+  String ? _refreshToken;
   String? _errorMessage;
 
-  Future<void> login(String username, String password) async {
+  List<Role> ?  _roles;
+
+
+
+  void  login(String username, String password) async {
     try {
-      LoginResponse? loginResponse =
-          await _authService.login(username, password);
+      LoginResponse? loginResponse = await _authService.login(username, password);
+
       if (loginResponse != null && loginResponse.isSuccessful) {
-        //todo: tunawakalisha
         _isLoggedIn = true;
         _authToken = loginResponse.authToken;
-        _message = loginResponse.message;
+        _message = loginResponse.message ?? "Login successful";
         _roles = loginResponse.roles;
         _errorMessage = null; // Clear any previous errors
+
+        // TODO: Handle post-login actions (e.g., navigation, token storage)
       } else {
         _isLoggedIn = false;
         _authToken = "";
-        _message = loginResponse?.message ??
-            "Login failed"; // Use API message if available
+        _message = loginResponse?.message ?? "Login failed. Please try again.";
         _roles = loginResponse?.roles ?? [];
-        _errorMessage = "Invalid credentials"; // Set error message for UI
+        _errorMessage = "Invalid credentials"; // Shown in UI
       }
     } catch (e) {
       _isLoggedIn = false;
-      _errorMessage = "An error occurred: $e";
+      _authToken = "";
+      _roles = [];
+      _message = "An unexpected error occurred.";
+      _errorMessage = "Error: $e"; // More useful for debugging/logging
     } finally {
-      notifyListeners(); // Update UI
+      notifyListeners(); // Update UI state
     }
   }
 
+
+
   set authToken(String token) => _authToken = token;
 
-  String get authToken => _authToken;
 
-  String get message => _message;
-  String get refreshToken => _refreshToken;
+  String? get message => _message;
+  String? get refreshToken => _refreshToken;
+  List<Role>? get roles => _roles;
+  String ? get loginAuthToken => _authToken;
+  String ? get errorMessage => _errorMessage;
 
-  List<Role> get roles => _roles;
 }

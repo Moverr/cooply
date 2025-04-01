@@ -1,12 +1,13 @@
 import 'package:Cooply/providers/auth_provider.dart';
+import 'package:Cooply/services/AuthService.dart';
 import 'package:Cooply/widgets/LoadingDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/dtos/LoginResponse.dart';
 import '../utils/AppConstants.dart';
 import 'dashboard/dashboard_screen.dart';
-
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -20,25 +21,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
-
-  late AuthProvider authProvider ;  // Global Instance
-
+  late AuthProvider authProvider; // Global Instance
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    authProvider =  Provider.of<AuthProvider>(context,listen: false);
-
+    authProvider = Provider.of<AuthProvider>(context, listen: false);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-
-
-     // TODO: implement build
+    // TODO: implement build
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(16.0),
@@ -223,39 +217,62 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
   }
 
-
-
-
-
   /**
    * Login Action
    */
-  void LoginAction() {
 
+  void LoginAction() async {
     //todo: commented out this line, to finish the UI
     if (_formKey.currentState!.validate()) {
-
-
-      //todo: service
-      //todo: bring the service, then work on sending items
-
+      FocusScope.of(context).unfocus();
       LoadingDialog.show(context, "Logging in ");
 
 
+      // try {
+        String username = _emailController.text;
+        String password = _passwordController.text;
+        AuthService authService = new AuthService();
+        // LoginResponse ? loginResponse =   authService.login(
+            // username, password);
 
-      // Simulate login action
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Logging in...')),
-      );
 
-      //todo: go to dashboard
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
+        int x = 10;
+
+
+        /*
+         final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+         authProvider.login(
+            _emailController.text, _passwordController.text);
+
+
+        if (authProvider.isLoggedIn == true) {
+          //todo: go to dashboard
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Dashboard()));
+        } else {
+          // Simulate login action
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Login Failed"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+      catch(e){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("An unexpected error occurred: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      */
+
 
       //  LoadingDialog.hide(context);
     }
   }
-
-
-
 }
