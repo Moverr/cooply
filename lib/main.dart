@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'services/AuthService.dart';
 
 void main() {
-  setupLocator();
+  // setupLocator();
   runApp(
 
       const MyApp()

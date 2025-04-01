@@ -22,6 +22,8 @@ class AuthProvider with ChangeNotifier {
 
 
   void  login(String username, String password) async {
+
+    /*
     try {
       LoginResponse? loginResponse = await _authService.login(username, password);
 
@@ -49,6 +51,10 @@ class AuthProvider with ChangeNotifier {
     } finally {
       notifyListeners(); // Update UI state
     }
+
+    */
+    notifyListeners();
+
   }
 
 

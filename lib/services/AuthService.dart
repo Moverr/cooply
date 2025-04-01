@@ -6,7 +6,7 @@ import '../models/dtos/LoginResponse.dart';
 
 import '../utils/AppConstants.dart';
 import '../utils/log_service.dart';
-
+import 'package:dio/dio.dart'; //import dio in exchange for http
 
 
 class AuthService {
@@ -31,26 +31,76 @@ class AuthService {
     return response.statusCode == 201; // 201 means user registered successfully
   }
 
+//'http://52.207.255.31:8082/v1'
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://localhost:8080/v1',
+      connectTimeout: const Duration(seconds: 10), // Timeout for connection
+      receiveTimeout: const Duration(seconds: 10), // Timeout for receiving data
+      headers: {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+      },
+    ),
+  );
 
-  Future<LoginResponse?> login(String username, String password) async {
-    final url = Uri.parse('http://52.207.255.31:8082/v1/auth/login');
+
+  Future<LoginResponse?> loginUser(String username, String password) async {
+
+    print("Method Login User  ");
+
 
     try {
-      final response = await http
-          .post(
-       url,
-        headers: {
-          'accept': '*/*',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
+      final response = await dio.post(
+        '/auth/login', // Using relative path for better maintainability
+        data: jsonEncode( {
           "username": username,
           "password": password,
         }),
       );
 
+      print("Status Code   : ${response.statusCode}");
+      if(response.statusCode == 200){
+        print("Data  : ${response.data}");
+
+        return LoginResponse.fromJson(response.data);
+      }
+      return null;
+
+    } on DioException catch (e) {
+      print("Login failed: ${e.response?.statusCode} - ${e.message}");
+      print("Login failed: ${e.response?.statusCode} - ${e.message}");
+      return null; // Handle error gracefully
+    }
+  }
+
+
+  /*
+  *
+  LoginResponse? login(String username, String password)  async {
+    final url = Uri.parse('http://52.207.255.31:8082/v1/auth/login');
+
+    try {
+
+      final dio =   Dio();
+
+
+      final response = await dio.post(
+        'http://52.207.255.31:8082/v1/auth/login',
+        options: Options(
+          headers: {
+            'accept': '**',
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: {
+          "username": username,
+          "password": password,
+        },
+      );
+
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = response.data; //already decoded but how to convert into a dto
 
         if (data['is_successful']) {
           LoginResponse loginResponse = LoginResponse.fromJson(data);
@@ -64,13 +114,14 @@ class AuthService {
         }
       }
 
-      LogService.error("Login Failed: ${response.body}");
+      LogService.error("Login Failed: ${response.data}");
       return null;
     } catch (e) {
       LogService.error("Login Exception: $e");
       return null;
     }
   }
+  */
 
 
   Future<void> logout() async {

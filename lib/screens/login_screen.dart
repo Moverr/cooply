@@ -21,13 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
-  late AuthProvider authProvider; // Global Instance
+  // late AuthProvider authProvider; // Global Instance
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    authProvider = Provider.of<AuthProvider>(context, listen: false);
+    // authProvider = Provider.of<AuthProvider>(context, listen: false);
   }
 
   @override
@@ -91,7 +91,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: LoginAction,
+                onPressed: () async {
+                  AuthService auth = new AuthService();
+                final response =  await  auth.loginUser("moverr@gmail.com", "password");
+
+                if(response != null){
+
+                }
+                int x = 0;
+
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0XFFE3D9A8),
 
@@ -130,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   CrossAxisAlignment.center, // Centers items vertically
               children: [
                 OutlinedButton(
-                  onPressed: LoginAction,
+                  onPressed: handleLogin,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -157,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(width: 20),
                 OutlinedButton(
-                  onPressed: LoginAction,
+                  onPressed: handleLogin,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -184,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(width: 20),
                 OutlinedButton(
-                  onPressed: LoginAction,
+                  onPressed: handleLogin,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -221,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
    * Login Action
    */
 
-  void LoginAction() async {
+  void handleLogin() async {
     //todo: commented out this line, to finish the UI
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
@@ -232,8 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
         String username = _emailController.text;
         String password = _passwordController.text;
         AuthService authService = new AuthService();
-        // LoginResponse ? loginResponse =   authService.login(
-            // username, password);
+         final loginResponse =    await authService.loginUser( username, password);
 
 
         int x = 10;
