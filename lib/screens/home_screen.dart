@@ -1,12 +1,12 @@
 import 'dart:ui';
 
-import 'package:Cooply/screens/register_form_screen.dart';
+import 'package:Cooply/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
 import '../widgets/SimpleTextWidget.dart';
-import 'login_form_screen.dart';
+import 'login_screen.dart';
 
 // @movers
 class HomeScreen extends StatelessWidget {
