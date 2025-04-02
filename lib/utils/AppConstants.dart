@@ -18,6 +18,7 @@ class AppConstants {
   static const String BASE_URL = "http://52.207.255.31:8082/";
 
   static const String AUTHENDPOINT = "v1/auth";
+  static const String LOGINENDPOINT = "auth/login";
 
   static const String REGISTER = "/register";
 

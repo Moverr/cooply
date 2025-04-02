@@ -91,15 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () async {
-                  AuthService auth = new AuthService();
-                final response =  await  auth.loginUser("moverr@gmail.com", "password");
-
-                if(response != null){
-
-                }
-                int x = 0;
-
+                onPressed: () {
+                  handleLogin();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0XFFE3D9A8),
@@ -236,18 +229,27 @@ class _LoginScreenState extends State<LoginScreen> {
       FocusScope.of(context).unfocus();
       LoadingDialog.show(context, "Logging in ");
 
-
       // try {
-        String username = _emailController.text;
-        String password = _passwordController.text;
-        AuthService authService = new AuthService();
-         final loginResponse =    await authService.loginUser( username, password);
+      String username = _emailController.text;
+      String password = _passwordController.text;
+      AuthService authService = new AuthService();
+      final loginResponse = await authService.loginUser(username, password);
 
+      LoadingDialog.hide(context);
 
-        int x = 10;
+      if (loginResponse != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login Failed"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
 
-
-        /*
+      /*
          final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
          authProvider.login(
@@ -278,7 +280,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       */
-
 
       //  LoadingDialog.hide(context);
     }

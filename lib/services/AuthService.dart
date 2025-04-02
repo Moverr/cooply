@@ -32,9 +32,11 @@ class AuthService {
   }
 
 //'http://52.207.255.31:8082/v1'
+
+  //http://52.207.255.31:8082/swagger-ui/index.html
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://localhost:8080/v1',
+      baseUrl: 'http://52.207.255.31:8082/v1',
       connectTimeout: const Duration(seconds: 10), // Timeout for connection
       receiveTimeout: const Duration(seconds: 10), // Timeout for receiving data
       headers: {
