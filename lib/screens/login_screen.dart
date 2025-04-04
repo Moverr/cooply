@@ -1,15 +1,14 @@
 import 'package:Cooply/providers/auth_provider.dart';
-import 'package:Cooply/services/AuthService.dart';
 import 'package:Cooply/widgets/LoadingDialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/dtos/LoginResponse.dart';
 import '../utils/AppConstants.dart';
 import 'dashboard/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<StatefulWidget> createState() => _LoginScreenState();
 }
@@ -219,9 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
   }
 
-  /**
-   * Login Action
-   */
+  /// Login Action
 
   void handleLogin() async {
     //todo: commented out this line, to finish the UI
@@ -229,6 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
       FocusScope.of(context).unfocus();
       LoadingDialog.show(context, "Logging in ");
 
+      /*
       // try {
       String username = _emailController.text;
       String password = _passwordController.text;
@@ -248,13 +246,15 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       }
+      */
 
-      /*
-         final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      try {
+        String username = _emailController.text;
+        String password = _passwordController.text;
 
-         authProvider.login(
-            _emailController.text, _passwordController.text);
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
+        await authProvider.login(username, password);
 
         if (authProvider.isLoggedIn == true) {
           //todo: go to dashboard
@@ -269,8 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         }
-      }
-      catch(e){
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("An unexpected error occurred: $e"),
@@ -278,8 +277,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       }
-
-      */
 
       //  LoadingDialog.hide(context);
     }

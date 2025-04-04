@@ -1,7 +1,5 @@
-import 'dart:ui';
 
 import 'package:Cooply/screens/register_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
@@ -10,6 +8,8 @@ import 'login_screen.dart';
 
 // @movers
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

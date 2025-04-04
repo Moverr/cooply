@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/MenuDto.dart';
 
 class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
+
   @override
   State<StatefulWidget> createState() => _DashboardState();
 }
@@ -118,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
                       _MenuItem(item.asset, item.item),
                       _Divider(),
                     ],
-                  )).toList(),
+                  )),
 
                   const Spacer(),
                   _MenuItem("assets/profile_icon.png", "Profile"),

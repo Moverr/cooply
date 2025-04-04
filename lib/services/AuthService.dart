@@ -56,7 +56,9 @@ class AuthService {
         await prefs.setString(
             'login_response', response.data); //add items to preferences
 
-        return LoginResponse.fromJson(response.data);
+        Map<String, dynamic> jsonMap = jsonDecode(response.data);
+
+        return LoginResponse.fromJson(jsonMap);
       }
       return null;
     } on DioException catch (e) {

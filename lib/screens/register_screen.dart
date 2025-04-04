@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../utils/AppConstants.dart';
 
 class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
+
   @override
   State<StatefulWidget> createState() => _RegisterState();
 }

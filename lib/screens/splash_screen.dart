@@ -1,7 +1,6 @@
 import 'dart:async';
 
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
@@ -26,9 +25,9 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
         body: ListView(
       children: [
-        Container(
-          child: SplashImageWidget(),
+        SizedBox(
           height: screenHeight * 0.86,
+          child: SplashImageWidget(),
         ),
         Container(
             height: screenHeight * 0.10,
@@ -44,7 +43,7 @@ class SplashScreen extends StatelessWidget {
                   fontSize: 25,
                 ),
                 SimpleTextWidget(
-                  title: AppConstants.companyName + " © "+AppConstants.currentYear,
+                  title: "${AppConstants.companyName} © ${AppConstants.currentYear}",
                   fontFamily: AppConstants.fontFamily,
                   fontWeight: FontWeight.normal,
                   fontSize: 10,
