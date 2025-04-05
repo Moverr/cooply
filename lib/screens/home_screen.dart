@@ -1,15 +1,15 @@
-import 'dart:ui';
-
 import 'package:Cooply/screens/register_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
+import '../widgets/FooterWidget.dart';
 import '../widgets/SimpleTextWidget.dart';
 import 'login_screen.dart';
 
 // @movers
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -28,11 +28,11 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 200,
-                  color: Color(0xFFEAF5E4),
+                  color:
+                      Color(0xFFFFFFFF), //todo: will investigate color father
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
-                      Colors.black
-                          .withOpacity(0.5), // Adjust opacity (0.0 to 1.0)
+                      Colors.white.withAlpha(128), // Adjust opacity (0.0 to 1.0)
                       BlendMode.dstATop, // Blend the opacity with the image
                     ),
                     child:
@@ -60,9 +60,8 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
                 ),
                 child: TabBar(
-                  labelColor: Color(0xFF000000), // Active tab color
-                  unselectedLabelColor:
-                      Colors.green.shade300, // Inactive tab color
+                  labelColor: Colors.black, // Active tab color
+                  unselectedLabelColor: Colors.black, // Inactive tab color
                   indicatorColor: Colors.white, // Color of the indicator line
                   indicatorWeight: 3.0, // Thickness of the indicator line
                   labelPadding: EdgeInsets.symmetric(
@@ -91,9 +90,13 @@ class HomeScreen extends StatelessWidget {
               ),
               Expanded(
                   child: TabBarView(children: [
-                LoginScreen(),
+
+
+                    LoginScreen(),
+                // LoginScreen(),
                 RegisterForm(),
-              ]))
+              ])),
+              FooterWidget()
             ],
           ),
         ));
