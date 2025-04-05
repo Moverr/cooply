@@ -1,4 +1,3 @@
-
 import 'package:Cooply/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -29,10 +28,11 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 200,
-                  color: Color(0xFFFFFFFF), //todo: will investigate color father
+                  color:
+                      Color(0xFFFFFFFF), //todo: will investigate color father
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
-                      Colors.white .withAlpha(128), // Adjust opacity (0.0 to 1.0)
+                      Colors.white.withAlpha(128), // Adjust opacity (0.0 to 1.0)
                       BlendMode.dstATop, // Blend the opacity with the image
                     ),
                     child:
@@ -47,8 +47,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-
               ],
             ))),
         body: DefaultTabController(
@@ -63,8 +61,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: TabBar(
                   labelColor: Colors.black, // Active tab color
-                  unselectedLabelColor:
-                      Colors.black, // Inactive tab color
+                  unselectedLabelColor: Colors.black, // Inactive tab color
                   indicatorColor: Colors.white, // Color of the indicator line
                   indicatorWeight: 3.0, // Thickness of the indicator line
                   labelPadding: EdgeInsets.symmetric(
@@ -92,21 +89,13 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
+                  child: TabBarView(children: [
 
 
-
-                    child: TabBarView(children: [
-                      Container(
-                        color: Colors.white,
-                        child: LoginScreen(),
-                      ),
-                      // LoginScreen(),
-                      RegisterForm(),
-                    ])
-
-
-
-        ),
+                    LoginScreen(),
+                // LoginScreen(),
+                RegisterForm(),
+              ])),
               FooterWidget()
             ],
           ),
