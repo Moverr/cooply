@@ -12,10 +12,15 @@ class Role{
   });
 
 
-  factory Role.fromJson(Map<String, dynamic> json) => Role(
-    id: json["id"],
-    name: json["name"],
-    permissions: List<Permission>.from(json["permissions"].map((x) => Permission.fromJson(x))),
+  factory Role.fromJson(Map<String, Object?> json) => Role(
+    id: json['id'] as int,
+    name: json['name'] as String,
+    permissions: (json['permissions'] as List)
+        .map((x) => Permission.fromJson(x as Map<String, Object?>))
+        .toList(),
+    // permissions: List<Permission>.from(
+    //   json['permissions'].map((x) => Permission.fromJson(x)),
+    // ),
   );
 
   Map<String, dynamic> toJson() => {

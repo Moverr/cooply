@@ -21,15 +21,15 @@ class Permission{
     required this.isSystem,
   });
 
-  factory Permission.fromJson(Map<String, dynamic> json) => Permission(
-    resourceName: json["resource_name"],
-    create: json["create"],
-    view: json["view"],
-    edit: json["edit"],
-    archive: json["archive"],
-    delete: json["delete"],
-    restore: json["restore"],
-    isSystem: json["is_system"],
+  factory Permission.fromJson(Map<String, Object?> json) => Permission(
+    resourceName: json['resource_name'] as String,
+    create: json['create'] as String,
+    view: json['view'] as String,
+    edit: json['edit'] as String,
+    archive: json['archive']as String,
+    delete: json['delete']as String,
+    restore: json['restore']as String,
+    isSystem: json['is_system'] as bool,
   );
 
   Map<String, dynamic> toJson() => {

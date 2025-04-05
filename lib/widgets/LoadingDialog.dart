@@ -3,7 +3,6 @@
 import 'dart:core';
 
 import 'package:Cooply/utils/AppConstants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoadingDialog{
