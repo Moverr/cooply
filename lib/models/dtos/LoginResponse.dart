@@ -19,12 +19,17 @@ class LoginResponse{
 
 
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
-    isSuccessful: json["is_successful"],
-    message: json["message"],
-    auth_token: json["auth_token"],
-    refresh_token: json["refresh_token"],
-    roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+
+
+
+  factory LoginResponse.fromJson(Map<String, Object?> json) => LoginResponse(
+    isSuccessful: json["is_successful"] as bool,
+    message: json["message"] as String,
+    auth_token: json["auth_token"] as String,
+    refresh_token: json["refresh_token"] as String,
+    roles: (json['roles'] as List).map((x) => Role.fromJson(x as Map<String, Object?>)).toList(),
+
+    // roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {

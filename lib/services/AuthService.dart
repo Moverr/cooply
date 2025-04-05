@@ -37,7 +37,7 @@ class AuthService {
   }
 
   Future<LoginResponse?> loginUser(String username, String password) async {
-    print("Method Login User  ");
+    print("Method Login User");
 
     try {
       final response = await initDio("http://52.207.255.31:8082/v1").post(
@@ -48,26 +48,38 @@ class AuthService {
         }),
       );
 
-      print("Status Code   : ${response.statusCode}");
+      print("Status Code: ${response.statusCode}");
+
       if (response.statusCode == 200) {
-        print("Data  : ${response.data}");
+        print("Data: ${response.data}");
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(
-            'login_response', response.data); //add items to preferences
 
-        Map<String, dynamic> jsonMap = jsonDecode(response.data);
+        // You can store the login response in SharedPreferences for future use
+        // Example: Store the token or the entire response
+        await prefs.setString('login_response', jsonEncode(response.data));
 
-        return LoginResponse.fromJson(jsonMap);
+        // Map<String, dynamic> jsonMap = jsonDecode(response.data);
+        Map<String, dynamic> jsonMap = response.data is Map ? response.data : jsonDecode(response.data);
+
+        // LogService.info(response.data);
+
+        LoginResponse loginResponse = LoginResponse.fromJson(jsonMap);
+        return loginResponse;
       }
+
+      // Handle non-200 responses here, e.g., show a message to the user
       return null;
     } on DioException catch (e) {
       print("Login failed: ${e.response?.statusCode} - ${e.message}");
-      print("Login failed: ${e.response?.statusCode} - ${e.message}");
+
+      // Optionally, log more information like the error stack trace
+      print("Stack Trace: ${e.stackTrace}");
 
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('login_response', '');
+      await prefs.setString('login_response', ''); // Clear the saved login data on failure
 
+      // You might want to propagate a more detailed error message here
       return null; // Handle error gracefully
     }
   }

@@ -10,7 +10,7 @@ class AuthProvider with ChangeNotifier {
   AuthProvider(this._authService);
 
   bool _isLoggedIn = false;
-  bool get isLoggedIn => _isLoggedIn;
+
 
   String? _message;
   String? _authToken;
@@ -59,4 +59,5 @@ class AuthProvider with ChangeNotifier {
   List<Role>? get roles => _roles;
   String? get loginAuthToken => _authToken;
   String? get errorMessage => _errorMessage;
+  bool get isLoggedIn => _isLoggedIn;
 }

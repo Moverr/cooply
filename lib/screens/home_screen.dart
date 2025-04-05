@@ -3,6 +3,7 @@ import 'package:Cooply/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
+import '../widgets/FooterWidget.dart';
 import '../widgets/SimpleTextWidget.dart';
 import 'login_screen.dart';
 
@@ -28,11 +29,10 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 200,
-                  color: Color(0xFFEAF5E4),
+                  color: Color(0xFFFFFFFF), //todo: will investigate color father
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
-                      Colors.black
-                          .withOpacity(0.5), // Adjust opacity (0.0 to 1.0)
+                      Colors.white .withAlpha(128), // Adjust opacity (0.0 to 1.0)
                       BlendMode.dstATop, // Blend the opacity with the image
                     ),
                     child:
@@ -47,6 +47,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
+
               ],
             ))),
         body: DefaultTabController(
@@ -60,9 +62,9 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
                 ),
                 child: TabBar(
-                  labelColor: Color(0xFF000000), // Active tab color
+                  labelColor: Colors.black, // Active tab color
                   unselectedLabelColor:
-                      Colors.green.shade300, // Inactive tab color
+                      Colors.black, // Inactive tab color
                   indicatorColor: Colors.white, // Color of the indicator line
                   indicatorWeight: 3.0, // Thickness of the indicator line
                   labelPadding: EdgeInsets.symmetric(
@@ -90,10 +92,22 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                  child: TabBarView(children: [
-                LoginScreen(),
-                RegisterForm(),
-              ]))
+
+
+
+                    child: TabBarView(children: [
+                      Container(
+                        color: Colors.white,
+                        child: LoginScreen(),
+                      ),
+                      // LoginScreen(),
+                      RegisterForm(),
+                    ])
+
+
+
+        ),
+              FooterWidget()
             ],
           ),
         ));

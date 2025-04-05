@@ -10,7 +10,7 @@ class AppConstants {
 
   static const String fontFamily = "Inria Sans";
   static const String LOGIN = "Login";
-  static const String SIGNUP_LOGIN = "signup";
+  static const String SIGNUP_LOGIN = "Signup";
 
   static const Color DashboardSideVIewDefault = Color(0XFFD9D9D9);
   // colors?
