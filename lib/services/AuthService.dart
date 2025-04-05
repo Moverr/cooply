@@ -25,15 +25,24 @@ class AuthService {
       );
 
   Future<bool> registerUser(String username, String password) async {
+    try {
     final response = await initDio("http://52.207.255.31:8082/v1").post(
-      '/register',
-      body: jsonEncode({
+      '/auth/register',
+      data: jsonEncode({
         "username": username,
         "password": password,
       }),
     );
+    print("Status Code: ${response.statusCode}");
 
     return response.statusCode == 201; // return a boolean
+    } on DioException catch (e) {
+      print("Login failed: ${e.response?.statusCode} - ${e.message}");
+
+      // Optionally, log more information like the error stack trace
+      print("Stack Trace: ${e.stackTrace}");
+      return false;
+    }
   }
 
   Future<LoginResponse?> loginUser(String username, String password) async {

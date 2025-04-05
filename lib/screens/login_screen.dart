@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/AppConstants.dart';
+import '../widgets/Auth2RowWidget.dart';
 import 'dashboard/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -136,94 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 )),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // Spaces items evenly
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center, // Centers items vertically
-                  children: [
-                    OutlinedButton(
-                      onPressed: handleLogin,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 20), // Adjust padding as needed
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-
-                          // Removes border radius
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize:
-                            MainAxisSize.min, // Prevents excessive button width
-                        children: [
-                          Image.asset(
-                            "assets/google.png",
-                            height: 24,
-                            width: 24,
-                          ),
-                          // Replace with your desired icon
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    OutlinedButton(
-                      onPressed: handleLogin,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 20), // Adjust padding as needed
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-
-                          // Removes border radius
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize:
-                            MainAxisSize.min, // Prevents excessive button width
-                        children: [
-                          Image.asset(
-                            "assets/x.png",
-                            height: 24,
-                            width: 24,
-                          ),
-                          // Replace with your desired icon
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    OutlinedButton(
-                      onPressed: handleLogin,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 20), // Adjust padding as needed
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-
-                          // Removes border radius
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize:
-                            MainAxisSize.min, // Prevents excessive button width
-                        children: [
-                          Image.asset(
-                            "assets/facebook.png",
-                            height: 24,
-                            width: 24,
-                          ),
-                          // Replace with your desired icon
-                        ],
-                      ),
-                    ),
-                  ],
-                )
+                //todo: not yet implemented
+                Auth2RowWidget() // handling Auth 2 buttons
               ],
             ),
           ),
@@ -231,6 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     ));
   }
+
+
 
   /// Login Action
 

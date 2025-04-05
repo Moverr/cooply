@@ -11,7 +11,6 @@ class AuthProvider with ChangeNotifier {
 
   bool _isLoggedIn = false;
 
-
   String? _message;
   String? _authToken;
   String? _refreshToken;
@@ -19,7 +18,37 @@ class AuthProvider with ChangeNotifier {
 
   List<Role>? _roles;
 
- Future<void> login(String username, String password) async {
+  bool _isregistered = false;
+
+  Future<void> register(String username, String password) async {
+
+    try {
+      bool response  = await _authService.registerUser(username, password);
+
+      if (response == true) {
+        _isregistered = true;
+      } else {
+        _isregistered = false;
+      }
+
+    }
+    catch(e) {
+
+      _isregistered = false;
+      _message = "An unexpected error occurred.";
+      _errorMessage = "Error: $e"; // More useful for debugging/logging
+      debugPrintStack();
+
+    }
+    finally{
+      notifyListeners();
+    }
+
+
+
+  }
+
+  Future<void> login(String username, String password) async {
     try {
       LoginResponse? loginResponse =
           await _authService.loginUser(username, password);
@@ -46,7 +75,6 @@ class AuthProvider with ChangeNotifier {
       _message = "An unexpected error occurred.";
       _errorMessage = "Error: $e"; // More useful for debugging/logging
       debugPrintStack();
-
     } finally {
       notifyListeners(); // Update UI state
     }
@@ -60,4 +88,6 @@ class AuthProvider with ChangeNotifier {
   String? get loginAuthToken => _authToken;
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _isLoggedIn;
+
+  bool get isRegistered => _isregistered;
 }
