@@ -1,0 +1,2 @@
+/Users/mover/custom-projects/kodeinc/cooply/android/app/.cxx/Debug/5q132f22/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/mover/custom-projects/kodeinc/cooply/android/app/.cxx/Debug/5q132f22/armeabi-v7a/CMakeFiles/rebuild_cache.dir
