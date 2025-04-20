@@ -11,6 +11,7 @@ class AuthProvider with ChangeNotifier {
 
   bool _isLoggedIn = false;
 
+  String? _username;
   String? _message;
   String? _authToken;
   String? _refreshToken;
@@ -48,27 +49,32 @@ class AuthProvider with ChangeNotifier {
 
   }
 
+  LoginResponse? logResponse;
+
   Future<void> login(String username, String password) async {
     try {
-      LoginResponse? loginResponse =
+      LoginResponse? loginDataResponse =
           await _authService.loginUser(username, password);
 
-      if (loginResponse != null && loginResponse.isSuccessful) {
+      if (loginDataResponse != null && loginDataResponse.isSuccessful) {
+        _username = loginDataResponse.username;
         _isLoggedIn = true;
-        _authToken = loginResponse.auth_token;
-        _message = loginResponse.message ?? "Login successful";
-        _roles = loginResponse.roles;
+        _authToken = loginDataResponse.auth_token;
+        _message = loginDataResponse.message ?? "Login successful";
+        _roles = loginDataResponse.roles;
         _errorMessage = null; // Clear any previous errors
 
+        logResponse = loginDataResponse;
         // TODO: Handle post-login actions (e.g., navigation, token storage)
       } else {
         _isLoggedIn = false;
         _authToken = "";
-        _message = loginResponse?.message ?? "Login failed. Please try again.";
-        _roles = loginResponse?.roles ?? [];
+        _message = loginDataResponse?.message ?? "Login failed. Please try again.";
+        _roles = loginDataResponse?.roles ?? [];
         _errorMessage = "Invalid credentials"; // Shown in UI
       }
     } catch (e) {
+      logResponse = null;
       _isLoggedIn = false;
       _authToken = "";
       _roles = [];
@@ -80,6 +86,11 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+
+  void logout(){
+
+    _isLoggedIn = false;
+  }
   set authToken(String token) => _authToken = token;
 
   String? get message => _message;
@@ -90,4 +101,6 @@ class AuthProvider with ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   bool get isRegistered => _isregistered;
+
+  String? get username => _username;
 }

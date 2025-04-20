@@ -8,6 +8,10 @@ import '../utils/AppConstants.dart';
 import '../widgets/Auth2RowWidget.dart';
 import 'dashboard/dashboard_screen.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -46,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -106,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       handleLogin();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0XFFE3D9A8),
+                      // backgroundColor: Color(0XFFE3D9A8),
 
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -130,8 +135,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w300),
                         ),
 
-                        SizedBox(width: 8), // Space between icon and text
-                        Icon(Icons.login), // Replace with your desired icon
+                        SizedBox(width: 8),
+                        IconButton(
+                          onPressed: null, icon: FaIcon(FontAwesomeIcons.lock)
+                          ,iconSize:18 ,
+                        ), // Replace with your desired icon
                       ],
                     ),
                   ),

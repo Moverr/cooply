@@ -2,6 +2,7 @@ import 'Role.dart';
 
 class LoginResponse{
 
+  String username;
   bool isSuccessful;
   String message;
   String auth_token;
@@ -9,6 +10,7 @@ class LoginResponse{
   List<Role> roles;
 
   LoginResponse({
+    required this.username,
     required this.isSuccessful,
     required this.message,
     required this.auth_token,
@@ -23,6 +25,7 @@ class LoginResponse{
 
 
   factory LoginResponse.fromJson(Map<String, Object?> json) => LoginResponse(
+    username: json["username"] as String,
     isSuccessful: json["is_successful"] as bool,
     message: json["message"] as String,
     auth_token: json["auth_token"] as String,

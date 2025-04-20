@@ -2,6 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+
 class Auth2RowWidget extends StatelessWidget {
 
 
@@ -22,8 +25,8 @@ class Auth2RowWidget extends StatelessWidget {
           onPressed: handleAuth2,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 20), // Adjust padding as needed
+                horizontal: 10,
+                vertical: 10), // Adjust padding as needed
 
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
@@ -35,11 +38,16 @@ class Auth2RowWidget extends StatelessWidget {
             mainAxisSize:
             MainAxisSize.min, // Prevents excessive button width
             children: [
-              Image.asset(
-                "assets/google.png",
-                height: 24,
-                width: 24,
-              ),
+
+              IconButton(
+                  onPressed: null, icon: FaIcon(FontAwesomeIcons.google)
+                  ,iconSize:18 ,
+              )
+              // Image.asset(
+              //   "assets/google.png",
+              //   height: 24,
+              //   width: 24,
+              // ),
               // Replace with your desired icon
             ],
           ),
@@ -49,8 +57,8 @@ class Auth2RowWidget extends StatelessWidget {
           onPressed: handleAuth2,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 20), // Adjust padding as needed
+                horizontal: 10,
+                vertical: 10), // Adjust padding as needed
 
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
@@ -62,11 +70,10 @@ class Auth2RowWidget extends StatelessWidget {
             mainAxisSize:
             MainAxisSize.min, // Prevents excessive button width
             children: [
-              Image.asset(
-                "assets/x.png",
-                height: 24,
-                width: 24,
-              ),
+              IconButton(
+                onPressed: null, icon: FaIcon(FontAwesomeIcons.x)
+                ,iconSize:18 ,
+              )
               // Replace with your desired icon
             ],
           ),
@@ -76,8 +83,8 @@ class Auth2RowWidget extends StatelessWidget {
           onPressed: handleAuth2,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 20), // Adjust padding as needed
+                horizontal: 10,
+                vertical: 10), // Adjust padding as needed
 
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
@@ -89,11 +96,10 @@ class Auth2RowWidget extends StatelessWidget {
             mainAxisSize:
             MainAxisSize.min, // Prevents excessive button width
             children: [
-              Image.asset(
-                "assets/facebook.png",
-                height: 24,
-                width: 24,
-              ),
+              IconButton(
+                onPressed: null, icon: FaIcon(FontAwesomeIcons.facebook)
+                ,iconSize:18 ,
+              )
               // Replace with your desired icon
             ],
           ),
