@@ -127,6 +127,57 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
 
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Your action here
+        },
+        icon: Icon(Icons.add),
+        label: Text("Add"),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+
+
+
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // View action
+                },
+                icon: Icon(Icons.visibility),
+                label: Text("View"),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Edit action
+                },
+                icon: Icon(Icons.edit),
+                label: Text("Edit"),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Delete action
+                },
+                icon: Icon(Icons.delete),
+                label: Text("Delete"),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              ),
+            ),
+          ],
+        ),
+      ),
 
 
     );
