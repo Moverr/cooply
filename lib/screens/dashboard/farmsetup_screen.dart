@@ -8,6 +8,40 @@ class FarmSetupScreen extends StatefulWidget {
 }
 
 class _FarmSetupSate extends State<FarmSetupScreen> {
+
+  TextEditingController _searchController = TextEditingController();
+
+  List<Map<String, String>> _filteredData = [];
+
+  final db _dataSource = db();
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Initially, show all data
+    _filteredData = _dataSource.getData();
+    _searchController.addListener(_filterData);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+  // Filter data based on search query
+  void _filterData() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredData = _dataSource.getData().where((row) {
+        return row['name']!.toLowerCase().contains(query) ||
+            row['account']!.toLowerCase().contains(query) ||
+            row['status']!.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,66 +68,140 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
           ),
         ],
       ),
-      body: Container(
-          child: Column(
+      body:Column(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Manage Farm",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+
+
+          Padding(padding: EdgeInsets.all( 16.0),
+            child:   const Text(
+              "Manage Farms",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
           ),
-          SizedBox(height: 20),
-          Table(
-            border: TableBorder.all(),
-            children: [
-              TableRow(children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Name',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Quantity',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Status',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ]),
-              TableRow(children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Eggs'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('120'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Available'),
-                ),
-              ]),
-              TableRow(children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Chickens'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('45'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Healthy'),
-                ),
-              ]),
-            ],
+
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Search',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
           ),
+
+           const SizedBox(height: 20),
+
+
+
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              // child: SingleChildScrollView(
+              //   scrollDirection: Axis.horizontal,
+                child:  PaginatedDataTable(
+                  // header: Text("Manage Farm Profiles"),
+                  rowsPerPage: 10,
+                  columnSpacing: 40,
+                  headingRowColor:  WidgetStateProperty.all(Colors.blueGrey.shade700),
+                  columns: [
+                    DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
+                    // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
+                    // DataColumn(label: Text('Date Created', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Action', style: TextStyle(color: Colors.white))),
+                  ],
+                  source: db(filteredData: _filteredData),
+                )
+                
+                
+
+                // ),
+              ),
+            ),
+
+
         ],
-      )),
+      ),
+
+
     );
   }
+}
+
+class db extends DataTableSource{
+
+
+  final List<Map<String, String>> filteredData;
+  db({this.filteredData = const []});
+
+  final List<Map<String, String>> _data = List.generate(100, (index) => {
+    'account': 'Default',
+    'name': 'Mwamba Farms',
+    // 'status': 'Active',
+    // 'author': 'M Rogers',
+    'dateCreated': '2204-01-13',
+    'action': 'Action',
+  });
+
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= _data.length) return null;
+    final row = _data[index];
+    return DataRow(cells: [
+      DataCell(Text(row['account']!)),
+      DataCell(Text(row['name']!)),
+      // DataCell(Text(row['status']!)),
+      // DataCell(Text(row['author']!)),
+      DataCell(Text(row['dateCreated']!)),
+      DataCell(
+        Row(
+          children: [
+            // Edit Button
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                print('Edit clicked for row $index');
+                // Handle Edit action
+              },
+            ),
+            // Delete Button
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                print('Delete clicked for row $index');
+                // Handle Delete action
+              },
+            ),
+            // View Button
+            IconButton(
+              icon: const Icon(Icons.visibility, color: Colors.green),
+              onPressed: () {
+                print('View clicked for row $index');
+                // Handle View action
+              },
+            ),
+          ],
+        )
+      ),
+    ]);
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => _data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  List<Map<String, String>> getData() => _data;
+
+
 }
