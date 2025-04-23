@@ -1,15 +1,20 @@
 import 'package:Cooply/providers/auth_provider.dart';
-import 'package:Cooply/services/AuthService.dart';
+import 'package:Cooply/utils/log_service.dart';
 import 'package:Cooply/widgets/LoadingDialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/dtos/LoginResponse.dart';
 import '../utils/AppConstants.dart';
+import '../widgets/Auth2RowWidget.dart';
 import 'dashboard/dashboard_screen.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+
+
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<StatefulWidget> createState() => _LoginScreenState();
 }
@@ -34,230 +39,156 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'username',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
-                }
-                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                  return 'Enter a valid email';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: _obscurePassword,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+        body: Container(
+
+      color: Colors.white,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'username',
+                    border: OutlineInputBorder(),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
                   },
                 ),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 20),
-            Center(
-                child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () async {
-                  AuthService auth = new AuthService();
-                final response =  await  auth.loginUser("moverr@gmail.com", "password");
-
-                if(response != null){
-
-                }
-                int x = 0;
-
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0XFFE3D9A8),
-
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 20), // Adjust padding as needed
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-
-                    // Removes border radius
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize:
-                      MainAxisSize.min, // Prevents excessive button width
-                  children: [
-                    Text(
-                      'Login',
-                      style: TextStyle(
-                          fontFamily: AppConstants.fontFamily,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w300),
-                    ),
-
-                    SizedBox(width: 8), // Space between icon and text
-                    Icon(Icons.login), // Replace with your desired icon
-                  ],
-                ),
-              ),
-            )),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Spaces items evenly
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Centers items vertically
-              children: [
-                OutlinedButton(
-                  onPressed: handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20), // Adjust padding as needed
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-
-                      // Removes border radius
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize:
-                        MainAxisSize.min, // Prevents excessive button width
-                    children: [
-                      Image.asset(
-                        "assets/google.png",
-                        height: 24,
-                        width: 24,
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  onFieldSubmitted: (value) {
+                    handleLogin();
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
-                      // Replace with your desired icon
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                OutlinedButton(
-                  onPressed: handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20), // Adjust padding as needed
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-
-                      // Removes border radius
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize:
-                        MainAxisSize.min, // Prevents excessive button width
-                    children: [
-                      Image.asset(
-                        "assets/x.png",
-                        height: 24,
-                        width: 24,
-                      ),
-                      // Replace with your desired icon
-                    ],
-                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+
+                    return null;
+                  },
                 ),
-                const SizedBox(width: 20),
-                OutlinedButton(
-                  onPressed: handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20), // Adjust padding as needed
+                const SizedBox(height: 20),
+                Center(
+                    child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      handleLogin();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      // backgroundColor: Color(0XFFE3D9A8),
 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20), // Adjust padding as needed
 
-                      // Removes border radius
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+
+                        // Removes border radius
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize:
+                          MainAxisSize.min, // Prevents excessive button width
+                      children: [
+                        Text(
+                          'Login',
+                          style: TextStyle(
+                              fontFamily: AppConstants.fontFamily,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w300),
+                        ),
+
+                        SizedBox(width: 8),
+                        IconButton(
+                          onPressed: null, icon: FaIcon(FontAwesomeIcons.lock)
+                          ,iconSize:18 ,
+                        ), // Replace with your desired icon
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize:
-                        MainAxisSize.min, // Prevents excessive button width
-                    children: [
-                      Image.asset(
-                        "assets/facebook.png",
-                        height: 24,
-                        width: 24,
-                      ),
-                      // Replace with your desired icon
-                    ],
-                  ),
-                ),
+                )),
+                const SizedBox(height: 20),
+                //todo: not yet implemented
+                Auth2RowWidget() // handling Auth 2 buttons
               ],
-            )
-          ],
+            ),
+          ),
         ),
       ),
     ));
   }
 
-  /**
-   * Login Action
-   */
 
-  void handleLogin() async {
+
+  /// Login Action
+
+  Future<void> handleLogin() async {
     //todo: commented out this line, to finish the UI
     if (_formKey.currentState!.validate()) {
-      FocusScope.of(context).unfocus();
-      LoadingDialog.show(context, "Logging in ");
+      try {
+        FocusScope.of(context).unfocus();
 
+        LoadingDialog.show(context, "Logging in ");
 
-      // try {
         String username = _emailController.text;
         String password = _passwordController.text;
-        AuthService authService = new AuthService();
-         final loginResponse =    await authService.loginUser( username, password);
 
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-        int x = 10;
+        await authProvider.login(username, password);
 
-
-        /*
-         final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-         authProvider.login(
-            _emailController.text, _passwordController.text);
-
+        LoadingDialog.hide(context);
 
         if (authProvider.isLoggedIn == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Login Succesfully"),
+              backgroundColor: Colors.green,
+            ),
+          );
+
           //todo: go to dashboard
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Dashboard()));
+
+
         } else {
           // Simulate login action
           ScaffoldMessenger.of(context).showSnackBar(
@@ -267,8 +198,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         }
-      }
-      catch(e){
+      } catch (e) {
+        LoadingDialog.hide(context);
+
+        print(e.toString());
+        LogService.error(e.toString());
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("An unexpected error occurred: $e"),
@@ -276,9 +211,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       }
-
-      */
-
 
       //  LoadingDialog.hide(context);
     }

@@ -7,22 +7,18 @@ import 'package:provider/provider.dart';
 import 'services/AuthService.dart';
 
 void main() {
-  // setupLocator();
+  setupLocator();
   runApp(
 
-      const MyApp()
-    /*  MultiProvider(
+      // const MyApp()
+      MultiProvider(
     providers: [
-     ChangeNotifierProvider(
+      ChangeNotifierProvider(
           create: (_) => AuthProvider(
               getIt<AuthService>())), //Inject get_it service into provider
     ],
     child: MyApp(),
-  )
-
-      const MyApp() */
-
-      );
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -41,4 +37,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
