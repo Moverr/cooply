@@ -187,6 +187,8 @@ class _LoginScreenState extends State<LoginScreen> {
           //todo: go to dashboard
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Dashboard()));
+
+
         } else {
           // Simulate login action
           ScaffoldMessenger.of(context).showSnackBar(

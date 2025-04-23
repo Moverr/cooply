@@ -1,3 +1,5 @@
+import 'package:Cooply/models/dtos/AccountResponse.dart';
+
 import 'Role.dart';
 
 class LoginResponse{
@@ -9,6 +11,9 @@ class LoginResponse{
   String refresh_token;
   List<Role> roles;
 
+  AccountResponse defaultAccount;
+  List<AccountResponse> accounts;
+
   LoginResponse({
     required this.username,
     required this.isSuccessful,
@@ -16,6 +21,8 @@ class LoginResponse{
     required this.auth_token,
     required this.refresh_token,
     required this.roles,
+    required this.defaultAccount,
+    required this.accounts,
   });
 
 
@@ -31,6 +38,9 @@ class LoginResponse{
     auth_token: json["auth_token"] as String,
     refresh_token: json["refresh_token"] as String,
     roles: (json['roles'] as List).map((x) => Role.fromJson(x as Map<String, Object?>)).toList(),
+    defaultAccount: AccountResponse.fromJson(json["defaultAccount"] as Map<String, Object?>),
+    accounts: (json['accounts'] as List).map((x) => AccountResponse.fromJson(x as Map<String, Object?>)).toList(),
+
 
     // roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
   );

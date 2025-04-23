@@ -1,6 +1,11 @@
 import 'dart:math';
 
 import 'package:Cooply/models/dtos/LoginResponse.dart';
+import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
+import 'package:Cooply/screens/dashboard/overview_screen.dart';
+import 'package:Cooply/screens/home_screen.dart';
+import 'package:Cooply/screens/login_screen.dart';
+import 'package:Cooply/screens/splash_screen.dart';
 import 'package:Cooply/services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -13,10 +18,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../providers/auth_provider.dart';
 
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -28,12 +30,62 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   bool isExpanded = true;
 
-
   final List<Menu> _menuList = [
-    const Menu(item: "Overview", asset: "assets/overview.png",faIcon:FontAwesomeIcons.chartBar ),
-    const Menu(item: "Farm", asset: "assets/farm.png",faIcon:FontAwesomeIcons.solidBuilding ),
-    const Menu(item: "Reports", asset: "assets/reports.png",faIcon:FontAwesomeIcons.fileLines ),
-    const Menu(item: "Users", asset: "assets/users.png",faIcon:FontAwesomeIcons.users ),
+    const Menu(
+        name: "Overview",
+        code: "overview",
+        asset: "assets/overview.png",
+        faIcon: FontAwesomeIcons.chartBar),
+
+    const Menu(
+        name: "Coops",
+        code: "coops",
+        asset: "assets/overview.png",
+        faIcon: FontAwesomeIcons.twitter),
+
+
+    const Menu(
+        name: "Inventory",
+        code: "inventory",
+        asset: "assets/overview.png",
+        faIcon: FontAwesomeIcons.listCheck),
+
+
+    const Menu(
+        name: "Sales & Expenses",
+        code: "sales_expenses",
+        asset: "assets/overview.png",
+        faIcon: FontAwesomeIcons.chartBar),
+
+
+
+    const Menu(
+        name: "Schedules",
+        code: "schedule",
+        asset: "assets/overview.png",
+        faIcon: FontAwesomeIcons.timeline),
+
+
+
+
+    const Menu(
+        name: "Reports",
+        code: "reports",
+        asset: "assets/reports.png",
+        faIcon: FontAwesomeIcons.fileLines),
+
+
+    const Menu(
+        name: "Farm Setup",
+        code : "farm_setup",
+        asset: "assets/farm.png",
+        faIcon: FontAwesomeIcons.gears),
+
+    const Menu(
+        name: "Users",
+        code: "users",
+        asset: "assets/users.png",
+        faIcon: FontAwesomeIcons.users),
   ];
 
   // final authProvider = GetIt.I<AuthProvider>();
@@ -41,27 +93,23 @@ class _DashboardState extends State<Dashboard> {
   AuthService authService = getIt<AuthService>();
   //todo: implement the user profile KYC information
   //todo: add the username on the response
-  LoginResponse? loginData ;
+  LoginResponse? loginData;
 
- late  String username ;
+  late String username;
+
+  String selectedMenu = "overview";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-     authService.getStoredLoginData()
-    .then((result)=>{
-         if (result != null) {
-            username = result.username
-       }
-     });
+    authService.getStoredLoginData().then((result) => {
+          if (result != null) {username = result.username}
+        });
   }
-
 
   @override
   Widget build(BuildContext context) {
-
-
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
 
     return Scaffold(
@@ -91,7 +139,6 @@ class _DashboardState extends State<Dashboard> {
                 bottomRight: Radius.circular(20), // Bottom-right corner
               ),
               */
-
               ),
               clipBehavior: Clip.hardEdge,
               child: Column(
@@ -118,7 +165,6 @@ class _DashboardState extends State<Dashboard> {
                             width: 30,
                           ),
                           if (isExpanded) ...[
-
                             Expanded(
                               // <-- FIX: Forces text to fit within available space
                               child: Column(
@@ -136,7 +182,8 @@ class _DashboardState extends State<Dashboard> {
 
                                   //todo: work on bringing the email
                                   Text(
-                                    authProvider.logResponse?.username??" na ",
+                                    authProvider.logResponse?.username ??
+                                        " na ",
                                     style: TextStyle(
                                         fontSize: 9,
                                         fontWeight: FontWeight.w700),
@@ -152,50 +199,114 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
 
-
                   _Divider(),
 
-
-                  ... _menuList.map((menu) => Column(
-                    children: [
-                      _MenuItem(menu.asset, menu.item,menu.faIcon),
-                      _Divider(),
-                    ],
-                  )),
+                  ..._menuList.map((menu) => Column(
+                        children: [
+                          _MenuItem(menu.asset, menu.name,menu.code, menu.faIcon),
+                          _Divider(),
+                        ],
+                      )),
 
                   const Spacer(),
-                  _MenuItem("assets/profile_icon.png", "Profile",FontAwesomeIcons.user),
+                  _MenuItem("assets/profile_icon.png", "Profile","profile",
+                      FontAwesomeIcons.user),
                   _Divider(),
-                  _MenuItem("assets/logout.png", "Logout",FontAwesomeIcons.arrowRightFromBracket),
-                //isLogout: true),
-
-
+                  _MenuItem("assets/logout.png", "Logout","logout",
+                      FontAwesomeIcons.arrowRightFromBracket),
+                  //isLogout: true),
                 ],
               ),
             ),
 
             // Main Content
-            Expanded(
-              child: Center(
-                child: Text(
-                  isExpanded ? "Sidebar Expanded" : "Sidebar Minimized",
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
+            Expanded(child: handleMenuItem(selectedMenu)),
           ],
         ),
       ),
     );
   }
 
+  Container presetContainer() {
+    return Container();
+  }
+
+  //Handle what Menu iTems see in the details page
+  handleMenuItem(String menuItem) {
+    isExpanded = false;
+    switch (menuItem.toLowerCase().trim()) {
+      case 'overview':
+        return OverviewScreen();
 
 
-  InkWell _MenuItem(String asset, String title,IconData faIcon) {
+      case 'farm_setup':
+          return FarmSetupScreen();
+
+
+
+      case 'reports':
+        return Center(
+          child: Text(
+            "Reports",
+            style: const TextStyle(fontSize: 20),
+          ),
+        );
+
+
+
+      case 'users':
+        return Center(
+          child: Text(
+            "Users",
+            style: const TextStyle(fontSize: 20),
+          ),
+        );
+
+
+
+      case 'profile':
+        return Center(
+          child: Text(
+            "Profile",
+            style: const TextStyle(fontSize: 20),
+          ),
+        );
+
+
+      case 'logout':
+
+        //todo: add logout information
+      //todo: go to logout
+      //todo: clear the auth provider and shared preferences
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SplashScreen()));
+
+
+        break;
+
+
+
+
+
+
+
+
+      default:
+        return Center(
+          child: Text(
+            "Welcome Screen",
+            style: const TextStyle(fontSize: 20),
+          ),
+        );
+        break;
+    }
+  }
+
+  InkWell _MenuItem(String asset, String title, String code,IconData faIcon) {
     return InkWell(
       onTap: () {
         setState(() {
-          isExpanded = !isExpanded;
+          selectedMenu = code;
         });
       },
       child: Container(
@@ -206,29 +317,19 @@ class _DashboardState extends State<Dashboard> {
           mainAxisSize: MainAxisSize.min, // Prevents overflow
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-/*
-            Image.asset(
-              asset,
-              height: 40,
-              width: 40,
+
+            Container(
+              width: 30,
+              padding: EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: FaIcon(
+                faIcon, // Replace with the icon you need
+                size: 15,
+
+                color: Color(0xFF000000), // Optional: specify icon color
+              ),
             ),
-            */
-          Container(
-            width: 30,
-            padding: EdgeInsets.all(8.0),
-            alignment: Alignment.center,
-            child: FaIcon(
-              faIcon, // Replace with the icon you need
-              size: 15,
-
-
-              color: Color(0xFF000000),    // Optional: specify icon color
-            ),
-
-          )
-            ,
             if (isExpanded) ...[
-
               Expanded(
                 // <-- FIX: Forces text to fit within available space
                 child: Column(
@@ -251,18 +352,16 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-
   // Divider Widget
   Widget _Divider() {
-    return (isExpanded ==false) ?
-     Padding(
+    return (isExpanded == false)
+        ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Divider(color: Colors.black12, thickness: 1),
+          )
+        : Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Divider(color: Colors.black12, thickness: 1),
-    ) :  Container(
-
+      child: Divider(color: Colors.white, thickness: 1),
     );
-
   }
-
-
 }
