@@ -108,11 +108,11 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
                   columnSpacing: 40,
                   headingRowColor:  WidgetStateProperty.all(Colors.blueGrey.shade700),
                   columns: [
-                    DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
+                    // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
                     DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
                     DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
                     // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
-                    // DataColumn(label: Text('Date Created', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Date Created', style: TextStyle(color: Colors.white))),
                     DataColumn(label: Text('Action', style: TextStyle(color: Colors.white))),
                   ],
                   source: db(filteredData: _filteredData),
@@ -192,9 +192,9 @@ class db extends DataTableSource{
 
   final List<Map<String, String>> _data = List.generate(100, (index) => {
     'account': 'Default',
-    'name': 'Mwamba Farms',
-    // 'status': 'Active',
-    // 'author': 'M Rogers',
+    'name': 'Default Farm ',
+    'status': 'Active',
+    'author': 'M Rogers',
     'dateCreated': '2204-01-13',
     'action': 'Action',
   });
@@ -205,9 +205,9 @@ class db extends DataTableSource{
     if (index >= _data.length) return null;
     final row = _data[index];
     return DataRow(cells: [
-      DataCell(Text(row['account']!)),
+      // DataCell(Text(row['account']!)),
       DataCell(Text(row['name']!)),
-      // DataCell(Text(row['status']!)),
+      DataCell(Text(row['status']!)),
       // DataCell(Text(row['author']!)),
       DataCell(Text(row['dateCreated']!)),
       DataCell(
