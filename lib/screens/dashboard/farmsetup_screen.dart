@@ -2,6 +2,9 @@ import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/dtos/Farm.dart';
+import '../../services/FarmService.dart';
+
 class FarmSetupScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _FarmSetupSate();
@@ -13,15 +16,24 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
 
   List<Map<String, String>> _filteredData = [];
 
-  final db _dataSource = db();
+
+  late FarmDataSource _farmDataSource;
+  final FarmService _farmService = FarmService();
+
+
 
 
   @override
   void initState() {
     super.initState();
     // Initially, show all data
-    _filteredData = _dataSource.getData();
-    _searchController.addListener(_filterData);
+    // _filteredData = _dataSource.getData();
+    // _searchController.addListener(_filterData);
+
+
+    _farmDataSource = FarmDataSource(context, _farmService);
+    _farmDataSource.fetchPage(0);
+
   }
 
   @override
@@ -31,7 +43,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
   }
   // Filter data based on search query
   void _filterData() {
-    final query = _searchController.text.toLowerCase();
+  /*  final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredData = _dataSource.getData().where((row) {
         return row['name']!.toLowerCase().contains(query) ||
@@ -39,6 +51,8 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
             row['status']!.toLowerCase().contains(query);
       }).toList();
     });
+
+    */
   }
 
 
@@ -108,14 +122,15 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
                   columnSpacing: 40,
                   headingRowColor:  WidgetStateProperty.all(Colors.blueGrey.shade700),
                   columns: [
-                    DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
+                    // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
                     DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
                     DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
                     // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
-                    // DataColumn(label: Text('Date Created', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Date Created', style: TextStyle(color: Colors.white))),
                     DataColumn(label: Text('Action', style: TextStyle(color: Colors.white))),
                   ],
-                  source: db(filteredData: _filteredData),
+                  source:_farmDataSource
+                  //FarmDataSource(filteredData: _filteredData),
                 )
                 
                 
@@ -184,30 +199,81 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
   }
 }
 
-class db extends DataTableSource{
+class FarmDataSource extends DataTableSource{
 
 
-  final List<Map<String, String>> filteredData;
-  db({this.filteredData = const []});
+  final BuildContext context;
+  final FarmService farmService;
+  List<Farm> farms = [];
+  int totalRows = 0;
+  int rowsPerPage = 5;
+  int page = 0;
+
+  FarmDataSource(this.context, this.farmService);
+
+  Future<void> fetchPage(int pageIndex) async {
+    final offset = pageIndex * rowsPerPage;
+    try {
+      final response = await farmService.fetchFarms(
+        accountId: 16,
+        offset: offset,
+        limit: rowsPerPage,
+      );
+
+      farms = response.content;
+      totalRows = response.totalElements;
+      page = response.pageNumber;
+
+      notifyListeners();
+    } catch (e) {
+      farms = [];
+      totalRows = 0;
+      notifyListeners();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error fetching farms: $e")),
+      );
+    }
+  }
+
+
+
+
+
+
 
   final List<Map<String, String>> _data = List.generate(100, (index) => {
     'account': 'Default',
-    'name': 'Mwamba Farms',
-    // 'status': 'Active',
-    // 'author': 'M Rogers',
+    'name': 'Default Farm ',
+    'status': 'Active',
+    'author': 'M Rogers',
     'dateCreated': '2204-01-13',
     'action': 'Action',
   });
 
 
+
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= farms.length) return null;
+    final farm = farms[index];
+    return DataRow.byIndex(index: index, cells: [
+      DataCell(Text(farm.id.toString())),
+      DataCell(Text(farm.name)),
+      DataCell(Text(farm.author)),
+      // DataCell(Text(farm.status ?? 'N/A')),
+    ]);
+  }
+
+  /*
   @override
   DataRow? getRow(int index) {
     if (index >= _data.length) return null;
     final row = _data[index];
     return DataRow(cells: [
-      DataCell(Text(row['account']!)),
+      // DataCell(Text(row['account']!)),
       DataCell(Text(row['name']!)),
-      // DataCell(Text(row['status']!)),
+      DataCell(Text(row['status']!)),
       // DataCell(Text(row['author']!)),
       DataCell(Text(row['dateCreated']!)),
       DataCell(
@@ -242,15 +308,19 @@ class db extends DataTableSource{
       ),
     ]);
   }
+  */
+
 
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _data.length;
+  int get rowCount => totalRows;
 
   @override
   int get selectedRowCount => 0;
+
+
 
   List<Map<String, String>> getData() => _data;
 
