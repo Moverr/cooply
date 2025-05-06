@@ -9,6 +9,8 @@ class FarmService {
   final String baseUrl = "${AppConstants.BASE_URL}${AppConstants.FARMENDPOINT}";
   final String baseApi = "http://52.207.255.31:8082/v1";
 
+  get token => "Token and also"; //todo: get the token from other apps
+
   initDio(String baseUrl) => Dio(
     BaseOptions(
       baseUrl: baseUrl,
@@ -16,6 +18,7 @@ class FarmService {
       receiveTimeout:
       const Duration(seconds: 10), // Timeout for receiving data
       headers: {
+        if (token != null) 'Authorization': 'Bearer $token',
         'accept': '*/*',
         'Content-Type': 'application/json',
       },
