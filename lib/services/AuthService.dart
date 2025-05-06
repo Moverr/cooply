@@ -26,8 +26,8 @@ class AuthService {
 
   Future<bool> registerUser(String username, String password) async {
     try {
-    final response = await initDio("http://52.207.255.31:8082/v1").post(
-      '/auth/register',
+    final response = await initDio(AppConstants.BASE_URL).post(
+      'v1/auth/register',
       data: jsonEncode({
         "username": username,
         "password": password,

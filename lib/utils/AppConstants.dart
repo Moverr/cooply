@@ -21,7 +21,10 @@ class AppConstants {
   static const String LOGINENDPOINT = "auth/login";
 
   static const String REGISTER = "/register";
+  static const String FARMENDPOINT = "v1/farm";
+
 
 
   static const String APP_TITLE = 'cooply';
+
 }
