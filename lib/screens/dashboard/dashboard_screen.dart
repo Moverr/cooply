@@ -159,6 +159,7 @@ class _DashboardState extends State<Dashboard> {
                         mainAxisSize: MainAxisSize.max, // Prevents overflow
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          const SizedBox(height: 30),
                           Image.asset(
                             "assets/chicken.png",
                             height: 30,
@@ -214,6 +215,7 @@ class _DashboardState extends State<Dashboard> {
                   _Divider(),
                   _MenuItem("assets/logout.png", "Logout","logout",
                       FontAwesomeIcons.arrowRightFromBracket),
+                  const SizedBox(height: 30),
                   //isLogout: true),
                 ],
               ),

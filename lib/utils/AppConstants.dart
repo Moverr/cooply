@@ -16,12 +16,16 @@ class AppConstants {
   // colors?
 
   static const String BASE_URL = "http://52.207.255.31:8082/";
+  static const String LOCAL_BASE_URL = "http://localhost:8080/";
 
   static const String AUTHENDPOINT = "v1/auth";
   static const String LOGINENDPOINT = "auth/login";
 
   static const String REGISTER = "/register";
+  static const String FARMENDPOINT = "v1/farm";
+
 
 
   static const String APP_TITLE = 'cooply';
+
 }
