@@ -16,6 +16,7 @@ class AppConstants {
   // colors?
 
   static const String BASE_URL = "http://52.207.255.31:8082/";
+  static const String LOCAL_BASE_URL = "http://localhost:8080/";
 
   static const String AUTHENDPOINT = "v1/auth";
   static const String LOGINENDPOINT = "auth/login";

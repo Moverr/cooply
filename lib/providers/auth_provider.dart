@@ -73,6 +73,9 @@ class AuthProvider with ChangeNotifier {
         _roles = loginDataResponse?.roles ?? [];
         _errorMessage = "Invalid credentials"; // Shown in UI
       }
+
+
+
     } catch (e) {
       logResponse = null;
       _isLoggedIn = false;

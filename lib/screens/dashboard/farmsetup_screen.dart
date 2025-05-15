@@ -1,8 +1,15 @@
+import 'dart:convert';
+
+import 'package:Cooply/models/dtos/LoginResponse.dart';
+import 'package:Cooply/services/AuthService.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/Farm.dart';
+import '../../providers/auth_provider.dart';
 import '../../services/FarmService.dart';
 
 class FarmSetupScreen extends StatefulWidget {
@@ -11,29 +18,42 @@ class FarmSetupScreen extends StatefulWidget {
 }
 
 class _FarmSetupSate extends State<FarmSetupScreen> {
-
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
 
-
   late FarmDataSource _farmDataSource;
   final FarmService _farmService = FarmService();
-
-
-
 
   @override
   void initState() {
     super.initState();
-    // Initially, show all data
-    // _filteredData = _dataSource.getData();
-    // _searchController.addListener(_filterData);
-
-
-    _farmDataSource = FarmDataSource(context, _farmService);
+    _farmDataSource = FarmDataSource(context);
     _farmDataSource.fetchPage(0);
+    /*
+    loadUser();
 
+    _farmDataSource = FarmDataSource(context,loginResponse);
+     _farmDataSource.fetchPage(0);
+     */
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //
+    // });
+  }
+
+  // FarmDataSource initFarmDatasource = (context,loginResponse) => FarmDataSource(context, loginResponse) ;
+
+  FarmDataSource Function(BuildContext, LoginResponse) initFarmDataSource =
+      (context, loginResponse) => FarmDataSource(context);
+
+  // Separate async method for initialization
+  Future<void> _initializeData() async {
+    await loadUser(); // Wait for loginResponse to be ready
+/*
+    _farmDataSource = initFarmDataSource(context, getLoginResponse());
+    _farmDataSource.fetchPage(0);
+    */
   }
 
   @override
@@ -41,9 +61,10 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
     _searchController.dispose();
     super.dispose();
   }
+
   // Filter data based on search query
   void _filterData() {
-  /*  final query = _searchController.text.toLowerCase();
+    /*  final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredData = _dataSource.getData().where((row) {
         return row['name']!.toLowerCase().contains(query) ||
@@ -55,9 +76,42 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
     */
   }
 
+  late LoginResponse? loginResponse;
+  Future<LoginResponse?> loadUser() async {
+    final user = await getLoginResponse();
+    if (user != null) {
+      return user;
+      // _farmDataSource = FarmDataSource(this.context,user);
+    } else {
+      return null;
+    }
+  }
+
+  Future<LoginResponse?> getLoginResponse() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString('login_response');
+
+      if (jsonString == null || jsonString.isEmpty) {
+        debugPrint('⚠️ No login_response found.');
+        return null;
+      }
+
+      final Map<String, dynamic> json = jsonDecode(jsonString);
+      final loginResponse = LoginResponse.fromJson(json);
+
+      debugPrint('✅ Loaded LoginResponse: $json');
+      return loginResponse;
+    } catch (e, stack) {
+      debugPrint('❌ Failed to load LoginResponse: $e\n$stack');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    _initializeData();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -82,19 +136,16 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
           ),
         ],
       ),
-      body:Column(
+      body: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
-          Padding(padding: EdgeInsets.all( 16.0),
-            child:   const Text(
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: const Text(
               "Manage Farms",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
-
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -106,40 +157,41 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
               ),
             ),
           ),
-
-           const SizedBox(height: 20),
-
-
-
+          const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              // child: SingleChildScrollView(
-              //   scrollDirection: Axis.horizontal,
-                child:  PaginatedDataTable(
-                  // header: Text("Manage Farm Profiles"),
-                  rowsPerPage: 10,
-                  columnSpacing: 40,
-                  headingRowColor:  WidgetStateProperty.all(Colors.blueGrey.shade700),
-                  columns: [
-                    // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
-                    DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
-                    DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
-                    // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
-                    DataColumn(label: Text('Date Created', style: TextStyle(color: Colors.white))),
-                    DataColumn(label: Text('Action', style: TextStyle(color: Colors.white))),
-                  ],
-                  source:_farmDataSource
-                  //FarmDataSource(filteredData: _filteredData),
-                )
-                
-                
+                scrollDirection: Axis.vertical,
+                // child: SingleChildScrollView(
+                //   scrollDirection: Axis.horizontal,
+                child: PaginatedDataTable(
+                    // header: Text("Manage Farm Profiles"),
+                    rowsPerPage: 2,
+                    columnSpacing: 40,
+                    headingRowColor:
+                        WidgetStateProperty.all(Colors.blueGrey.shade700),
+                    columns: [
+                      // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
+                      DataColumn(
+                          label: Text('Name',
+                              style: TextStyle(color: Colors.white))),
+                      DataColumn(
+                          label: Text('Status',
+                              style: TextStyle(color: Colors.white))),
+                      // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
+                      DataColumn(
+                          label: Text('Date Created',
+                              style: TextStyle(color: Colors.white))),
+                      DataColumn(
+                          label: Text('Action',
+                              style: TextStyle(color: Colors.white))),
+                    ],
+                    source: _farmDataSource
+                    //FarmDataSource(filteredData: _filteredData),
+                    )
 
                 // ),
-              ),
-            ),
-
-
+                ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -150,9 +202,6 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
         label: Text("Add"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-
-
-
       bottomNavigationBar: Container(
         color: Colors.white,
         padding: const EdgeInsets.all(12),
@@ -193,37 +242,58 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
           ],
         ),
       ),
-
-
     );
   }
 }
 
-class FarmDataSource extends DataTableSource{
-
-
+class FarmDataSource extends DataTableSource {
   final BuildContext context;
-  final FarmService farmService;
+
   List<Farm> farms = [];
   int totalRows = 0;
-  int rowsPerPage = 5;
+  int rowsPerPage = 2;
   int page = 0;
 
-  FarmDataSource(this.context, this.farmService);
+  FarmDataSource(this.context);
+
+  Future<LoginResponse?> getLoginResponse() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString('login_response');
+
+      if (jsonString == null || jsonString.isEmpty) {
+        debugPrint('⚠️ No login_response found.');
+        return null;
+      }
+
+      final Map<String, dynamic> json = jsonDecode(jsonString);
+      final loginResponse = LoginResponse.fromJson(json);
+
+      debugPrint('✅ Loaded LoginResponse: $loginResponse');
+      return loginResponse;
+    } catch (e, stack) {
+      debugPrint('❌ Failed to load LoginResponse: $e\n$stack');
+      return null;
+    }
+  }
 
   Future<void> fetchPage(int pageIndex) async {
+    LoginResponse? loginResponse = await getLoginResponse();
+
+    FarmService farmService = FarmService();
+
     final offset = pageIndex * rowsPerPage;
     try {
       final response = await farmService.fetchFarms(
-        accountId: 16,
-        offset: offset,
-        limit: rowsPerPage,
-      );
+          accountId: 16,
+          offset: offset,
+          limit: rowsPerPage,
+          loginResponse: loginResponse);
 
-      farms = response.content;
+      farms = response!.content;
       totalRows = response.totalElements;
       page = response.pageNumber;
-
+      debugPrint("Reached this Part :-------");
       notifyListeners();
     } catch (e) {
       farms = [];
@@ -235,34 +305,52 @@ class FarmDataSource extends DataTableSource{
     }
   }
 
-
-
-
-
-
-
-  final List<Map<String, String>> _data = List.generate(100, (index) => {
-    'account': 'Default',
-    'name': 'Default Farm ',
-    'status': 'Active',
-    'author': 'M Rogers',
-    'dateCreated': '2204-01-13',
-    'action': 'Action',
-  });
-
-
-
+  final List<Map<String, String>> _data = List.empty();
 
   @override
   DataRow? getRow(int index) {
     if (index >= farms.length) return null;
     final farm = farms[index];
     return DataRow.byIndex(index: index, cells: [
-      DataCell(Text(farm.id.toString())),
-      DataCell(Text(farm.name)),
-      DataCell(Text(farm.author)),
-      // DataCell(Text(farm.status ?? 'N/A')),
+      DataCell(Text(farm.name.toString())),
+      DataCell(Text(farm.status.toString())),
+      DataCell(Text(farm.modifiedOn.toString())),
+
+      getActionCell(farm.id)
+
+
     ]);
+  }
+
+  DataCell getActionCell(int index) {
+    return DataCell(Row(
+      children: [
+        // Edit Button
+        IconButton(
+          icon: const Icon(Icons.edit, color: Colors.blue),
+          onPressed: () {
+            print('Edit clicked for row $index');
+            // Handle Edit action
+          },
+        ),
+        // Delete Button
+        IconButton(
+          icon: const Icon(Icons.delete, color: Colors.red),
+          onPressed: () {
+            print('Delete clicked for row $index');
+            // Handle Delete action
+          },
+        ),
+        // View Button
+        IconButton(
+          icon: const Icon(Icons.visibility, color: Colors.green),
+          onPressed: () {
+            print('View clicked for row $index');
+            // Handle View action
+          },
+        ),
+      ],
+    ));
   }
 
   /*
@@ -310,7 +398,6 @@ class FarmDataSource extends DataTableSource{
   }
   */
 
-
   @override
   bool get isRowCountApproximate => false;
 
@@ -320,9 +407,5 @@ class FarmDataSource extends DataTableSource{
   @override
   int get selectedRowCount => 0;
 
-
-
   List<Map<String, String>> getData() => _data;
-
-
 }
