@@ -1,0 +1,9 @@
+{
+ "@@locale": "en",
+  "overview": "Overview",
+  "farm": "Farm",
+  "coop": "Coop",
+  "flock": "Flock",
+  "feeds": "Feeds",
+  "health": "Health"
+}

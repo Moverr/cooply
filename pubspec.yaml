@@ -40,6 +40,9 @@ dependencies:
   json_annotation: ^4.8.1
   font_awesome_flutter: ^10.8.0
   skeletons: ^0.0.3
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +57,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/splash_image.png
@@ -83,6 +87,14 @@ flutter_icons:
   ios: true      # Set the icon for iOS
   image_path: "assets/icon/icon.png"
 
+
+
+# Add this section to set up your l10n (localization) directory
+localizations:
+  arb-dir: lib/l10n
+  template-arb-file: app_en.arb
+  output-localization-file: app_localizations.dart
+  output-class: AppLocalizations
 
     # Path to your app icon image
 
