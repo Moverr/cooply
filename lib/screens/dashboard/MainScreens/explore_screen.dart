@@ -23,11 +23,13 @@ class _ExploreState extends State<ExploreScreen>
   ]; // Dynamic list
 
   int _initialTabIndex = 0;
+  bool _isTabControllerReady = false;  // Flag to wait for async loading
 
 
   Future<void> _loadTabIndex() async {
     final prefs = await SharedPreferences.getInstance();
     _initialTabIndex = prefs.getInt('exploreTabIndex') ?? 0;
+
 
     _tabController = TabController(
       length: tabTitles.length,
@@ -35,20 +37,29 @@ class _ExploreState extends State<ExploreScreen>
       initialIndex: _initialTabIndex,
     );
 
+
+
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         prefs.setInt('exploreTabIndex', _tabController.index);
       }
     });
 
-    setState(() {}); // Trigger build after controller is ready
+    setState(() {
+      _isTabControllerReady = true;  // Mark ready and rebuild
+    }); // Trigger build after controller is ready
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
- _loadTabIndex();
+
+
+
+
+
+    _loadTabIndex();
 
   }
 
@@ -65,7 +76,7 @@ class _ExploreState extends State<ExploreScreen>
 
 
     // Show loading while waiting for controller
-    if (!this.mounted || _tabController.length == 0) {
+    if (!_isTabControllerReady) {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
