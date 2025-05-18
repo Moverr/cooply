@@ -1,12 +1,16 @@
 import 'dart:math';
 
 import 'package:Cooply/models/dtos/LoginResponse.dart';
+import 'package:Cooply/screens/dashboard/MainScreens/messages_screen.dart';
+import 'package:Cooply/screens/dashboard/MainScreens/profie_screen.dart';
+import 'package:Cooply/screens/dashboard/MainScreens/reports_screen.dart';
+import 'package:Cooply/screens/dashboard/MainScreens/schedule_screen.dart';
 import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
 import 'package:Cooply/screens/dashboard/overview_screen.dart';
 import 'package:Cooply/screens/home_screen.dart';
-import 'package:Cooply/screens/login_screen.dart';
 import 'package:Cooply/screens/splash_screen.dart';
 import 'package:Cooply/services/AuthService.dart';
+import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +24,8 @@ import '../../providers/auth_provider.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'MainScreens/explore_screen.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -29,6 +35,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   bool isExpanded = true;
+  int _currentIndex = 0;
 
   final List<Menu> _menuList = [
     const Menu(
@@ -88,6 +95,31 @@ class _DashboardState extends State<Dashboard> {
         faIcon: FontAwesomeIcons.users),
   ];
 
+  final List<BottomNavigationBarItem> bottomMainMenu = [
+    BottomNavigationBarItem(
+
+      icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+      label: 'Explore',
+    ),
+    BottomNavigationBarItem(
+      icon: FaIcon(FontAwesomeIcons.fileLines),
+      label: 'Reports',
+    ),
+
+    BottomNavigationBarItem(
+      icon: FaIcon(FontAwesomeIcons.calendar),
+      label: 'Schedule',
+    ),
+    BottomNavigationBarItem(
+      icon: FaIcon(FontAwesomeIcons.message),
+      label: 'Messages',
+    ),
+    BottomNavigationBarItem(
+      icon: FaIcon(FontAwesomeIcons.circleUser),
+      label: 'Profile',
+    ),
+  ];
+
   // final authProvider = GetIt.I<AuthProvider>();
 
   AuthService authService = getIt<AuthService>();
@@ -108,24 +140,77 @@ class _DashboardState extends State<Dashboard> {
         });
   }
 
+
+  final List<Widget> _mainPages = [
+    ExploreScreen(),
+    ReportScreen(),
+    ScheduleScreen(),
+    MessageScreen(),
+    ProfileScreen(),
+  ];
+
+
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
 
-    return Scaffold(
-      //  appBar: AppBar(
-      //   title: const Text("Dashboard"),
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.menu),
-      //     onPressed: () {
-      //       setState(() {
-      //         isExpanded = !isExpanded;
-      //       });
-      //     },
-      //   ),
-      // ),
 
-      body: Center(
+    return Scaffold(
+       appBar: AppBar(
+        title:  Row(
+          children: [
+            Image.asset(
+              "assets/chicken.png",
+              width: 40,
+              height: 30,
+
+            ),
+            const Text(AppConstants.titleText,
+                 style: TextStyle(
+                   fontFamily: "inter",
+                fontSize: 20,
+                color: Color(0XFF3AAD8F),
+                fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+
+
+         actions: [
+           IconButton(
+             icon: Image.asset("assets/users.png",
+               width: 40, height: 30,
+             ),
+
+             // const  FaIcon(FontAwesomeIcons.users),
+             //Icon(Icons.notifications),
+             onPressed: () {
+               // Handle notification press
+             },
+           ),
+           IconButton(
+             icon:  const  FaIcon(FontAwesomeIcons.rss ),
+             onPressed: () {
+               // Handle settings press
+             },
+           ),
+
+           IconButton(
+             icon:  const  FaIcon(FontAwesomeIcons.gear),
+             onPressed: () {
+               // Handle settings press
+             },
+           ),
+
+         ],
+
+      ),
+
+
+      body: _mainPages[_currentIndex],
+          /*
+      Center(
         child: Row(
           children: [
             AnimatedContainer(
@@ -159,6 +244,7 @@ class _DashboardState extends State<Dashboard> {
                         mainAxisSize: MainAxisSize.max, // Prevents overflow
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          const SizedBox(height: 30),
                           Image.asset(
                             "assets/chicken.png",
                             height: 30,
@@ -214,6 +300,7 @@ class _DashboardState extends State<Dashboard> {
                   _Divider(),
                   _MenuItem("assets/logout.png", "Logout","logout",
                       FontAwesomeIcons.arrowRightFromBracket),
+                  const SizedBox(height: 30),
                   //isLogout: true),
                 ],
               ),
@@ -224,6 +311,20 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       ),
+*/
+        bottomNavigationBar:
+        BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          selectedItemColor:  Color(0xFF3AAD8F),
+          unselectedItemColor:  Color(0xFF000000),
+          onTap: (index) => setState(() => _currentIndex = index),
+          selectedLabelStyle: TextStyle(fontSize: 10,fontFamily: AppConstants.fontFamily, fontWeight: FontWeight.normal),
+          unselectedLabelStyle: TextStyle(fontSize: 10, fontFamily: AppConstants.fontFamily, fontWeight: FontWeight.normal),
+          items: bottomMainMenu,
+ 
+        ),
+
     );
   }
 

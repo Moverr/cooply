@@ -26,8 +26,8 @@ class AuthService {
 
   Future<bool> registerUser(String username, String password) async {
     try {
-    final response = await initDio("http://52.207.255.31:8082/v1").post(
-      '/auth/register',
+    final response = await initDio(AppConstants.LOCAL_BASE_URL).post(
+      'v1/auth/register',
       data: jsonEncode({
         "username": username,
         "password": password,
@@ -49,8 +49,8 @@ class AuthService {
     print("Method Login User");
 
     try {
-      final response = await initDio("http://52.207.255.31:8082/v1").post(
-        '/auth/login', // Using relative path for better maintainability
+      final response = await initDio(AppConstants.LOCAL_BASE_URL).post(
+        '/v1/auth/login', // Using relative path for better maintainability
         data: jsonEncode({
           "username": username,
           "password": password,
