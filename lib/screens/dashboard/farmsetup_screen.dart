@@ -104,6 +104,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       return null;
     }
   }
+
   bool _isLoading = true;
   @override
   Widget build(BuildContext context) {
@@ -136,6 +137,15 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Expanded(
+              child: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text('Item ${index + 1}'),
+              );
+            },
+          )),
           Padding(
             padding: EdgeInsets.all(16.0),
             child: const Text(
@@ -160,8 +170,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
                 scrollDirection: Axis.vertical,
                 // child: SingleChildScrollView(
                 //   scrollDirection: Axis.horizontal,
-                child:
-                PaginatedDataTable(
+                child: PaginatedDataTable(
                     // header: Text("Manage Farm Profiles"),
                     rowsPerPage: 2,
                     columnSpacing: 40,

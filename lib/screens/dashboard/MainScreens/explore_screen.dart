@@ -1,3 +1,4 @@
+import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ class _ExploreState extends State<ExploreScreen>
 
 
   final List<String> tabTitles = [
-    'Overview',
+    'Home',
     'Farm',
     'Coop',
     'Flock',
@@ -55,10 +56,6 @@ class _ExploreState extends State<ExploreScreen>
     // TODO: implement initState
     super.initState();
 
-
-
-
-
     _loadTabIndex();
 
   }
@@ -90,13 +87,12 @@ class _ExploreState extends State<ExploreScreen>
                   children: [
                     TabBar(
                       controller: _tabController,
-                      isScrollable: true,
+                      isScrollable: false,
                       labelColor: Colors.blue,
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: Colors.blue,
-                      padding: EdgeInsets.zero, // Remove internal padding
-                      labelPadding: EdgeInsets.only(
-                          right: 16, left: 16), // Adjust space between tabs
+                      // padding: EdgeInsets.zero, // Remove internal padding
+                      // labelPadding: EdgeInsets.only(  right: 16, left: 16), // Adjust space between tabs
                       tabs: tabTitles.map((title) => Tab(text: title)).toList(),
                     ),
 // Tab Views Divider(height: 1),
@@ -106,7 +102,7 @@ class _ExploreState extends State<ExploreScreen>
                         controller: _tabController,
                         children: [
                           Center(child: Text('Overview content')),
-                          Center(child: Text('Farm content')),
+                         FarmSetupScreen(),
                           Center(child: Text('Coop content')),
                           Center(child: Text('Flock content')),
                           Center(child: Text('Feed content')),
