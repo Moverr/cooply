@@ -1,45 +1,111 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ExploreScreen extends StatefulWidget{
+class ExploreScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ExploreState();
-
 }
 
-class _ExploreState extends State<ExploreScreen>{
+class _ExploreState extends State<ExploreScreen>
+    with SingleTickerProviderStateMixin {
 
-  final List<String> tabTitles = ['Overview', 'Farm', 'Coop','Flock','Feeds','Health']; // Dynamic list
+  late TabController _tabController;
+
+
+  final List<String> tabTitles = [
+    'Overview',
+    'Farm',
+    'Coop',
+    'Flock',
+    'Feeds',
+    'Health'
+  ]; // Dynamic list
+
+  int _initialTabIndex = 0;
+
+
+  Future<void> _loadTabIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    _initialTabIndex = prefs.getInt('exploreTabIndex') ?? 0;
+
+    _tabController = TabController(
+      length: tabTitles.length,
+      vsync: this,
+      initialIndex: _initialTabIndex,
+    );
+
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        prefs.setInt('exploreTabIndex', _tabController.index);
+      }
+    });
+
+    setState(() {}); // Trigger build after controller is ready
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+ _loadTabIndex();
+
+  }
+
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
 
   @override
   Widget build(BuildContext context) {
 
+
+    // Show loading while waiting for controller
+    if (!this.mounted || _tabController.length == 0) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
-
-      body:  DefaultTabController(
-          length: tabTitles.length,
-          child: Align(
-              alignment: Alignment.topLeft, // Aligns TabBar to the left
-child:
-              TabBar(
-                isScrollable: true,
-                labelColor: Colors.blue,
-                unselectedLabelColor: Colors.grey,
-                indicatorColor: Colors.blue,
-                padding: EdgeInsets.zero,          // Remove internal padding
-                labelPadding: EdgeInsets.only(right: 16,left: 16), // Adjust space between tabs
-                tabs: tabTitles.map((title) => Tab(text: title)).toList(),
-              ),
-
-
-          )
-      )
+        body: SafeArea(
+            // length: tabTitles.length,
+            // child: Align(
+            //     alignment: Alignment.topLeft, // Aligns TabBar to the left
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TabBar(
+                      controller: _tabController,
+                      isScrollable: true,
+                      labelColor: Colors.blue,
+                      unselectedLabelColor: Colors.grey,
+                      indicatorColor: Colors.blue,
+                      padding: EdgeInsets.zero, // Remove internal padding
+                      labelPadding: EdgeInsets.only(
+                          right: 16, left: 16), // Adjust space between tabs
+                      tabs: tabTitles.map((title) => Tab(text: title)).toList(),
+                    ),
+// Tab Views Divider(height: 1),
+                    Divider(height: 1),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          Center(child: Text('Overview content')),
+                          Center(child: Text('Farm content')),
+                          Center(child: Text('Coop content')),
+                          Center(child: Text('Flock content')),
+                          Center(child: Text('Feed content')),
+                          Center(child: Text('Health content')),
+                        ],
+                      ),
+                    ),
+                  ],
+                ))
     );
-
-
+    // ));
   }
-
 }
