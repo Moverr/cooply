@@ -39,6 +39,7 @@ dependencies:
   dio: ^5.8.0+1
   json_annotation: ^4.8.1
   font_awesome_flutter: ^10.8.0
+  skeletons: ^0.0.3
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,8 @@ flutter:
     - assets/farm.png
     - assets/reports.png
     - assets/logout.png
+    - assets/users.png
+    - assets/cooply_header.png
     - assets/users.png
 
 

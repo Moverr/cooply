@@ -1,15 +1,12 @@
 import 'dart:convert';
 
 import 'package:Cooply/models/dtos/LoginResponse.dart';
-import 'package:Cooply/services/AuthService.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/Farm.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/FarmService.dart';
 
 class FarmSetupScreen extends StatefulWidget {
@@ -107,7 +104,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       return null;
     }
   }
-
+  bool _isLoading = true;
   @override
   Widget build(BuildContext context) {
     _initializeData();
@@ -163,7 +160,8 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
                 scrollDirection: Axis.vertical,
                 // child: SingleChildScrollView(
                 //   scrollDirection: Axis.horizontal,
-                child: PaginatedDataTable(
+                child:
+                PaginatedDataTable(
                     // header: Text("Manage Farm Profiles"),
                     rowsPerPage: 2,
                     columnSpacing: 40,
@@ -315,10 +313,7 @@ class FarmDataSource extends DataTableSource {
       DataCell(Text(farm.name.toString())),
       DataCell(Text(farm.status.toString())),
       DataCell(Text(farm.modifiedOn.toString())),
-
       getActionCell(farm.id)
-
-
     ]);
   }
 
