@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:Cooply/models/dtos/LoginResponse.dart';
+import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/messages_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/profie_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/reports_screen.dart';
@@ -16,7 +16,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/di/service_locator.dart';
-import '../../models/MenuDto.dart';
+import '../../models/menuDto.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

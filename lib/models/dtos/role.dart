@@ -1,4 +1,4 @@
-import 'Permission.dart';
+import 'permission.dart';
 
 class Role{
   int id;

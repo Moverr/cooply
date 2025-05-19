@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/dtos/LoginResponse.dart';
+import '../models/dtos/loginResponse.dart';
 
 import '../utils/AppConstants.dart';
 import '../utils/log_service.dart';

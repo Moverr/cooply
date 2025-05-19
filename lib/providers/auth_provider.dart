@@ -1,8 +1,8 @@
 import 'package:Cooply/services/AuthService.dart';
 import 'package:flutter/foundation.dart';
 
-import '../models/dtos/LoginResponse.dart';
-import '../models/dtos/Role.dart';
+import '../models/dtos/loginResponse.dart';
+import '../models/dtos/role.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService;

@@ -2,8 +2,8 @@ import 'package:Cooply/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../models/dtos/Farm.dart';
-import '../models/dtos/LoginResponse.dart';
+import '../models/dtos/farm.dart';
+import '../models/dtos/loginResponse.dart';
 import '../utils/AppConstants.dart';
 
 class FarmService {

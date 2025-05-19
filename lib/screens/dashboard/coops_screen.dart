@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:Cooply/models/dtos/accountResponse.dart';
+import 'package:Cooply/models/dtos/coop.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:Cooply/widgets/farmListTyle.dart';
@@ -10,13 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/farm.dart';
 import '../../services/FarmService.dart';
+import '../../widgets/coopListTyle.dart';
 
-class FarmSetupScreen extends StatefulWidget {
+class CoopsScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _FarmSetupSate();
+  State<StatefulWidget> createState() => _CoopState();
 }
 
-class _FarmSetupSate extends State<FarmSetupScreen> {
+class _CoopState extends State<CoopsScreen> {
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
@@ -109,68 +111,74 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
 
   bool _isLoading = true;
 
-  final List<Farm> items = [
-    Farm(
+  final List<Coop> items = [
+    Coop(
       id: 1,
-      name: "Mwamba Farrm",
-      author: "Rogers",
+      name: "Gianna Coop",
+      farmName: "Mwamba Farm",
+      author: "Muyinda ROgers",
       status: "Active",
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(34000.toString()),
-      coops: double.parse(3.toString()),
+      createdOn: "12-10-2024",
+      modifiedOn: "12-10-2024",
+      currentBirdCount: double.parse(34000.toString()),
+      type: "Deep Litre",
+        capacity: 20000
     ),
-    Farm(
+    Coop(
       id: 1,
-      name: "Junju Farrm",
-      author: "Rogers",
+      name: "Gianna Coop",
+      farmName: "Mwamba Farm",
+      author: "Muyinda ROgers",
       status: "Active",
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(35400.toString()),
-      coops: double.parse(5.toString()),
+      createdOn: "12-10-2024",
+      modifiedOn: "12-10-2024",
+      currentBirdCount: 34000,
+      type: "Battery Cage",
+        capacity: 20000
     ),
-    Farm(
+    Coop(
       id: 1,
-      name: "Migori Farrm",
-      author: "Rogers",
-      status: "Active",
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(1200.toString()),
-      coops: double.parse(6.toString()),
+      name: "Gianna Coop",
+      farmName: "Mwamba Farm",
+      author: "Muyinda ROgers",
+      status: "InActive",
+      createdOn: "12-10-2024",
+      modifiedOn: "12-10-2024",
+      currentBirdCount: double.parse(34000.toString()),
+      type: "Free Range",
+      capacity: 20000
     ),
-    Farm(
+    Coop(
       id: 1,
-      name: "Zaiter Farrm",
-      author: "Rogers",
+      name: "Gianna Coop",
+      farmName: "Mwamba Farm",
+      author: "Muyinda ROgers",
       status: "Active",
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(34000.toString()),
-      coops: double.parse(5.toString()),
-    )
+      createdOn: "12-10-2024",
+      modifiedOn: "12-10-2024",
+      currentBirdCount:  34000,
+      type: "Slatted Floor",
+        capacity: 20000
+    ),
+
+
+    Coop(
+        id: 1,
+        name: "Gianna Coop",
+        farmName: "Mwamba Farm",
+        author: "Muyinda ROgers",
+        status: "Active",
+        createdOn: "12-10-2024",
+        modifiedOn: "12-10-2024",
+        currentBirdCount:  34000,
+        type: "Semi Intensive ",
+        capacity: 20000
+    ),
+
   ];
+
+  String selectedValue = 'Apple';
+  final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
 
   @override
   Widget build(BuildContext context) {
@@ -204,32 +212,67 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ExpansionTile(
-              title: Text(
-                "Farms",
-                style: TextStyle(
-                    fontSize: 20, fontFamily: AppConstants.fontFamily),
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      labelText: 'Search',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            title: Text(
+              "Coops",
+              style:
+                  TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: selectedValue,
+                      isExpanded: true,
+                      icon: const Icon(Icons.arrow_drop_down),
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedValue = value!;
+                        });
+                      },
+                      hint: const Text(
+                        "Select an option",
+                        style: TextStyle(color: Colors.grey),
                       ),
-                      prefixIcon: Icon(Icons.search),
+                      items: dropDownItems
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ),
-              ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    ),
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                ),
+              ),
+            ],
+          ),
           Expanded(
               child: ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) {
-              return farmListTyle(
-                farm: items[index],
+              return CoopListTyle(
+                coop: items[index],
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Tapped ${items[index]}')),

@@ -30,4 +30,7 @@ class AppConstants {
 
   static const String APP_TITLE = 'cooply';
 
+  static var tilePrimaryColor = 0XFFF9F7EE;
+
+
 }
