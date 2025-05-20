@@ -23,11 +23,11 @@ class CoopListTyle extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: Color(AppConstants.tilePrimaryColor),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: const [
               BoxShadow(
-                color: Colors.black12,
+                color: Color(0XFFCDB4B4),
                 blurRadius: 5,
                 offset: Offset(0, 3),
               ),
@@ -101,6 +101,16 @@ class CoopListTyle extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
+                        "Capacity : ${coop.capacity}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12,
+                            fontFamily: AppConstants.fontFamily),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
                         "Flock : ${coop.currentBirdCount}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
@@ -127,7 +137,7 @@ class CoopListTyle extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child:Text(
-                        "2024 Feb 18th",
+                        "${coop.status!.toUpperCase()}",
                         style: const TextStyle(fontSize: 10,fontWeight: FontWeight.normal),
                       ) ,
                     )

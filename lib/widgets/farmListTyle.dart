@@ -22,11 +22,11 @@ class farmListTyle extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: Color(AppConstants.tilePrimaryColor),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: const [
               BoxShadow(
-                color: Colors.black12,
+                color: Color(0XFFCDB4B4),
                 blurRadius: 5,
                 offset: Offset(0, 3),
               ),
