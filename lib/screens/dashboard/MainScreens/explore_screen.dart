@@ -1,5 +1,6 @@
 import 'package:Cooply/screens/dashboard/coops_screen.dart';
 import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
+import 'package:Cooply/screens/dashboard/flock_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,7 +95,7 @@ class _ExploreState extends State<ExploreScreen>
               Center(child: Text('Overview content')),
               FarmSetupScreen(),
               CoopsScreen(),
-              Center(child: Text('Flock content')),
+              FlockScreen(),
               Center(child: Text('Feed content')),
               Center(child: Text('Health content')),
             ],
