@@ -72,7 +72,7 @@ class farmListTyle extends StatelessWidget {
                         farm.name,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 20,
+                            fontSize: 13,
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),

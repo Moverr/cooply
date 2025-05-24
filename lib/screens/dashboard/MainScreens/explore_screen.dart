@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../feed_screen.dart';
+
 class ExploreScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ExploreState();
@@ -96,7 +98,7 @@ class _ExploreState extends State<ExploreScreen>
               FarmSetupScreen(),
               CoopsScreen(),
               FlockScreen(),
-              Center(child: Text('Feed content')),
+              FeedScreen(),
               Center(child: Text('Health content')),
             ],
           ),

@@ -14,7 +14,8 @@ class Flock {
   final String? modifiedOn;
   final double? currentBirdCount;
   final String? type;
-  final double? motality;
+  final double? mortality;
+  final double? stock;
   final String? stage;
 
   Flock(
@@ -28,8 +29,10 @@ class Flock {
         required this.currentBirdCount,
         required this.type,
         required this.acquiredOn,
-        required this.motality,
-        required this.stage
+        required this.mortality,
+        required this.stage,
+        required this.stock,
+
       });
 
   factory Flock.fromJson(Map<String, Object?> json) {
@@ -45,7 +48,8 @@ class Flock {
       currentBirdCount: 0 as double?,
       type: json['type'] as String?,
       stage: json['stage'] as String?,
-      motality: json['motality'] as double?,
+      mortality: json['motality'] as double?,
+      stock: json['stock'] as double?,
     );
   }
 }

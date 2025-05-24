@@ -72,17 +72,17 @@ class FlockListTyle extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        flock.batchName,
+                        "BN : ${flock.batchName}",
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 20,
+                            fontSize: 13,
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        flock.coopName!,
+                        "Acquired : ${flock.acquiredOn!}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
@@ -103,7 +103,7 @@ class FlockListTyle extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Capacity : ${flock.motality}",
+                        "Current Stock : ${flock.currentBirdCount}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
@@ -113,7 +113,17 @@ class FlockListTyle extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Flock : ${flock.currentBirdCount}",
+                        "Stock : ${flock.stock}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12,
+                            fontFamily: AppConstants.fontFamily),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Mortality : ${flock.mortality}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,

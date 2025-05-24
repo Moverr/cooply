@@ -15,12 +15,12 @@ import '../../models/dtos/farm.dart';
 import '../../services/FarmService.dart';
 import '../../widgets/coopListTyle.dart';
 
-class FlockScreen extends StatefulWidget {
+class FeedScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _FlockState();
+  State<StatefulWidget> createState() => _FeedState();
 }
 
-class _FlockState extends State<FlockScreen> {
+class _FeedState extends State<FeedScreen> {
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
@@ -211,7 +211,7 @@ class _FlockState extends State<FlockScreen> {
         children: [
           ExpansionTile(
             title: Text(
-              "Flock",
+              "Feeds",
               style:
                   TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
             ),

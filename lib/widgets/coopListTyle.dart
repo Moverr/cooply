@@ -73,7 +73,7 @@ class CoopListTyle extends StatelessWidget {
                         coop.name,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 20,
+                            fontSize: 13,
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
