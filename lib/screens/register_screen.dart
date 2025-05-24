@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../utils/AppConstants.dart';
-import '../widgets/LoadingDialog.dart';
+import '../widgets/loadingDialog.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});

@@ -4,9 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
-import '../widgets/FooterWidget.dart';
-import '../widgets/SimpleTextWidget.dart';
-import '../widgets/SplashImageWidget.dart';
+import '../widgets/footerWidget.dart';
+import '../widgets/simpleTextWidget.dart';
+import '../widgets/splashImageWidget.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends StatelessWidget {

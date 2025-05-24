@@ -33,19 +33,9 @@ class _FeedState extends State<FeedScreen> {
     super.initState();
     _farmDataSource = FarmDataSource(context);
     _farmDataSource.fetchPage(0);
-    /*
-    loadUser();
 
-    _farmDataSource = FarmDataSource(context,loginResponse);
-     _farmDataSource.fetchPage(0);
-     */
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //
-    // });
   }
 
-  // FarmDataSource initFarmDatasource = (context,loginResponse) => FarmDataSource(context, loginResponse) ;
 
   FarmDataSource Function(BuildContext, LoginResponse) initFarmDataSource =
       (context, loginResponse) => FarmDataSource(context);
@@ -53,10 +43,7 @@ class _FeedState extends State<FeedScreen> {
   // Separate async method for initialization
   Future<void> _initializeData() async {
     await loadUser(); // Wait for loginResponse to be ready
-/*
-    _farmDataSource = initFarmDataSource(context, getLoginResponse());
-    _farmDataSource.fetchPage(0);
-    */
+
   }
 
   @override

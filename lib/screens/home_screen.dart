@@ -2,8 +2,8 @@ import 'package:Cooply/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
-import '../widgets/FooterWidget.dart';
-import '../widgets/SimpleTextWidget.dart';
+import '../widgets/footerWidget.dart';
+import '../widgets/simpleTextWidget.dart';
 import 'login_screen.dart';
 
 // @movers

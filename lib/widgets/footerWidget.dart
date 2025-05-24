@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../utils/AppConstants.dart';
-import 'SimpleTextWidget.dart';
+import 'simpleTextWidget.dart';
 
 class FooterWidget extends StatelessWidget {
   @override
