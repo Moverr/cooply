@@ -12,8 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/farm.dart';
+import '../../models/dtos/feed_inventory.dart';
 import '../../services/FarmService.dart';
 import '../../widgets/coopListTyle.dart';
+import '../../widgets/feedListTyle.dart';
 
 class FeedScreen extends StatefulWidget {
   @override
@@ -33,9 +35,7 @@ class _FeedState extends State<FeedScreen> {
     super.initState();
     _farmDataSource = FarmDataSource(context);
     _farmDataSource.fetchPage(0);
-
   }
-
 
   FarmDataSource Function(BuildContext, LoginResponse) initFarmDataSource =
       (context, loginResponse) => FarmDataSource(context);
@@ -43,7 +43,6 @@ class _FeedState extends State<FeedScreen> {
   // Separate async method for initialization
   Future<void> _initializeData() async {
     await loadUser(); // Wait for loginResponse to be ready
-
   }
 
   @override
@@ -100,66 +99,28 @@ class _FeedState extends State<FeedScreen> {
 
   bool _isLoading = true;
 
-  final List<Flock> items = [
-    Flock(
+  final List<FeedInventory> items = [
+    FeedInventory(
         id: 1,
-        batchName: "1202202401",
-        coopName: "Gianna House",
-        author: "Muyinda ROgers",
-        status: "Active",
-        createdOn: "12-10-2024",
-        modifiedOn: "12-10-2024",
-        currentBirdCount: double.parse(34000.toString()),
-        type: "Deep Litre",
-        mortality: 120,
-        acquiredOn: "12-10-2024",
-        stage: "Pre Layer Stage", // Operation Stage,
-        stock: 123000),
+        batchId: "1202202401",
+        quantity: 12344,
+        availableQuantity: 12344,
+        transactionType: "ADDITION", //ADDITION,REDUCTION
+        farm: "Mwamba Farm",
+        flock: "BN:1234567", //?? which coop
 
-    Flock(
-        id: 1,
-        batchName: "1202202401",
-        coopName: "Gianna House",
         author: "Muyinda ROgers",
-        status: "Active",
+        registeredDate: "12-10-2024",
         createdOn: "12-10-2024",
         modifiedOn: "12-10-2024",
-        currentBirdCount: double.parse(34000.toString()),
-        type: "Deep Litre",
-        mortality: 120,
-        acquiredOn: "12-10-2024",
-        stage: "Pre Layer Stage", // Operation Stage,
-        stock: 123000),
-
-    Flock(
-        id: 1,
-        batchName: "1202202401",
-        coopName: "Gianna House",
-        author: "Muyinda ROgers",
-        status: "Active",
-        createdOn: "12-10-2024",
-        modifiedOn: "12-10-2024",
-        currentBirdCount: double.parse(34000.toString()),
-        type: "Deep Litre",
-        mortality: 120,
-        acquiredOn: "12-10-2024",
-        stage: "Pre Layer Stage", // Operation Stage,
-        stock: 123000),
-
-    Flock(
-        id: 1,
-        batchName: "1202202401",
-        coopName: "Gianna House",
-        author: "Muyinda ROgers",
-        status: "Active",
-        createdOn: "12-10-2024",
-        modifiedOn: "12-10-2024",
-        currentBirdCount: double.parse(34000.toString()),
-        type: "Deep Litre",
-        mortality: 120,
-        acquiredOn: "12-10-2024",
-        stage: "Pre Layer Stage", // Operation Stage,
-        stock: 123000),
+        items: [
+          FeedInventoryLog(
+              id: 1,
+              itemName: "Maize",
+              quantity: 1000, //consumed or added
+              availableQuantity: 1100,
+              transactionType: "ADDITION")
+        ]),
   ];
 
   String selectedValue = 'Apple';
@@ -290,7 +251,7 @@ class _FeedState extends State<FeedScreen> {
               child: ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) {
-              return FlockListTyle(
+              return FeedListTyle(
                 flock: items[index],
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(

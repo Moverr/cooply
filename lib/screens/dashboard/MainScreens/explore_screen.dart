@@ -72,6 +72,7 @@ class _ExploreState extends State<ExploreScreen>
 
     return Scaffold(
         body: SafeArea(
+
             // length: tabTitles.length,
             // child: Align(
             //     alignment: Alignment.topLeft, // Aligns TabBar to the left

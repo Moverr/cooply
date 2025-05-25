@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 200,
                   color:
-                      Color(0xFFFFFFFF), //todo: will investigate color father
+                      Colors.white, //todo: will investigate color father
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
                       Colors.white.withAlpha(128), // Adjust opacity (0.0 to 1.0)
