@@ -119,7 +119,7 @@ class farmListTyle extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: IconButton(onPressed: (){
 
-                      }, icon: Icon( FontAwesomeIcons.penToSquare)
+                      }, icon: Icon( FontAwesomeIcons.penToSquare,size: 15,)
                       ),
                     ),
                     Container(

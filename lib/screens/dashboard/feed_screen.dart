@@ -121,6 +121,27 @@ class _FeedState extends State<FeedScreen> {
               availableQuantity: 1100,
               transactionType: "ADDITION")
         ]),
+    FeedInventory(
+        id: 1,
+        batchId: "1202202401",
+        quantity: 12344,
+        availableQuantity: 12344,
+        transactionType: "ADDITION", //ADDITION,REDUCTION
+        farm: "Mwamba Farm",
+        flock: "BN:1234567", //?? which coop
+
+        author: "Muyinda ROgers",
+        registeredDate: "12-10-2024",
+        createdOn: "12-10-2024",
+        modifiedOn: "12-10-2024",
+        items: [
+          FeedInventoryLog(
+              id: 1,
+              itemName: "Maize",
+              quantity: 1000, //consumed or added
+              availableQuantity: 1100,
+              transactionType: "ADDITION")
+        ]),
   ];
 
   String selectedValue = 'Apple';
@@ -252,7 +273,7 @@ class _FeedState extends State<FeedScreen> {
             itemCount: items.length,
             itemBuilder: (context, index) {
               return FeedListTyle(
-                flock: items[index],
+                feed: items[index],
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Tapped ${items[index]}')),
