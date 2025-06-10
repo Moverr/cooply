@@ -102,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
       label: 'Explore',
     ),
     BottomNavigationBarItem(
-      icon: FaIcon(FontAwesomeIcons.fileLines),
+      icon: FaIcon(FontAwesomeIcons.chartLine),
       label: 'Reports',
     ),
 

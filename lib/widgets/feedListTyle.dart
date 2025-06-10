@@ -201,6 +201,7 @@ class FeedListTyle extends StatelessWidget {
                         scrollDirection: Axis.vertical,
                         //todo: Make datatable sortable
                         child:    DataTable(
+
                           columns: const [
                             DataColumn(label: Text("Item")),
                             DataColumn(label: Text("Quantity")),
@@ -208,13 +209,17 @@ class FeedListTyle extends StatelessWidget {
                             DataColumn(label: Text("Total")),
                             // DataColumn(label: Text("Date")),
                           ],
+
                           rows: transactions.map((tx) {
-                            return DataRow(cells: [
+
+                            return DataRow(
+
+                                cells: [
                               DataCell(Text(tx['item'])),
                               DataCell(Text(tx['quantity'].toString())),
                               DataCell(Text(tx['transactionType'])),
                               DataCell(Text(tx['available_quantity'].toString())),
-                              // DataCell(Text(tx['timestamp'])),
+
 
                             ]);
                           }).toList(),

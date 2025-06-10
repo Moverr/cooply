@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../feed_screen.dart';
+import '../health_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -100,7 +101,7 @@ class _ExploreState extends State<ExploreScreen>
               CoopsScreen(),
               FlockScreen(),
               FeedScreen(),
-              Center(child: Text('Health content')),
+              HealthScreen(),
             ],
           ),
         ),

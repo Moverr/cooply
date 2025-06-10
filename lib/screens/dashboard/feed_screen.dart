@@ -152,29 +152,7 @@ class _FeedState extends State<FeedScreen> {
     _initializeData();
 
     return Scaffold(
-      // appBar: AppBar(
-      // title: Text(
-      //   "Farm Management",
-      //   style: TextStyle(
-      //       fontFamily: AppConstants.fontFamily,
-      //       fontSize: 15,
-      //       fontWeight: FontWeight.bold),
-      // ),
-      // actions: [
-      //   IconButton(
-      //     icon: Icon(Icons.search),
-      //     onPressed: () {
-      //       // Handle search action
-      //     },
-      //   ),
-      //   IconButton(
-      //     icon: Icon(Icons.settings),
-      //     onPressed: () {
-      //       // Handle settings action
-      //     },
-      //   ),
-      // ],
-      // ),
+
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -280,48 +258,11 @@ class _FeedState extends State<FeedScreen> {
                   );
                 },
               );
-              // return ListTile(
-              //   title: Text('Item ${index + 1}'),
-              // );
+
             },
           )),
 
-          /*    const SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                // child: SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                child: PaginatedDataTable(
-                    // header: Text("Manage Farm Profiles"),
-                    rowsPerPage: 2,
-                    columnSpacing: 40,
-                    headingRowColor:
-                        WidgetStateProperty.all(Colors.blueGrey.shade700),
-                    columns: [
-                      // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Name',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Status',
-                              style: TextStyle(color: Colors.white))),
-                      // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Date Created',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Action',
-                              style: TextStyle(color: Colors.white))),
-                    ],
-                    source: _farmDataSource
-                    //FarmDataSource(filteredData: _filteredData),
-                    )
 
-                // ),
-                ),
-          ),
-          */
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -332,47 +273,7 @@ class _FeedState extends State<FeedScreen> {
         label: Text("Add"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      /* bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // View action
-                },
-                icon: Icon(Icons.visibility),
-                label: Text("View"),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Edit action
-                },
-                icon: Icon(Icons.edit),
-                label: Text("Edit"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Delete action
-                },
-                icon: Icon(Icons.delete),
-                label: Text("Delete"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              ),
-            ),
-          ],
-        ),
-      ),
-      */
+
     );
   }
 }
