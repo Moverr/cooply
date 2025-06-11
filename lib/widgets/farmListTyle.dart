@@ -110,7 +110,7 @@ class farmListTyle extends StatelessWidget {
                 ),
               ),
               Container(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: Column(
                   children: [
                     Container(
@@ -123,7 +123,7 @@ class farmListTyle extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      alignment: Alignment.centerLeft,
+                      alignment: Alignment.topRight,
                       child:Text(
                         "2024 Feb 18th",
                         style: const TextStyle(fontSize: 10,fontWeight: FontWeight.normal),

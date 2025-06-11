@@ -1,27 +1,24 @@
-
 import 'dart:convert';
 
+import 'package:Cooply/cards/schedule_card.dart';
+import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/dtos/Farm.dart';
 import '../../../models/dtos/feed_inventory.dart';
 import '../../../models/dtos/loginResponse.dart';
+import '../../../models/dtos/schedule.dart';
 import '../../../services/FarmService.dart';
-import '../../../utils/AppConstants.dart';
-import '../../../widgets/feedListTyle.dart';
 
-
-
-class ScheduleScreen extends StatefulWidget{
+class ScheduleScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ScheduleState();
-
 }
 
-class _ScheduleState extends State<ScheduleScreen>{
-
+class _ScheduleState extends State<ScheduleScreen> {
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
@@ -146,125 +143,94 @@ class _ScheduleState extends State<ScheduleScreen>{
   String selectedValue = 'Apple';
   final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
 
+  List<Schedule> schedules = [
+    Schedule(
+        id: 1
+        ,scheduleDate:DateTime.now().add(Duration(days: -1))
+        ,farm: "Samba Farm"
+        ,coop: "Bilungo"
+        ,type: "Farm Visit"
+        ,from: DateTime.now().add(Duration(days: -1))
+        ,to:DateTime.now().add(Duration(days: 2))
+        ,priority: "low"
+        ,assignedTo: "Muyinda Rogers"
+        ,status: TaskStatus.pending
+    ),
+
+    Schedule(
+        id: 1
+        ,scheduleDate:  DateTime.now().add(Duration(days: -3))
+        ,farm: "Zamba Farm"
+        ,coop: "0001BNXY"
+        ,type: "Vaccination"
+        ,from: DateTime.now().add(Duration(days: -3))
+        ,to:DateTime.now().add(Duration(days: -1))
+        ,priority: "high"
+        ,assignedTo: "Muyinda Rogers"
+        ,status: TaskStatus.missed
+    ),
+
+    Schedule(
+        id: 1
+        ,scheduleDate: DateTime.now()
+        ,farm: "Mwamba Farm"
+        ,coop: "Ginanna"
+        ,type: "Vaccination"
+        ,from: DateTime.now()
+        ,to:DateTime.now()
+        ,priority: "high"
+        ,assignedTo: "Muyinda Rogers"
+        ,status: TaskStatus.rescheduled
+    ),
+
+    Schedule(
+        id: 1
+        ,scheduleDate: DateTime.now()
+        ,farm: "Mwamba Farm"
+        ,coop: "Ginanna"
+        ,type: "Vaccination"
+        ,from: DateTime.now()
+        ,to:DateTime.now()
+        ,priority: "high"
+        ,assignedTo: "Muyinda Rogers"
+        ,status: TaskStatus.finished
+    ),
+
+    Schedule(
+        id: 1
+        ,scheduleDate: DateTime.now()
+        ,farm: "Mwamba Farm"
+        ,coop: "Ginanna"
+        ,type: "Vaccination"
+        ,from: DateTime.now()
+        ,to:DateTime.now()
+        ,priority: "high"
+        ,assignedTo: "Muyinda Rogers"
+        ,status: TaskStatus.skipped
+    ),
+
+
+
+
+
+  ];
 
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-
-      body: Column(
+      appBar: AppBar(
+        title: Container(
+          // padding: EdgeInsets.all(10),
+          width: double.infinity,
+          // color: Colors.green.shade300,
+          child: Text("Schedule") ,
+        ),
+       
+      ),
+      body: ListView(
         // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExpansionTile(
-            title: Text(
-              "Feeds",
-              style:
-              TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
-            ),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedValue,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedValue = value!;
-                        });
-                      },
-                      hint: const Text(
-                        "Select an option",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      items: dropDownItems
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedValue,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedValue = value!;
-                        });
-                      },
-                      hint: const Text(
-                        "Select an option",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      items: dropDownItems
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    labelText: 'Search',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return FeedListTyle(
-                    feed: items[index],
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Tapped ${items[index]}')),
-                      );
-                    },
-                  );
-
-                },
-              )),
-
-
-        ],
+        children: schedules.map((item) => ScheduleCard(item)).toList(),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -274,9 +240,9 @@ class _ScheduleState extends State<ScheduleScreen>{
         label: Text("Add"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-
     );
   }
+
 
 }
 
@@ -440,4 +406,3 @@ class FarmDataSource extends DataTableSource {
 
   List<Map<String, String>> getData() => _data;
 }
-
