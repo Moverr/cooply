@@ -225,7 +225,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
         ),
         Padding(
           //Bottom Item
-          padding:   EdgeInsets.all(Util.scaleWidthFromDesign(context,1.0)),
+          padding:   EdgeInsets.all( 1.0),
           child: SingleChildScrollView(
               child: SingleChildScrollView(
                   child: Theme(
@@ -237,7 +237,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
 
                   color: Colors.black,
                   fontWeight: FontWeight.w200,
-                  fontSize: Util.scaleWidthFromDesign(context,12),
+                  fontSize: Util.scaleWidthFromDesign(context,7),
                   fontFamily: AppConstants.fontFamily,
                   letterSpacing:Util.scaleWidthFromDesign(context,1)
 
@@ -263,7 +263,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
 
               source: MyDataSource(data),
               rowsPerPage: 5,
-              columnSpacing: Util.scaleWidthFromDesign(context,5),
+              columnSpacing: Util.scaleWidthFromDesign(context,2),
                 showCheckboxColumn:true,
             ),
           ))
