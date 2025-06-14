@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../cards/health_overview_card.dart';
 import '../../../models/dtos/feed_inventory.dart';
+import '../../../utils/util.dart';
 
 class OverviewHealthScreen extends StatefulWidget {
   @override
@@ -184,7 +185,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
   ];
 
   final List<String> tableHeaders = [
-    "FLOCK","SICK","MORTALITY","LAST VACCINATION","NEXT VACCINATION"
+    "FLOCK","SICK","MORTALITY","LAST VAC","NEXT VAC"
   ];
 
   final List<Map<String, dynamic>> data = List.generate(50, (index) {
@@ -205,15 +206,15 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
         body: ListView(
       children: [
         Container(
-          padding: const EdgeInsets.only(left: 15.0, top: 10),
+          padding:   EdgeInsets.only(left: Util.scaleWidthFromDesign(context,15.0), top: Util.scaleWidthFromDesign(context,10)),
           alignment: Alignment.centerLeft,
           child: Text("  May 15th   - May 20th"),
         ),
         Padding(
           //top View
-          padding: const EdgeInsets.all(16.0),
+          padding:   EdgeInsets.all(Util.scaleWidthFromDesign(context,16.0)),
           child: SizedBox(
-            height: 210, // height of each horizontal item
+            height: Util.scaleWidthFromDesign(context,210), // height of each horizontal item
             child: ListView(scrollDirection: Axis.horizontal, children: [
               HealthOverviewCard("Mortality", "120", 0XFFCF6B57, "2%"),
               HealthOverviewCard("Sick", "15", 0XFFEBC774, "10%"),
@@ -224,7 +225,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
         ),
         Padding(
           //Bottom Item
-          padding: const EdgeInsets.all(16.0),
+          padding:   EdgeInsets.all(Util.scaleWidthFromDesign(context,1.0)),
           child: SingleChildScrollView(
               child: SingleChildScrollView(
                   child: Theme(
@@ -232,13 +233,13 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
               cardColor: Colors.white,
               dataTableTheme: DataTableThemeData(
                 headingRowColor: WidgetStateProperty.all(Color(0XFFF9F7EE)),
-                headingTextStyle: const TextStyle(
+                headingTextStyle:   TextStyle(
 
                   color: Colors.black,
                   fontWeight: FontWeight.w200,
-                  fontSize: 15,
+                  fontSize: Util.scaleWidthFromDesign(context,12),
                   fontFamily: AppConstants.fontFamily,
-                  letterSpacing:3
+                  letterSpacing:Util.scaleWidthFromDesign(context,1)
 
 
                 ),
@@ -247,9 +248,9 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
                     return Colors.white;
                   },
                 ),
-                dataTextStyle: const TextStyle(
+                dataTextStyle:   TextStyle(
                   color: Colors.black,
-                  fontSize: 14,
+                  fontSize: Util.scaleWidthFromDesign(context,8),
                 ),
               ),
             ),
@@ -262,7 +263,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
 
               source: MyDataSource(data),
               rowsPerPage: 5,
-              columnSpacing: 30,
+              columnSpacing: Util.scaleWidthFromDesign(context,5),
                 showCheckboxColumn:true,
             ),
           ))

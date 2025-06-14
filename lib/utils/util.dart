@@ -1,10 +1,18 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../models/dtos/schedule.dart';
 
 class Util{
+
+
+  /// Scales a design pixel value (e.g., 13) based on a 360px-wide design
+  static double scaleWidthFromDesign(BuildContext context, double designPixels) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return (screenWidth / 360) * designPixels;
+  }
 
 
  static  Map<TaskStatus, int> mappedColors = {
@@ -60,7 +68,7 @@ class Util{
    final sameYear = from.year == to.year;
 
    final timeFormat = DateFormat.jm(); // "11:00 AM"
-   final dateFormat = DateFormat('MMM d'); // "Jan 11"
+   final dateFormat = DateFormat('d'); // "Jan 11"
    final monthFormat = DateFormat('MMM'); // "Jan"
    final yearFormat = DateFormat('y'); // "2024"
 
@@ -73,11 +81,11 @@ class Util{
      return '${dateFormat.format(from)}, $fromTime - '
          '${dateFormat.format(to)}, $toTime';
    } else if (sameYear && from.month != to.month) {
-     return '${monthFormat.format(from)} - ${monthFormat.format(to)}, '
-         '$fromTime - $toTime';
+     return '${monthFormat.format(from)} - ${monthFormat.format(to)}, ';
+         // '$fromTime - $toTime';
    } else {
-     return '${yearFormat.format(from)} - ${yearFormat.format(to)}, '
-         '$fromTime - $toTime';
+     return '${yearFormat.format(from)} - ${yearFormat.format(to)} ';
+         // '$fromTime - $toTime';
    }
  }
 

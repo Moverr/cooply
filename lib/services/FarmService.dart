@@ -40,7 +40,7 @@ class FarmService {
   }) async {
 
 
-    print('URL  : ${AppConstants.LOCAL_BASE_URL}v1/farm');
+    print('URL  : ${AppConstants.BASE_URL}v1/farm');
 
     // print('Inside  : ${authProvider.refreshToken}');
 
