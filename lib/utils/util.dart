@@ -7,6 +7,19 @@ import '../models/dtos/schedule.dart';
 
 class Util{
 
+  static double scaleFont(BuildContext context, double baseFontSize) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    const double baseWidth = 360.0;
+
+    // Linear scale based on screen width
+    final double scale = screenWidth / baseWidth;
+
+    // Dampens the scale so fonts don’t grow too fast
+    final double dampenedScale = 1 + (scale - 1) * 0.5;
+
+    // Clamp to keep font sizes in a sensible range
+    return (baseFontSize * dampenedScale).clamp(12.0, 24.0);
+  }
 
   /// Scales a design pixel value (e.g., 13) based on a 360px-wide design
   static double scaleWidthFromDesign(BuildContext context, double designPixels) {

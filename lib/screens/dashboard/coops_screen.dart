@@ -4,7 +4,9 @@ import 'package:Cooply/models/dtos/accountResponse.dart';
 import 'package:Cooply/models/dtos/coop.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
+import 'package:Cooply/utils/util.dart';
 import 'package:Cooply/widgets/farmListTyle.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -185,86 +187,97 @@ class _CoopState extends State<CoopsScreen> {
     _initializeData();
 
     return Scaffold(
-      // appBar: AppBar(
-      // title: Text(
-      //   "Farm Management",
-      //   style: TextStyle(
-      //       fontFamily: AppConstants.fontFamily,
-      //       fontSize: 15,
-      //       fontWeight: FontWeight.bold),
-      // ),
-      // actions: [
-      //   IconButton(
-      //     icon: Icon(Icons.search),
-      //     onPressed: () {
-      //       // Handle search action
-      //     },
-      //   ),
-      //   IconButton(
-      //     icon: Icon(Icons.settings),
-      //     onPressed: () {
-      //       // Handle settings action
-      //     },
-      //   ),
-      // ],
-      // ),
-      body: Column(
+
+      body:
+          Container(
+            color: Colors.white,
+
+          child:
+      Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+
           ExpansionTile(
             title: Text(
-              "Coops",
+              "coops",
               style:
-                  TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
+                  TextStyle(fontSize:Util.scaleWidthFromDesign(context,20) , fontFamily: AppConstants.fontFamily),
             ),
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedValue,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedValue = value!;
-                        });
-                      },
-                      hint: const Text(
-                        "Select an option",
-                        style: TextStyle(color: Colors.grey),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownSearch<String>(
+                    items: dropDownItems,
+                    popupProps: PopupProps.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          // hintText: "Search farm...",
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                       ),
-                      items: dropDownItems
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                      fit: FlexFit.loose,
+                      constraints: BoxConstraints(maxHeight: 300),
                     ),
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Select Farm",
+                        // hintText: "Choose a farm",
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    onChanged: (value) => print("You selected $value"),
                   ),
                 ),
               ),
+
+
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:
+                EdgeInsets.all(Util.scaleWidthFromDesign(context, 8.0)),
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
                     labelText: 'Search',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    labelStyle: TextStyle(
+                      fontSize: Util.scaleFont(context, 16),
+                      color: Colors.grey[700],
                     ),
-                    prefixIcon: Icon(Icons.search),
+                    hintText: 'Type to search...',
+                    hintStyle: TextStyle(
+                      fontSize: Util.scaleFont(context, 14),
+                      color: Colors.grey[500],
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: Util.scaleWidthFromDesign(context, 14),
+                      horizontal: Util.scaleWidthFromDesign(context, 16),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      // borderSide: BorderSide.none,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey[600],
+                      size: Util.scaleWidthFromDesign(context, 12),
+                    ),
                   ),
                 ),
               ),
+
+
             ],
           ),
           Expanded(
@@ -285,44 +298,10 @@ class _CoopState extends State<CoopsScreen> {
             },
           )),
 
-          /*    const SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                // child: SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                child: PaginatedDataTable(
-                    // header: Text("Manage Farm Profiles"),
-                    rowsPerPage: 2,
-                    columnSpacing: 40,
-                    headingRowColor:
-                        WidgetStateProperty.all(Colors.blueGrey.shade700),
-                    columns: [
-                      // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Name',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Status',
-                              style: TextStyle(color: Colors.white))),
-                      // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Date Created',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Action',
-                              style: TextStyle(color: Colors.white))),
-                    ],
-                    source: _farmDataSource
-                    //FarmDataSource(filteredData: _filteredData),
-                    )
 
-                // ),
-                ),
-          ),
-          */
         ],
       ),
+          ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Your action here

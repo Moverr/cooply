@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 import '../models/dtos/flock.dart';
+import '../utils/util.dart';
 
 
 
@@ -109,13 +110,12 @@ class FeedListTyle extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: const [
+              boxShadow:   [
               BoxShadow(
-                color: Color(0XFFCDB4B4),
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              ),
-            ],
+              color: Color(0XFFCDB4B4),
+        blurRadius:  Util.scaleWidthFromDesign(context,1),
+        offset: Offset( Util.scaleWidthFromDesign(context,0),  Util.scaleWidthFromDesign(context,3)),
+      ),],
           ),
           alignment: Alignment.topLeft,
           child: Row(

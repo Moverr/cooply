@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../utils/util.dart';
+
 class CoopListTyle extends StatelessWidget {
   final Coop coop;
   final VoidCallback? onTap;
@@ -19,17 +21,17 @@ class CoopListTyle extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          height: 125,
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          height: Util.scaleWidthFromDesign(context,125),
+          margin:   EdgeInsets.symmetric(vertical:Util.scaleWidthFromDesign(context,8) , horizontal: 16),
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: const [
+            boxShadow:   [
               BoxShadow(
                 color: Color(0XFFCDB4B4),
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius:  Util.scaleWidthFromDesign(context,1),
+                offset: Offset( Util.scaleWidthFromDesign(context,0),  Util.scaleWidthFromDesign(context,3)),
               ),
             ],
           ),
@@ -44,8 +46,8 @@ class CoopListTyle extends StatelessWidget {
                   boxShadow: null,
                 ),
                 // color: Colors.yellow,
-                width: 120,
-                height: 125,
+                width: Util.scaleWidthFromDesign(context,120),
+                height:Util.scaleWidthFromDesign(context, 125),
                 child: Center(
                   child: getRandomImage()
                   /*  Text(
@@ -56,13 +58,13 @@ class CoopListTyle extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 2,
-                height: 130, // You can adjust height as needed
+                width: Util.scaleWidthFromDesign(context,2),
+                height: Util.scaleWidthFromDesign(context,130), // You can adjust height as needed
                 color: Colors.white, // Add your desired color
               ),
               Container(
-                height: 125,
-                width: 200,
+                height: Util.scaleWidthFromDesign(context,125),
+                width: Util.scaleWidthFromDesign(context,150),
                 padding: const EdgeInsets.all(5),
                 alignment: Alignment.topLeft,
                 child: Column(
@@ -73,7 +75,7 @@ class CoopListTyle extends StatelessWidget {
                         coop.name,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 13,
+                            fontSize: Util.scaleWidthFromDesign(context,13),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -83,7 +85,7 @@ class CoopListTyle extends StatelessWidget {
                         coop.farmName!,
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize: Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -94,7 +96,7 @@ class CoopListTyle extends StatelessWidget {
                         "Type : ${coop.type}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize: Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -104,7 +106,7 @@ class CoopListTyle extends StatelessWidget {
                         "Capacity : ${coop.capacity}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize: Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -114,7 +116,7 @@ class CoopListTyle extends StatelessWidget {
                         "Flock : ${coop.currentBirdCount}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize: Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     )
@@ -126,19 +128,19 @@ class CoopListTyle extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 80,
+                      height: Util.scaleWidthFromDesign(context,80),
                       // color: Colors.blue,
                       alignment: Alignment.topRight,
                       child: IconButton(onPressed: (){
 
-                      }, icon: Icon( FontAwesomeIcons.penToSquare,size: 15,)
+                      }, icon: Icon( FontAwesomeIcons.penToSquare,size: Util.scaleWidthFromDesign(context,12),)
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
                       child:Text(
                         "${coop.status!.toUpperCase()}",
-                        style: const TextStyle(fontSize: 10,fontWeight: FontWeight.normal),
+                        style:   TextStyle(fontSize: Util.scaleWidthFromDesign(context,9),fontWeight: FontWeight.normal),
                       ) ,
                     )
                   ],

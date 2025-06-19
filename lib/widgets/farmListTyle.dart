@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../utils/util.dart';
+
 class farmListTyle extends StatelessWidget {
   final Farm farm;
   final VoidCallback? onTap;
@@ -18,17 +20,17 @@ class farmListTyle extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          height: 125,
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          padding: const EdgeInsets.all(5),
+          height:  Util.scaleWidthFromDesign(context,125),
+          margin:   EdgeInsets.symmetric(vertical:  Util.scaleWidthFromDesign(context,8), horizontal:  Util.scaleWidthFromDesign(context,16)),
+          padding:   EdgeInsets.all( Util.scaleWidthFromDesign(context,5)),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: const [
+            borderRadius: BorderRadius.circular( Util.scaleWidthFromDesign(context,12)),
+            boxShadow:   [
               BoxShadow(
                 color: Color(0XFFCDB4B4),
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius:  Util.scaleWidthFromDesign(context,5),
+                offset: Offset( Util.scaleWidthFromDesign(context,0),  Util.scaleWidthFromDesign(context,3)),
               ),
             ],
           ),
@@ -39,12 +41,12 @@ class farmListTyle extends StatelessWidget {
                 //image Container
                 decoration: BoxDecoration(
                   // color: Color(0XFFF9F7EE),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular( Util.scaleWidthFromDesign(context,12)),
                   boxShadow: null,
                 ),
                 // color: Colors.yellow,
-                width: 120,
-                height: 125,
+                width:  Util.scaleWidthFromDesign(context,120),
+                height:  Util.scaleWidthFromDesign(context,125),
                 child: Center(
                   child: getRandomImage()
                   /*  Text(
@@ -55,14 +57,14 @@ class farmListTyle extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 2,
-                height: 130, // You can adjust height as needed
+                width:  Util.scaleWidthFromDesign(context,2),
+                height:  Util.scaleWidthFromDesign(context,130), // You can adjust height as needed
                 color: Colors.white, // Add your desired color
               ),
               Container(
-                height: 125,
-                width: 200,
-                padding: const EdgeInsets.all(5),
+                height:  Util.scaleWidthFromDesign(context,125),
+                width:  Util.scaleWidthFromDesign(context,200),
+                padding:   EdgeInsets.all( Util.scaleWidthFromDesign(context,5)),
                 alignment: Alignment.topLeft,
                 child: Column(
                   children: [
@@ -72,7 +74,7 @@ class farmListTyle extends StatelessWidget {
                         farm.name,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 13,
+                            fontSize:  Util.scaleWidthFromDesign(context,13),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -82,7 +84,7 @@ class farmListTyle extends StatelessWidget {
                         "Location : Jinja,Uganda",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize:  Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -92,7 +94,7 @@ class farmListTyle extends StatelessWidget {
                         "Coops : ${farm.coops}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize:  Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     ),
@@ -102,7 +104,7 @@ class farmListTyle extends StatelessWidget {
                         "Ftock : ${farm.flock}",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize:  Util.scaleWidthFromDesign(context,12),
                             fontFamily: AppConstants.fontFamily),
                       ),
                     )
@@ -114,19 +116,19 @@ class farmListTyle extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: 80,
+                      height:  Util.scaleWidthFromDesign(context,80),
                       // color: Colors.blue,
                       alignment: Alignment.topRight,
                       child: IconButton(onPressed: (){
 
-                      }, icon: Icon( FontAwesomeIcons.penToSquare,size: 15,)
+                      }, icon: Icon( FontAwesomeIcons.penToSquare,size:  Util.scaleWidthFromDesign(context,15),)
                       ),
                     ),
                     Container(
                       alignment: Alignment.topRight,
                       child:Text(
                         "2024 Feb 18th",
-                        style: const TextStyle(fontSize: 10,fontWeight: FontWeight.normal),
+                        style:   TextStyle(fontSize:  Util.scaleWidthFromDesign(context,10),fontWeight: FontWeight.normal),
                       ) ,
                     )
                   ],

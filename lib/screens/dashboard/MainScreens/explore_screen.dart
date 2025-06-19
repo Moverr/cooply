@@ -19,7 +19,7 @@ class _ExploreState extends State<ExploreScreen>
 
   final List<String> tabTitles = [
     'Home',
-    'Farm',
+    // 'Farm', // removed this from the main screen
     'Coop',
     'Flock',
     'Feeds',
@@ -86,6 +86,9 @@ class _ExploreState extends State<ExploreScreen>
           labelColor: Colors.blue,
           unselectedLabelColor: Colors.grey,
           indicatorColor: Colors.blue,
+          unselectedLabelStyle: TextStyle(
+            fontSize: 14,
+          ),
           // padding: EdgeInsets.zero, // Remove internal padding
           // labelPadding: EdgeInsets.only(  right: 16, left: 16), // Adjust space between tabs
           tabs: tabTitles.map((title) => Tab(text: title)).toList(),
@@ -97,7 +100,7 @@ class _ExploreState extends State<ExploreScreen>
             controller: _tabController,
             children: [
               Center(child: Text('Overview content')),
-              FarmSetupScreen(),
+              // FarmSetupScreen(),
               CoopsScreen(),
               FlockScreen(),
               FeedScreen(),
