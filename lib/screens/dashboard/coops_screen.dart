@@ -115,55 +115,16 @@ class _CoopState extends State<CoopsScreen> {
 
   final List<Coop> items = [
     Coop(
-      id: 1,
-      name: "Gianna Coop",
-      farmName: "Mwamba Farm",
-      author: "Muyinda ROgers",
-      status: "Active",
-      createdOn: "12-10-2024",
-      modifiedOn: "12-10-2024",
-      currentBirdCount: double.parse(34000.toString()),
-      type: "Deep Litre",
-        capacity: 20000
-    ),
-    Coop(
-      id: 1,
-      name: "Gianna Coop",
-      farmName: "Mwamba Farm",
-      author: "Muyinda ROgers",
-      status: "Active",
-      createdOn: "12-10-2024",
-      modifiedOn: "12-10-2024",
-      currentBirdCount: 34000,
-      type: "Battery Cage",
-        capacity: 20000
-    ),
-    Coop(
-      id: 1,
-      name: "Gianna Coop",
-      farmName: "Mwamba Farm",
-      author: "Muyinda ROgers",
-      status: "InActive",
-      createdOn: "12-10-2024",
-      modifiedOn: "12-10-2024",
-      currentBirdCount: double.parse(34000.toString()),
-      type: "Free Range",
-      capacity: 20000
-    ),
-    Coop(
-      id: 1,
-      name: "Gianna Coop",
-      farmName: "Mwamba Farm",
-      author: "Muyinda ROgers",
-      status: "Active",
-      createdOn: "12-10-2024",
-      modifiedOn: "12-10-2024",
-      currentBirdCount:  34000,
-      type: "Slatted Floor",
-        capacity: 20000
-    ),
-
-
+        id: 1,
+        name: "Gianna Coop",
+        farmName: "Mwamba Farm",
+        author: "Muyinda ROgers",
+        status: "Active",
+        createdOn: "12-10-2024",
+        modifiedOn: "12-10-2024",
+        currentBirdCount: double.parse(34000.toString()),
+        type: "Deep Litre",
+        capacity: 20000),
     Coop(
         id: 1,
         name: "Gianna Coop",
@@ -172,11 +133,42 @@ class _CoopState extends State<CoopsScreen> {
         status: "Active",
         createdOn: "12-10-2024",
         modifiedOn: "12-10-2024",
-        currentBirdCount:  34000,
+        currentBirdCount: 34000,
+        type: "Battery Cage",
+        capacity: 20000),
+    Coop(
+        id: 1,
+        name: "Gianna Coop",
+        farmName: "Mwamba Farm",
+        author: "Muyinda ROgers",
+        status: "InActive",
+        createdOn: "12-10-2024",
+        modifiedOn: "12-10-2024",
+        currentBirdCount: double.parse(34000.toString()),
+        type: "Free Range",
+        capacity: 20000),
+    Coop(
+        id: 1,
+        name: "Gianna Coop",
+        farmName: "Mwamba Farm",
+        author: "Muyinda ROgers",
+        status: "Active",
+        createdOn: "12-10-2024",
+        modifiedOn: "12-10-2024",
+        currentBirdCount: 34000,
+        type: "Slatted Floor",
+        capacity: 20000),
+    Coop(
+        id: 1,
+        name: "Gianna Coop",
+        farmName: "Mwamba Farm",
+        author: "Muyinda ROgers",
+        status: "Active",
+        createdOn: "12-10-2024",
+        modifiedOn: "12-10-2024",
+        currentBirdCount: 34000,
         type: "Semi Intensive ",
-        capacity: 20000
-    ),
-
+        capacity: 20000),
   ];
 
   String selectedValue = 'Apple';
@@ -187,121 +179,115 @@ class _CoopState extends State<CoopsScreen> {
     _initializeData();
 
     return Scaffold(
-
-      body:
-          Container(
-            color: Colors.white,
-
-          child:
-      Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-
-          ExpansionTile(
-            title: Text(
-              "coops",
-              style:
-                  TextStyle(fontSize:Util.scaleWidthFromDesign(context,20) , fontFamily: AppConstants.fontFamily),
-            ),
+      body: Container(
+        color: Colors.white,
+        child: Container(
+          color: Colors.white,
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownSearch<String>(
-                    items: dropDownItems,
-                    popupProps: PopupProps.menu(
-                      showSearchBox: true,
-                      searchFieldProps: TextFieldProps(
-                        decoration: InputDecoration(
-                          // hintText: "Search farm...",
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+              ExpansionTile(
+                title: Text(
+                  " 🏠coops",
+                  style: TextStyle(
+                      fontSize:  20,
+                      fontFamily: AppConstants.fontFamily),
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownSearch<String>(
+                        items: dropDownItems,
+                        popupProps: PopupProps.menu(
+                          showSearchBox: true,
+                          searchFieldProps: TextFieldProps(
+                            decoration: InputDecoration(
+                              // hintText: "Search farm...",
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                          fit: FlexFit.loose,
+                          constraints: BoxConstraints(maxHeight: 300),
+                        ),
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: "Select Farm",
+                            // hintText: "Choose a farm",
+                            filled: true,
+                            fillColor: Colors.grey.shade100,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
+                        onChanged: (value) => print("You selected $value"),
                       ),
-                      fit: FlexFit.loose,
-                      constraints: BoxConstraints(maxHeight: 300),
                     ),
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: "Select Farm",
-                        // hintText: "Choose a farm",
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.all(Util.scaleWidthFromDesign(context, 8.0)),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        labelText: 'Search',
+                        labelStyle: TextStyle(
+                          fontSize: Util.scaleFont(context, 16),
+                          color: Colors.grey[700],
+                        ),
+                        hintText: 'Type to search...',
+                        hintStyle: TextStyle(
+                          fontSize: Util.scaleFont(context, 14),
+                          color: Colors.grey[500],
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: Util.scaleWidthFromDesign(context, 14),
+                          horizontal: Util.scaleWidthFromDesign(context, 16),
+                        ),
                         filled: true,
-                        fillColor: Colors.grey.shade100,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        fillColor: Colors.grey[100],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
+                          // borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.grey[600],
+                          size: Util.scaleWidthFromDesign(context, 12),
                         ),
                       ),
                     ),
-                    onChanged: (value) => print("You selected $value"),
                   ),
-                ),
+                ],
               ),
-
-
-              Padding(
-                padding:
-                EdgeInsets.all(Util.scaleWidthFromDesign(context, 8.0)),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    labelText: 'Search',
-                    labelStyle: TextStyle(
-                      fontSize: Util.scaleFont(context, 16),
-                      color: Colors.grey[700],
-                    ),
-                    hintText: 'Type to search...',
-                    hintStyle: TextStyle(
-                      fontSize: Util.scaleFont(context, 14),
-                      color: Colors.grey[500],
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: Util.scaleWidthFromDesign(context, 14),
-                      horizontal: Util.scaleWidthFromDesign(context, 16),
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      // borderSide: BorderSide.none,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey[600],
-                      size: Util.scaleWidthFromDesign(context, 12),
-                    ),
-                  ),
-                ),
-              ),
-
-
+              Expanded(
+                  child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return CoopListTyle(
+                    coop: items[index],
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Tapped ${items[index]}')),
+                      );
+                    },
+                  );
+                  // return ListTile(
+                  //   title: Text('Item ${index + 1}'),
+                  // );
+                },
+              )),
             ],
           ),
-          Expanded(
-              child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return CoopListTyle(
-                coop: items[index],
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Tapped ${items[index]}')),
-                  );
-                },
-              );
-              // return ListTile(
-              //   title: Text('Item ${index + 1}'),
-              // );
-            },
-          )),
-
-
-        ],
+        ),
       ),
-          ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Your action here

@@ -49,11 +49,9 @@ class CoopListTyle extends StatelessWidget {
                 width: Util.scaleWidthFromDesign(context,120),
                 height:Util.scaleWidthFromDesign(context, 125),
                 child: Center(
-                  child: getRandomImage()
-                  /*  Text(
-                  "WINK",
-                  style: const TextStyle(fontSize: 18),
-                ) */
+                  child: Text("🏡",style:TextStyle(fontSize: Util.scaleWidthFromDesign(context, 70)))
+                  //getRandomImage()
+                  /**/
                   ,
                 ),
               ),

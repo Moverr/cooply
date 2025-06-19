@@ -206,12 +206,16 @@ class _FlockState extends State<FlockScreen> {
       //   ),
       // ],
       // ),
-      body: Column(
+      body: Container(
+        color: Colors.white,
+        child:
+
+      Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ExpansionTile(
             title: Text(
-              "Flock",
+              "  🐓flock",
               style:
                   TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
             ),
@@ -299,6 +303,8 @@ class _FlockState extends State<FlockScreen> {
               ),
             ],
           ),
+
+
           Expanded(
               child: ListView.builder(
             itemCount: items.length,
@@ -354,6 +360,7 @@ class _FlockState extends State<FlockScreen> {
           ),
           */
         ],
+      ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
