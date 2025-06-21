@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/farm.dart';
 import '../../services/FarmService.dart';
+import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
 
 class FlockScreen extends StatefulWidget {
@@ -27,6 +28,11 @@ class _FlockState extends State<FlockScreen> {
 
   late FarmDataSource _farmDataSource;
   final FarmService _farmService = FarmService();
+
+  final GlobalKey expansionTileKey = GlobalKey();
+  bool _isExpanded = false;
+
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -128,7 +134,6 @@ class _FlockState extends State<FlockScreen> {
         acquiredOn: "12-10-2024",
         stage: "Pre Layer Stage", // Operation Stage,
         stock: 123000),
-
     Flock(
         id: 1,
         batchName: "1202202401",
@@ -143,7 +148,6 @@ class _FlockState extends State<FlockScreen> {
         acquiredOn: "12-10-2024",
         stage: "Pre Layer Stage", // Operation Stage,
         stock: 123000),
-
     Flock(
         id: 1,
         batchName: "1202202401",
@@ -158,7 +162,6 @@ class _FlockState extends State<FlockScreen> {
         acquiredOn: "12-10-2024",
         stage: "Pre Layer Stage", // Operation Stage,
         stock: 123000),
-
     Flock(
         id: 1,
         batchName: "1202202401",
@@ -183,147 +186,163 @@ class _FlockState extends State<FlockScreen> {
     _initializeData();
 
     return Scaffold(
-      // appBar: AppBar(
-      // title: Text(
-      //   "Farm Management",
-      //   style: TextStyle(
-      //       fontFamily: AppConstants.fontFamily,
-      //       fontSize: 15,
-      //       fontWeight: FontWeight.bold),
-      // ),
-      // actions: [
-      //   IconButton(
-      //     icon: Icon(Icons.search),
-      //     onPressed: () {
-      //       // Handle search action
-      //     },
-      //   ),
-      //   IconButton(
-      //     icon: Icon(Icons.settings),
-      //     onPressed: () {
-      //       // Handle settings action
-      //     },
-      //   ),
-      // ],
-      // ),
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Search flock...',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.black38),
+
+                  // border: OutlineInputBorder(
+                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  //   ),
+                  prefixIcon: Icon(Icons.search),
+                ),
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontFamily: AppConstants.fontFamily,
+                  fontSize: 16,
+                ),
+                onChanged: (query) {
+                  // You can filter your list here
+                  print("Searching for: $query");
+                },
+              )
+            : Text(
+                "🐓 Flock Management",
+                style: TextStyle(
+                  fontFamily: AppConstants.fontFamily,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                if (_isSearching) {
+                  _searchController.clear();
+                  // Optionally reset list or results
+                }
+                _isSearching = !_isSearching;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
+            onPressed: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
+          ),
+        ],
+      ),
       body: Container(
         color: Colors.white,
-        child:
-
-      Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExpansionTile(
-            title: Text(
-              "  🐓flock",
-              style:
-                  TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _CustomExpansionTile(
+              expanded: _isExpanded,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade400),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: selectedValue,
+                          isExpanded: true,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.black),
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedValue = value!;
+                            });
+                          },
+                          hint: const Text(
+                            "Select an option",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          items: dropDownItems
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade400),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: selectedValue,
+                          isExpanded: true,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.black),
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedValue = value!;
+                            });
+                          },
+                          hint: const Text(
+                            "Select an option",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          items: dropDownItems
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedValue,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedValue = value!;
-                        });
-                      },
-                      hint: const Text(
-                        "Select an option",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      items: dropDownItems
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedValue,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedValue = value!;
-                        });
-                      },
-                      hint: const Text(
-                        "Select an option",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      items: dropDownItems
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    labelText: 'Search',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            Expanded(
+                child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return FlockListTyle(
+                  flock: items[index],
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Tapped ${items[index]}')),
+                    );
+                  },
+                );
+                // return ListTile(
+                //   title: Text('Item ${index + 1}'),
+                // );
+              },
+            )),
 
-
-          Expanded(
-              child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return FlockListTyle(
-                flock: items[index],
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Tapped ${items[index]}')),
-                  );
-                },
-              );
-              // return ListTile(
-              //   title: Text('Item ${index + 1}'),
-              // );
-            },
-          )),
-
-          /*    const SizedBox(height: 20),
+            /*    const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -359,8 +378,8 @@ class _FlockState extends State<FlockScreen> {
                 ),
           ),
           */
-        ],
-      ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -574,4 +593,46 @@ class FarmDataSource extends DataTableSource {
   int get selectedRowCount => 0;
 
   List<Map<String, String>> getData() => _data;
+}
+
+class _CustomExpansionTile extends StatelessWidget {
+  final Widget child;
+  final bool expanded;
+
+  const _CustomExpansionTile({
+    super.key,
+    required this.child,
+    required this.expanded,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AnimatedRotation(
+                turns: expanded ? 0.5 : 0,
+                duration: Duration(milliseconds: 200),
+                child: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+            ],
+          ),
+        ),
+        AnimatedCrossFade(
+          firstChild: SizedBox.shrink(),
+          secondChild: child,
+          duration: Duration(milliseconds: 300),
+          crossFadeState:
+              expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        ),
+      ],
+    );
+  }
 }
