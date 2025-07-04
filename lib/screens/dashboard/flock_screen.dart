@@ -7,6 +7,7 @@ import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:Cooply/widgets/farmListTyle.dart';
 import 'package:Cooply/widgets/flockListTyle.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,7 @@ import '../../models/dtos/farm.dart';
 import '../../services/FarmService.dart';
 import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
+import '../../widgets/custom_expansion_tile.dart';
 
 class FlockScreen extends StatefulWidget {
   @override
@@ -247,80 +249,88 @@ class _FlockState extends State<FlockScreen> {
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _CustomExpansionTile(
+            CustomExpansionTile(
               expanded: _isExpanded,
               child: Column(
                 children: [
+
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade400),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedValue,
-                          isExpanded: true,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.black),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedValue = value!;
-                            });
-                          },
-                          hint: const Text(
-                            "Select an option",
-                            style: TextStyle(color: Colors.grey),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownSearch<String>(
+                        items: dropDownItems,
+                        popupProps: PopupProps.menu(
+                          showSearchBox: true,
+                          searchFieldProps: TextFieldProps(
+                            decoration: InputDecoration(
+                              // hintText: "Search farm...",
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                           ),
-                          items: dropDownItems
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          fit: FlexFit.loose,
+                          constraints: BoxConstraints(maxHeight: 300),
                         ),
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: "Select Farm",
+                            // hintText: "Choose a farm",
+                            filled: true,
+                            fillColor: Colors.grey.shade100,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) => print("You selected $value"),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade400),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedValue,
-                          isExpanded: true,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.black),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedValue = value!;
-                            });
-                          },
-                          hint: const Text(
-                            "Select an option",
-                            style: TextStyle(color: Colors.grey),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownSearch<String>(
+                        items: dropDownItems,
+                        popupProps: PopupProps.menu(
+                          showSearchBox: true,
+                          searchFieldProps: TextFieldProps(
+                            decoration: InputDecoration(
+                              // hintText: "Search farm...",
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                           ),
-                          items: dropDownItems
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          fit: FlexFit.loose,
+                          constraints: BoxConstraints(maxHeight: 300),
                         ),
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: "Select Coop",
+                            // hintText: "Choose a farm",
+                            filled: true,
+                            fillColor: Colors.grey.shade100,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 16),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) => print("You selected $value"),
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),
@@ -595,44 +605,3 @@ class FarmDataSource extends DataTableSource {
   List<Map<String, String>> getData() => _data;
 }
 
-class _CustomExpansionTile extends StatelessWidget {
-  final Widget child;
-  final bool expanded;
-
-  const _CustomExpansionTile({
-    super.key,
-    required this.child,
-    required this.expanded,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AnimatedRotation(
-                turns: expanded ? 0.5 : 0,
-                duration: Duration(milliseconds: 200),
-                child: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-            ],
-          ),
-        ),
-        AnimatedCrossFade(
-          firstChild: SizedBox.shrink(),
-          secondChild: child,
-          duration: Duration(milliseconds: 300),
-          crossFadeState:
-              expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-        ),
-      ],
-    );
-  }
-}

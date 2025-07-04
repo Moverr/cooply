@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/dtos/farm.dart';
 import '../../services/FarmService.dart';
 import '../../widgets/coopListTyle.dart';
+import '../../widgets/custom_expansion_tile.dart';
 
 class CoopsScreen extends StatefulWidget {
   @override
@@ -27,6 +28,12 @@ class _CoopState extends State<CoopsScreen> {
 
   late FarmDataSource _farmDataSource;
   final FarmService _farmService = FarmService();
+
+  bool _isExpanded = false;
+
+  bool _isSearching = false;
+
+
 
   @override
   void initState() {
@@ -179,94 +186,116 @@ class _CoopState extends State<CoopsScreen> {
     _initializeData();
 
     return Scaffold(
+      appBar:  AppBar(
+        title: _isSearching
+            ? TextField(
+          controller: _searchController,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'Search coops...',
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.black38),
+
+            // border: OutlineInputBorder(
+            //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            //   ),
+            prefixIcon: Icon(Icons.search),
+          ),
+          style: TextStyle(
+            color: Colors.black38,
+            fontFamily: AppConstants.fontFamily,
+            fontSize: 16,
+          ),
+          onChanged: (query) {
+            // You can filter your list here
+            print("Searching for: $query");
+          },
+        )
+            : Text(
+          " 🏠 Coop Management",
+          style: TextStyle(
+            fontFamily: AppConstants.fontFamily,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                if (_isSearching) {
+                  _searchController.clear();
+                  // Optionally reset list or results
+                }
+                _isSearching = !_isSearching;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
+            onPressed: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
+          ),
+        ],
+      ),
       body: Container(
         color: Colors.white,
-        child: Container(
-          color: Colors.white,
-          child: Column(
+        child: Column(
             children: [
-              ExpansionTile(
-                title: Text(
-                  " 🏠coops",
-                  style: TextStyle(
-                      fontSize:  20,
-                      fontFamily: AppConstants.fontFamily),
-                ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownSearch<String>(
-                        items: dropDownItems,
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
-                              // hintText: "Search farm...",
+
+              CustomExpansionTile(
+                expanded: _isExpanded,
+                child: Column(
+                  children: [
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownSearch<String>(
+                          items: dropDownItems,
+                          popupProps: PopupProps.menu(
+                            showSearchBox: true,
+                            searchFieldProps: TextFieldProps(
+                              decoration: InputDecoration(
+                                // hintText: "Search farm...",
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                            fit: FlexFit.loose,
+                            constraints: BoxConstraints(maxHeight: 300),
+                          ),
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              labelText: "Select Farm",
+                              // hintText: "Choose a farm",
+                              filled: true,
+                              fillColor: Colors.grey.shade100,
                               contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
+                                  horizontal: 12, vertical: 16),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                           ),
-                          fit: FlexFit.loose,
-                          constraints: BoxConstraints(maxHeight: 300),
-                        ),
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            labelText: "Select Farm",
-                            // hintText: "Choose a farm",
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 16),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) => print("You selected $value"),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.all(Util.scaleWidthFromDesign(context, 8.0)),
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        labelText: 'Search',
-                        labelStyle: TextStyle(
-                          fontSize: Util.scaleFont(context, 16),
-                          color: Colors.grey[700],
-                        ),
-                        hintText: 'Type to search...',
-                        hintStyle: TextStyle(
-                          fontSize: Util.scaleFont(context, 14),
-                          color: Colors.grey[500],
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: Util.scaleWidthFromDesign(context, 14),
-                          horizontal: Util.scaleWidthFromDesign(context, 16),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          // borderSide: BorderSide.none,
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.grey[600],
-                          size: Util.scaleWidthFromDesign(context, 12),
+                          onChanged: (value) => print("You selected $value"),
                         ),
                       ),
                     ),
-                  ),
-                ],
+
+                  ],
+                ),
               ),
+
+
               Expanded(
                   child: ListView.builder(
                 itemCount: items.length,
@@ -286,7 +315,7 @@ class _CoopState extends State<CoopsScreen> {
               )),
             ],
           ),
-        ),
+
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
