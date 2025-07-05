@@ -75,7 +75,7 @@ class FlockListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize:  Util.scaleWidthFromDesign(context,11),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -85,7 +85,7 @@ class FlockListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,11),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
 
@@ -96,7 +96,7 @@ class FlockListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,11),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -106,7 +106,7 @@ class FlockListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,11),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -116,7 +116,7 @@ class FlockListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,11),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -126,7 +126,7 @@ class FlockListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,11),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     )
                   ],

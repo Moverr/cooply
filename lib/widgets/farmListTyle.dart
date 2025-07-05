@@ -75,7 +75,7 @@ class farmListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize:  Util.scaleWidthFromDesign(context,13),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -85,7 +85,7 @@ class farmListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,12),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -95,7 +95,7 @@ class farmListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,12),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -105,7 +105,7 @@ class farmListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize:  Util.scaleWidthFromDesign(context,12),
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     )
                   ],

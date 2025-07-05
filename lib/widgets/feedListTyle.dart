@@ -140,7 +140,7 @@ class FeedListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
                     Container(
@@ -151,7 +151,7 @@ class FeedListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
 
@@ -163,7 +163,7 @@ class FeedListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
 
@@ -175,7 +175,7 @@ class FeedListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
 
@@ -187,7 +187,7 @@ class FeedListTyle extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 12,
-                            fontFamily: AppConstants.fontFamily),
+                            fontFamily: AppConstants.defaultFont),
                       ),
                     ),
 

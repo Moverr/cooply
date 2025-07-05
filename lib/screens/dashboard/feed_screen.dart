@@ -160,7 +160,7 @@ class _FeedState extends State<FeedScreen> {
             title: Text(
               "Feeds",
               style:
-                  TextStyle(fontSize: 20, fontFamily: AppConstants.fontFamily),
+                  TextStyle(fontSize: 20, fontFamily: AppConstants.defaultFont),
             ),
             children: [
               Padding(

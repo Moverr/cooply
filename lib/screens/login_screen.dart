@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           'Login',
                           style: TextStyle(
-                              fontFamily: AppConstants.fontFamily,
+                              fontFamily: AppConstants.defaultFont,
                               fontSize: 20,
                               fontWeight: FontWeight.w300),
                         ),

@@ -205,7 +205,7 @@ class _FlockState extends State<FlockScreen> {
                 ),
                 style: TextStyle(
                   color: Colors.black38,
-                  fontFamily: AppConstants.fontFamily,
+                  fontFamily: AppConstants.defaultFont,
                   fontSize: 16,
                 ),
                 onChanged: (query) {
@@ -216,7 +216,7 @@ class _FlockState extends State<FlockScreen> {
             : Text(
                 "🐓 Flock Management",
                 style: TextStyle(
-                  fontFamily: AppConstants.fontFamily,
+                  fontFamily: AppConstants.defaultFont,
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),

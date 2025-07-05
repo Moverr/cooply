@@ -6,24 +6,29 @@ import 'package:flutter/cupertino.dart';
 class Coop {
   final int id;
   final String name;
+  final String reference;
   final String author;
   final String? status;
   final String? farmName;
   final String? createdOn;
   final String? modifiedOn;
-  final double? currentBirdCount;
+  final double? currentFlock;
+  final double? acquiredFlock;
   final String? type;
   final double? capacity;
 
   Coop(
-      {required this.id,
+      {
+      required this.id,
       required this.name,
+      required this.reference,
       required this.author,
       required this.status,
       required this.farmName,
       required this.createdOn,
       required this.modifiedOn,
-      required this.currentBirdCount,
+      required this.currentFlock,
+        required this.acquiredFlock,
       required this.type,
         required this.capacity
       });
@@ -32,13 +37,18 @@ class Coop {
     return Coop(
       id: json['id'] as int,
       name: json['name'] as String,
+      reference: json['reference'] as String,
       author: json['author'] as String,
       status: json['status'] as String?,
       farmName: json['farm_name'] as String?,
       createdOn: json['created_on'] as String?,
       modifiedOn: json['modified_on'] as String?,
-      currentBirdCount: 0 as double?,
+
       type: json['type'] as String?,
+
+      //flock inventory
+      currentFlock:  json['current_flock'] as double?,
+      acquiredFlock:  json['acquired_flock'] as double?,
       capacity: json['capacity'] as double?,
     );
   }

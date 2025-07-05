@@ -20,7 +20,7 @@ class LoadingDialog{
             RefreshProgressIndicator(),
             // LinearProgressIndicator(),
             SizedBox(width: 16,),// width and height
-            Text(information,style: TextStyle(fontFamily:AppConstants.fontFamily,fontSize: 12,
+            Text(information,style: TextStyle(fontFamily:AppConstants.defaultFont,fontSize: 12,
               fontWeight:FontWeight.w500,
 
             ) ,)

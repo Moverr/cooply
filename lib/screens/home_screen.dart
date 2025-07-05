@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                     Tab(
                       child: SimpleTextWidget(
                         title: AppConstants.LOGIN,
-                        fontFamily: AppConstants.fontFamily,
+                        fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.w400,
                         fontSize: 16, // Adjust font size for better readability
                         // color: Color(0xFF000000), // Text color
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                     Tab(
                       child: SimpleTextWidget(
                         title: AppConstants.SIGNUP_LOGIN,
-                        fontFamily: AppConstants.fontFamily,
+                        fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
                         // color: Color(0xFF000000),

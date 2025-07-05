@@ -36,7 +36,7 @@ class ScheduleCard extends StatelessWidget{
                 Container(
                   padding: EdgeInsets.only( left:  Util.scaleWidthFromDesign(context,10),top:  Util.scaleWidthFromDesign(context,10),right:  Util.scaleWidthFromDesign(context,10)),
                   alignment: Alignment.center,
-                  child: Text(Util.getDayWithSuffix(schedule.scheduleDate),style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,20),fontWeight: FontWeight.normal,color: Color(Util.getStatusColor(schedule.status)) ),
+                  child: Text(Util.getDayWithSuffix(schedule.scheduleDate),style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,20),fontWeight: FontWeight.normal,color: Color(Util.getStatusColor(schedule.status)) ),
                   ),
                 ),
                 Container(
@@ -48,7 +48,7 @@ class ScheduleCard extends StatelessWidget{
                     border: Border.all(color: Color(Util.getStatusColor(schedule.status)) ),  // Optional border
                   ),
                   alignment: Alignment.center,
-                  child: Text(Util.getMonthYearFormatted(schedule.scheduleDate),style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize: 10,fontWeight: FontWeight.normal,color: Colors.white),),
+                  child: Text(Util.getMonthYearFormatted(schedule.scheduleDate),style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize: 10,fontWeight: FontWeight.normal,color: Colors.white),),
                 )
 
               ],
@@ -66,8 +66,8 @@ class ScheduleCard extends StatelessWidget{
                     alignment: Alignment.topLeft,
                     child:  Row(
                       children: [
-                        Text("🏡 : ",style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
-                        Text(schedule.farm,style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
+                        Text("🏡 : ",style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
+                        Text(schedule.farm,style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
 
                       ],
                     )
@@ -77,8 +77,8 @@ class ScheduleCard extends StatelessWidget{
                     alignment: Alignment.topLeft,
                     child:  Row(
                       children: [
-                        Text("🏠 : ",style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
-                        Text(schedule.coop,style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
+                        Text("🏠 : ",style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
+                        Text(schedule.coop,style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
 
                       ],
                     )
@@ -88,8 +88,8 @@ class ScheduleCard extends StatelessWidget{
                     alignment: Alignment.topLeft,
                     child:  Row(
                       children: [
-                        Text("📋 : ",style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
-                        Text(schedule.type,style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
+                        Text("📋 : ",style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
+                        Text(schedule.type,style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
 
                       ],
                     )
@@ -100,11 +100,11 @@ class ScheduleCard extends StatelessWidget{
                     alignment: Alignment.topLeft,
                     child:  Row(
                       children: [
-                        Text("⏰ : ",style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),
+                        Text("⏰ : ",style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),
                           overflow: TextOverflow.ellipsis, // or TextOverflow.fade
                           maxLines: 1,
                         ),
-                        Text(Util.formatSmartRange(schedule.from,schedule.to),style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38), overflow: TextOverflow.ellipsis, // or TextOverflow.fade
+                        Text(Util.formatSmartRange(schedule.from,schedule.to),style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38), overflow: TextOverflow.ellipsis, // or TextOverflow.fade
                           maxLines: 1,),
 
                       ],
@@ -115,8 +115,8 @@ class ScheduleCard extends StatelessWidget{
                     alignment: Alignment.topLeft,
                     child:  Row(
                       children: [
-                        Text("⚠️ : ",style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
-                        Text(schedule.priority,style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
+                        Text("⚠️ : ",style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
+                        Text(schedule.priority,style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
 
                       ],
                     )
@@ -127,8 +127,8 @@ class ScheduleCard extends StatelessWidget{
                     alignment: Alignment.topLeft,
                     child:  Row(
                       children: [
-                        Text("👤 : ",style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
-                        Text(schedule.assignedTo,style: TextStyle(fontFamily: AppConstants.fontFamily,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
+                        Text("👤 : ",style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.bold,color: Colors.black),),
+                        Text(schedule.assignedTo,style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize:  Util.scaleWidthFromDesign(context,13),fontWeight: FontWeight.normal,color: Colors.black38),),
 
                       ],
                     )

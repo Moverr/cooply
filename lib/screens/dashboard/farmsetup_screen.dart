@@ -207,7 +207,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
               title: Text(
                 "Farms",
                 style: TextStyle(
-                    fontSize: 20, fontFamily: AppConstants.fontFamily),
+                    fontSize: 20, fontFamily: AppConstants.defaultFont),
               ),
               children: [
                 Padding(

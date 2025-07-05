@@ -6,6 +6,36 @@ import 'package:intl/intl.dart';
 import '../models/dtos/schedule.dart';
 
 class Util{
+ static  String  findPercentage(double? a, double? b)=>
+       (a == null || b == null) ? "0":
+       ((a/b) * 100).toStringAsFixed(1);
+
+
+static  String formatCount(double ? number) {
+    if (number == null) return '0';
+    if (number < 1000) return number.toString();
+
+    final units = [
+      {'value': 1e12, 'suffix': 'T'},
+      {'value': 1e9,  'suffix': 'B'},
+      {'value': 1e6,  'suffix': 'M'},
+      {'value': 1e3,  'suffix': 'K'},
+    ];
+
+    for (var unit in units) {
+      final unitValue = unit['value'] as num;
+      final suffix = unit['suffix'] as String;
+
+      if (number >= unitValue) {
+        double result = number / unitValue;
+        return result
+            .toStringAsFixed(result < 10 ? 1 : 0)
+            .replaceAll(RegExp(r'\.0$'), '') + suffix;
+      }
+    }
+
+    return number.toString();
+  }
 
   static double scaleFont(BuildContext context, double baseFontSize) {
     final double screenWidth = MediaQuery.of(context).size.width;

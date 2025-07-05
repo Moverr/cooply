@@ -238,7 +238,7 @@ class _OverviewHealthState extends State<OverviewHealthScreen> {
                   color: Colors.black,
                   fontWeight: FontWeight.w200,
                   fontSize: Util.scaleWidthFromDesign(context,7),
-                  fontFamily: AppConstants.fontFamily,
+                  fontFamily: AppConstants.defaultFont,
                   letterSpacing:Util.scaleWidthFromDesign(context,1)
 
 

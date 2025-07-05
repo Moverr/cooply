@@ -74,7 +74,7 @@ class HealthOverviewCard extends StatelessWidget {
                         title,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontFamily: AppConstants.fontFamily,
+                            fontFamily: AppConstants.defaultFont,
                             color: Colors.white,
                             fontSize: Util.scaleWidthFromDesign(context,20)),
                         softWrap: true, // Allows wrapping
@@ -93,7 +93,7 @@ class HealthOverviewCard extends StatelessWidget {
                         count.toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontFamily: AppConstants.fontFamily,
+                            fontFamily: AppConstants.defaultFont,
                             color: Colors.white,
                             fontSize:Util.scaleWidthFromDesign(context,25)  ),
                         softWrap: true, // Allows wrapping
@@ -113,7 +113,7 @@ class HealthOverviewCard extends StatelessWidget {
                        percentage,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontFamily: AppConstants.fontFamily,
+                            fontFamily: AppConstants.defaultFont,
                             color: Colors.white,
                             fontSize: Util.scaleWidthFromDesign(context,15)),
                         softWrap: true, // Allows wrapping

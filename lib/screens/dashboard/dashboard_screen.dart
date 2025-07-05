@@ -319,8 +319,8 @@ class _DashboardState extends State<Dashboard> {
           selectedItemColor:  Color(0xFF3AAD8F),
           unselectedItemColor:  Color(0xFF000000),
           onTap: (index) => setState(() => _currentIndex = index),
-          selectedLabelStyle: TextStyle(fontSize: 10,fontFamily: AppConstants.fontFamily, fontWeight: FontWeight.normal),
-          unselectedLabelStyle: TextStyle(fontSize: 10, fontFamily: AppConstants.fontFamily, fontWeight: FontWeight.normal),
+          selectedLabelStyle: TextStyle(fontSize: 10,fontFamily: AppConstants.defaultFont, fontWeight: FontWeight.normal),
+          unselectedLabelStyle: TextStyle(fontSize: 10, fontFamily: AppConstants.defaultFont, fontWeight: FontWeight.normal),
           items: bottomMainMenu,
  
         ),

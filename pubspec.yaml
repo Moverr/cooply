@@ -65,6 +65,11 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
+    - assets/svg/place.svg
+    - assets/icon/total_stock.png
+    - assets/icon/capacity_per.png
+    - assets/icon/blocks.png
+    - assets/icon/layer_block.png
     - assets/splash_image.png
     - assets/icon/icon.png
     - assets/home_screen_image.png
