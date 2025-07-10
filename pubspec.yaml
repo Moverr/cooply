@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  http: ^1.3.0  # or latest version
+  http: ^1.4.0
   shared_preferences: ^2.5.2
   get_it: ^8.0.3
   provider: ^6.1.4
@@ -48,6 +48,10 @@ dependencies:
   flutter_screenutil: ^5.9.0  # or latest
   dropdown_search: ^5.0.6
   flutter_svg: ^2.0.7
+  url_launcher: ^6.1.7
+  flutter_map: ^6.2.1
+  latlong2: ^0.9.1
+
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +74,8 @@ flutter:
     - assets/icon/capacity_per.png
     - assets/icon/blocks.png
     - assets/icon/layer_block.png
+    - assets/icon/syringe.png
+    - assets/icon/map-pin.png
     - assets/splash_image.png
     - assets/icon/icon.png
     - assets/home_screen_image.png

@@ -26,11 +26,12 @@ class FlockListTyle extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular( Util.scaleWidthFromDesign(context,12)),
+
             boxShadow:   [
               BoxShadow(
                 color: Color(0XFFCDB4B4),
-                blurRadius:  Util.scaleWidthFromDesign(context,1),
-                offset: Offset( Util.scaleWidthFromDesign(context,0),  Util.scaleWidthFromDesign(context,3)),
+                // blurRadius:  Util.scaleWidthFromDesign(context,1),
+                offset: Offset( Util.scaleWidthFromDesign(context,0),  Util.scaleWidthFromDesign(context,0.5)),
               ),
             ],
           ),
