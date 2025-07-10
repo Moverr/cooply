@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Cooply/cards/map_card.dart';
 import 'package:Cooply/models/dtos/coop.dart';
 import 'package:Cooply/models/dtos/farm.dart';
 import 'package:Cooply/utils/AppConstants.dart';
@@ -515,72 +516,9 @@ class _CoopListTyleState extends State<CoopListTyle>{
 
 
                 ),
-                Expanded(child:
-
-                Row(
-                  children: [
-
-                    // if(_showMap)...[
-                    Expanded(
-
-
-
-                      child:
-
-                      ClipRRect(
-                        // borderRadius: BorderRadius.circular(12),
-                        child: SizedBox(
-                          height: Util.scaleWidthFromDesign(context,100) ,
-                          child: FlutterMap(
-                            options: MapOptions(
-                              initialCenter: _location,
-                              initialZoom: 14.0,
-                                interactionOptions:InteractionOptions(
-                                  flags: InteractiveFlag.flingAnimation,
-
-                                ),
-
-                            ),
-                            children: [
-                              //  urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-                              //  urlTemplate: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-                              //  urlTemplate: 'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-                              // urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              TileLayer(
-                                urlTemplate:
-                                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                subdomains: ['a', 'b', 'c'],
-                                userAgentPackageName: 'com.khoodilabs.cooply',
-                              ),
-                              MarkerLayer(
-                                markers: [
-                                  Marker(
-                                    // width: 80.0,
-                                    height: Util.scaleWidthFromDesign(context,20.0) ,
-                                    point: _location,
-                                    child: Icon(
-                                      Icons.location_pin,
-                                      color: Colors.red.shade200,
-                                      size: Util.scaleWidthFromDesign(context,30),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),),
-                    ),
-
-                    // ],
-
-
-                  ],
-                ),
-
-
-
-
-                ),
+                
+                //Map Display
+                MapCard(location: _location,),
                 //bottom, which is the map level
               ],
             )
@@ -591,6 +529,7 @@ class _CoopListTyleState extends State<CoopListTyle>{
       ),);
 
   }
+
 
   List<String> images = [
     "assets/chicken1.png",
