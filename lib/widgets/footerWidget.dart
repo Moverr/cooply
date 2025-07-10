@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../utils/AppConstants.dart';
-import 'SimpleTextWidget.dart';
+import 'simpleTextWidget.dart';
 
 class FooterWidget extends StatelessWidget {
   @override
@@ -19,14 +19,14 @@ class FooterWidget extends StatelessWidget {
           children: [
             SimpleTextWidget(
               title: AppConstants.appVersion,
-              fontFamily: AppConstants.fontFamily,
+              fontFamily: AppConstants.defaultFont,
               fontWeight: FontWeight.normal,
               fontSize: 25,
             ),
             SimpleTextWidget(
               title:
                   "${AppConstants.companyName} © ${AppConstants.currentYear}",
-              fontFamily: AppConstants.fontFamily,
+              fontFamily: AppConstants.defaultFont,
               fontWeight: FontWeight.normal,
               fontSize: 10,
             )

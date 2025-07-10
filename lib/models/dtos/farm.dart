@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:Cooply/models/dtos/AccountResponse.dart';
+import 'package:Cooply/models/dtos/accountResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 class Farm {
@@ -11,6 +11,9 @@ class Farm {
    final AccountResponse account;
   final String ? createdOn;
   final String ? modifiedOn;
+  final double ?  coops;
+  final double ?  flock;
+
 
 
   Farm({
@@ -21,6 +24,8 @@ class Farm {
     required this.account,
     required this.createdOn,
     required this.modifiedOn,
+    required this.coops,
+    required this.flock,
   });
 
   factory Farm.fromJson(Map<String, Object?> json) {
@@ -32,6 +37,10 @@ class Farm {
       account:   AccountResponse.fromJson(json['account'] as Map<String,Object?>),
       createdOn: json['created_on'] as String?,
       modifiedOn: json['modified_on'] as String?,
+      coops: 0 as double?,
+      flock: 0 as double?,
+
+
     );
   }
 }

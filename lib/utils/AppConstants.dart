@@ -10,7 +10,7 @@ class AppConstants {
   static const String companyName = "khoodilabs";
   static final String currentYear = DateTime.now().year.toString();
 
-  static const String fontFamily = "inter";
+  static const String defaultFont = "inter";
   static const String LOGIN = "Login";
   static const String SIGNUP_LOGIN = "Signup";
 
@@ -29,5 +29,8 @@ class AppConstants {
 
 
   static const String APP_TITLE = 'cooply';
+
+  static var tilePrimaryColor = 0XFFF9F7EE;
+
 
 }

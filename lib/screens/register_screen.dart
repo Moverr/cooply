@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../utils/AppConstants.dart';
-import '../widgets/LoadingDialog.dart';
+import '../widgets/loadingDialog.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -139,7 +139,7 @@ class _RegisterState extends State<RegisterForm> {
                             Text(
                               'Register',
                               style: TextStyle(
-                                fontFamily: AppConstants.fontFamily,
+                                fontFamily: AppConstants.defaultFont,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w300,
                               ),

@@ -1,12 +1,14 @@
 import 'dart:convert';
 
-import 'package:Cooply/models/dtos/LoginResponse.dart';
+import 'package:Cooply/models/dtos/accountResponse.dart';
+import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
+import 'package:Cooply/widgets/farmListTyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/dtos/Farm.dart';
+import '../../models/dtos/farm.dart';
 import '../../services/FarmService.dart';
 
 class FarmSetupScreen extends StatefulWidget {
@@ -106,65 +108,141 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
   }
 
   bool _isLoading = true;
+
+  final List<Farm> items = [
+    Farm(
+      id: 1,
+      name: "Mwamba Farrm",
+      author: "Rogers",
+      status: "Active",
+      account: AccountResponse(
+          id: 1,
+          name: "Default Account",
+          author: "Muyinda Rogers",
+          referenceId: "12345"),
+      createdOn: null,
+      modifiedOn: null,
+      flock: double.parse(34000.toString()),
+      coops: double.parse(3.toString()),
+    ),
+    Farm(
+      id: 1,
+      name: "Junju Farrm",
+      author: "Rogers",
+      status: "Active",
+      account: AccountResponse(
+          id: 1,
+          name: "Default Account",
+          author: "Muyinda Rogers",
+          referenceId: "12345"),
+      createdOn: null,
+      modifiedOn: null,
+      flock: double.parse(35400.toString()),
+      coops: double.parse(5.toString()),
+    ),
+    Farm(
+      id: 1,
+      name: "Migori Farrm",
+      author: "Rogers",
+      status: "Active",
+      account: AccountResponse(
+          id: 1,
+          name: "Default Account",
+          author: "Muyinda Rogers",
+          referenceId: "12345"),
+      createdOn: null,
+      modifiedOn: null,
+      flock: double.parse(1200.toString()),
+      coops: double.parse(6.toString()),
+    ),
+    Farm(
+      id: 1,
+      name: "Zaiter Farrm",
+      author: "Rogers",
+      status: "Active",
+      account: AccountResponse(
+          id: 1,
+          name: "Default Account",
+          author: "Muyinda Rogers",
+          referenceId: "12345"),
+      createdOn: null,
+      modifiedOn: null,
+      flock: double.parse(34000.toString()),
+      coops: double.parse(5.toString()),
+    )
+  ];
+
   @override
   Widget build(BuildContext context) {
     _initializeData();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Farm Management",
-          style: TextStyle(
-              fontFamily: AppConstants.fontFamily,
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Handle search action
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // Handle settings action
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      // title: Text(
+      //   "Farm Management",
+      //   style: TextStyle(
+      //       fontFamily: AppConstants.fontFamily,
+      //       fontSize: 15,
+      //       fontWeight: FontWeight.bold),
+      // ),
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.search),
+      //     onPressed: () {
+      //       // Handle search action
+      //     },
+      //   ),
+      //   IconButton(
+      //     icon: Icon(Icons.settings),
+      //     onPressed: () {
+      //       // Handle settings action
+      //     },
+      //   ),
+      // ],
+      // ),
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          ExpansionTile(
+              title: Text(
+                "Farms",
+                style: TextStyle(
+                    fontSize: 20, fontFamily: AppConstants.defaultFont),
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      labelText: 'Search',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      ),
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ]),
           Expanded(
               child: ListView.builder(
-            itemCount: 10,
+            itemCount: items.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('Item ${index + 1}'),
+              return farmListTyle(
+                farm: items[index],
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Tapped ${items[index]}')),
+                  );
+                },
               );
+              // return ListTile(
+              //   title: Text('Item ${index + 1}'),
+              // );
             },
           )),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: const Text(
-              "Manage Farms",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
+
+          /*    const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -199,6 +277,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
                 // ),
                 ),
           ),
+          */
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -208,8 +287,8 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
         icon: Icon(Icons.add),
         label: Text("Add"),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      bottomNavigationBar: Container(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      /* bottomNavigationBar: Container(
         color: Colors.white,
         padding: const EdgeInsets.all(12),
         child: Row(
@@ -249,6 +328,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
           ],
         ),
       ),
+      */
     );
   }
 }

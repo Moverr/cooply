@@ -1,7 +1,12 @@
+import 'package:Cooply/screens/dashboard/coops_screen.dart';
 import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
+import 'package:Cooply/screens/dashboard/flock_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../feed_screen.dart';
+import '../health_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -10,13 +15,11 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
-
   late TabController _tabController;
-
 
   final List<String> tabTitles = [
     'Home',
-    'Farm',
+    // 'Farm', // removed this from the main screen
     'Coop',
     'Flock',
     'Feeds',
@@ -24,21 +27,17 @@ class _ExploreState extends State<ExploreScreen>
   ]; // Dynamic list
 
   int _initialTabIndex = 0;
-  bool _isTabControllerReady = false;  // Flag to wait for async loading
-
+  bool _isTabControllerReady = false; // Flag to wait for async loading
 
   Future<void> _loadTabIndex() async {
     final prefs = await SharedPreferences.getInstance();
     _initialTabIndex = prefs.getInt('exploreTabIndex') ?? 0;
-
 
     _tabController = TabController(
       length: tabTitles.length,
       vsync: this,
       initialIndex: _initialTabIndex,
     );
-
-
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -47,7 +46,7 @@ class _ExploreState extends State<ExploreScreen>
     });
 
     setState(() {
-      _isTabControllerReady = true;  // Mark ready and rebuild
+      _isTabControllerReady = true; // Mark ready and rebuild
     }); // Trigger build after controller is ready
   }
 
@@ -57,9 +56,7 @@ class _ExploreState extends State<ExploreScreen>
     super.initState();
 
     _loadTabIndex();
-
   }
-
 
   @override
   void dispose() {
@@ -67,11 +64,8 @@ class _ExploreState extends State<ExploreScreen>
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-
     // Show loading while waiting for controller
     if (!_isTabControllerReady) {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -79,40 +73,43 @@ class _ExploreState extends State<ExploreScreen>
 
     return Scaffold(
         body: SafeArea(
+
             // length: tabTitles.length,
             // child: Align(
             //     alignment: Alignment.topLeft, // Aligns TabBar to the left
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TabBar(
-                      controller: _tabController,
-                      isScrollable: false,
-                      labelColor: Colors.blue,
-                      unselectedLabelColor: Colors.grey,
-                      indicatorColor: Colors.blue,
-                      // padding: EdgeInsets.zero, // Remove internal padding
-                      // labelPadding: EdgeInsets.only(  right: 16, left: 16), // Adjust space between tabs
-                      tabs: tabTitles.map((title) => Tab(text: title)).toList(),
-                    ),
+            child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TabBar(
+          controller: _tabController,
+          isScrollable: false,
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: Colors.blue,
+          unselectedLabelStyle: TextStyle(
+            fontSize: 14,
+          ),
+          // padding: EdgeInsets.zero, // Remove internal padding
+          // labelPadding: EdgeInsets.only(  right: 16, left: 16), // Adjust space between tabs
+          tabs: tabTitles.map((title) => Tab(text: title)).toList(),
+        ),
 // Tab Views Divider(height: 1),
-                    Divider(height: 1),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          Center(child: Text('Overview content')),
-                         FarmSetupScreen(),
-                          Center(child: Text('Coop content')),
-                          Center(child: Text('Flock content')),
-                          Center(child: Text('Feed content')),
-                          Center(child: Text('Health content')),
-                        ],
-                      ),
-                    ),
-                  ],
-                ))
-    );
+        Divider(height: 1),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              Center(child: Text('Overview content')),
+              // FarmSetupScreen(),
+              CoopsScreen(),
+              FlockScreen(),
+              FeedScreen(),
+              HealthScreen(),
+            ],
+          ),
+        ),
+      ],
+    )));
     // ));
   }
 }

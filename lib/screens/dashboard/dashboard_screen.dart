@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:Cooply/models/dtos/LoginResponse.dart';
+import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/messages_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/profie_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/reports_screen.dart';
@@ -16,7 +16,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/di/service_locator.dart';
-import '../../models/MenuDto.dart';
+import '../../models/menuDto.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -102,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
       label: 'Explore',
     ),
     BottomNavigationBarItem(
-      icon: FaIcon(FontAwesomeIcons.fileLines),
+      icon: FaIcon(FontAwesomeIcons.chartLine),
       label: 'Reports',
     ),
 
@@ -319,8 +319,8 @@ class _DashboardState extends State<Dashboard> {
           selectedItemColor:  Color(0xFF3AAD8F),
           unselectedItemColor:  Color(0xFF000000),
           onTap: (index) => setState(() => _currentIndex = index),
-          selectedLabelStyle: TextStyle(fontSize: 10,fontFamily: AppConstants.fontFamily, fontWeight: FontWeight.normal),
-          unselectedLabelStyle: TextStyle(fontSize: 10, fontFamily: AppConstants.fontFamily, fontWeight: FontWeight.normal),
+          selectedLabelStyle: TextStyle(fontSize: 10,fontFamily: AppConstants.defaultFont, fontWeight: FontWeight.normal),
+          unselectedLabelStyle: TextStyle(fontSize: 10, fontFamily: AppConstants.defaultFont, fontWeight: FontWeight.normal),
           items: bottomMainMenu,
  
         ),

@@ -1,6 +1,6 @@
-import 'package:Cooply/models/dtos/AccountResponse.dart';
+import 'package:Cooply/models/dtos/accountResponse.dart';
 
-import 'Role.dart';
+import 'role.dart';
 
 class LoginResponse{
 

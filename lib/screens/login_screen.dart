@@ -1,6 +1,6 @@
 import 'package:Cooply/providers/auth_provider.dart';
 import 'package:Cooply/utils/log_service.dart';
-import 'package:Cooply/widgets/LoadingDialog.dart';
+import 'package:Cooply/widgets/loadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           'Login',
                           style: TextStyle(
-                              fontFamily: AppConstants.fontFamily,
+                              fontFamily: AppConstants.defaultFont,
                               fontSize: 20,
                               fontWeight: FontWeight.w300),
                         ),

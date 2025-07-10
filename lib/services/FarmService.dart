@@ -2,14 +2,14 @@ import 'package:Cooply/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../models/dtos/Farm.dart';
-import '../models/dtos/LoginResponse.dart';
+import '../models/dtos/farm.dart';
+import '../models/dtos/loginResponse.dart';
 import '../utils/AppConstants.dart';
 
 class FarmService {
 
 
-  final String baseUrl = "${AppConstants.LOCAL_BASE_URL}${AppConstants.FARMENDPOINT}";
+  final String baseUrl = "${AppConstants.BASE_URL}${AppConstants.FARMENDPOINT}";
   final String baseApi = "http://52.207.255.31:8082/v1";
 
   get token => "Token and also"; //todo: get the token from other apps
@@ -40,7 +40,7 @@ class FarmService {
   }) async {
 
 
-    print('URL  : ${AppConstants.LOCAL_BASE_URL}v1/farm');
+    print('URL  : ${AppConstants.BASE_URL}v1/farm');
 
     // print('Inside  : ${authProvider.refreshToken}');
 

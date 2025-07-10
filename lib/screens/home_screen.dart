@@ -2,8 +2,8 @@ import 'package:Cooply/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
-import '../widgets/FooterWidget.dart';
-import '../widgets/SimpleTextWidget.dart';
+import '../widgets/footerWidget.dart';
+import '../widgets/simpleTextWidget.dart';
 import 'login_screen.dart';
 
 // @movers
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 200,
                   color:
-                      Color(0xFFFFFFFF), //todo: will investigate color father
+                      Colors.white, //todo: will investigate color father
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
                       Colors.white.withAlpha(128), // Adjust opacity (0.0 to 1.0)
@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                     Tab(
                       child: SimpleTextWidget(
                         title: AppConstants.LOGIN,
-                        fontFamily: AppConstants.fontFamily,
+                        fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.w400,
                         fontSize: 16, // Adjust font size for better readability
                         // color: Color(0xFF000000), // Text color
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                     Tab(
                       child: SimpleTextWidget(
                         title: AppConstants.SIGNUP_LOGIN,
-                        fontFamily: AppConstants.fontFamily,
+                        fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
                         // color: Color(0xFF000000),
