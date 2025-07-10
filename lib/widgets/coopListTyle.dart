@@ -542,6 +542,10 @@ class _CoopListTyleState extends State<CoopListTyle>{
 
                             ),
                             children: [
+                              //  urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+                              //  urlTemplate: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+                              //  urlTemplate: 'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
+                              // urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                               TileLayer(
                                 urlTemplate:
                                 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
