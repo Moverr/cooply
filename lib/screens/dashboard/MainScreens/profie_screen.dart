@@ -17,7 +17,7 @@ class _ProfileState extends State<ProfileScreen> {
           scrollDirection: Axis.vertical,
       child: Column(children: [
         //Profile Section
-        progileCard(context),
+        profileCard(context),
         SizedBox(height: 20),
        Container(
          height: Util.scaleWidthFromDesign(context, 100)   ,
@@ -38,7 +38,7 @@ class _ProfileState extends State<ProfileScreen> {
     ));
   }
 
-  Container progileCard(BuildContext context) {
+  Container profileCard(BuildContext context) {
     return Container(
       child: Column(
         children: [
