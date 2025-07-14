@@ -14,6 +14,7 @@ import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/di/service_locator.dart';
 import '../../models/menuDto.dart';
@@ -36,6 +37,8 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   bool isExpanded = true;
   int _currentIndex = 0;
+  bool _isTabControllerReady = false; // Flag to wait for async loading
+
 
   final List<Menu> _menuList = [
     const Menu(
@@ -138,7 +141,30 @@ class _DashboardState extends State<Dashboard> {
     authService.getStoredLoginData().then((result) => {
           if (result != null) {username = result.username}
         });
+
+    _loadTabIndex();
+
   }
+
+
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
+
+  Future<void> _loadTabIndex() async {
+    final prefs = await getPref();
+    _currentIndex = prefs.getInt('mainBottomTabIndex') ?? 0;
+
+
+
+    setState(() {
+      _isTabControllerReady = true; // Mark ready and rebuild
+    }); // Trigger build after controller is ready
+  }
+
 
 
   final List<Widget> _mainPages = [
@@ -149,11 +175,23 @@ class _DashboardState extends State<Dashboard> {
     ProfileScreen(),
   ];
 
+  Future<SharedPreferences> getPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs;
+  }
 
+  Future<void> setReferenceTab(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('mainBottomTabIndex', index);
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
+
+    if (!_isTabControllerReady) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
 
     return Scaffold(
@@ -318,7 +356,12 @@ class _DashboardState extends State<Dashboard> {
           currentIndex: _currentIndex,
           selectedItemColor:  Color(0xFF3AAD8F),
           unselectedItemColor:  Color(0xFF000000),
-          onTap: (index) => setState(() => _currentIndex = index),
+          onTap: (index) => setState(
+                  () {
+                    _currentIndex= index;
+                    setReferenceTab(_currentIndex);
+                  }
+          ),
           selectedLabelStyle: TextStyle(fontSize: 10,fontFamily: AppConstants.defaultFont, fontWeight: FontWeight.normal),
           unselectedLabelStyle: TextStyle(fontSize: 10, fontFamily: AppConstants.defaultFont, fontWeight: FontWeight.normal),
           items: bottomMainMenu,
@@ -327,6 +370,7 @@ class _DashboardState extends State<Dashboard> {
 
     );
   }
+
 
   Container presetContainer() {
     return Container();
