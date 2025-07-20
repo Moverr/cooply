@@ -30,7 +30,7 @@ class _ExploreState extends State<ExploreScreen>
   bool _isTabControllerReady = false; // Flag to wait for async loading
 
   Future<void> _loadTabIndex() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await getPref();
     _initialTabIndex = prefs.getInt('exploreTabIndex') ?? 0;
 
     _tabController = TabController(
@@ -48,6 +48,11 @@ class _ExploreState extends State<ExploreScreen>
     setState(() {
       _isTabControllerReady = true; // Mark ready and rebuild
     }); // Trigger build after controller is ready
+  }
+
+  Future<SharedPreferences> getPref() async {
+     final prefs = await SharedPreferences.getInstance();
+    return prefs;
   }
 
   @override

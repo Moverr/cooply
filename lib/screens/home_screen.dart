@@ -2,6 +2,7 @@ import 'package:Cooply/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
+import '../utils/util.dart';
 import '../widgets/footerWidget.dart';
 import '../widgets/simpleTextWidget.dart';
 import 'login_screen.dart';
@@ -21,13 +22,12 @@ class HomeScreen extends StatelessWidget {
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(200),
             child: AppBar(
-                // title: Text("Mawae"),
                 flexibleSpace: Stack(
               alignment: Alignment.center,
               children: [
                 Container(
                   width: double.infinity,
-                  height: 200,
+                  height:   Util.scaleWidthFromDesign(context, 200) ,
                   color:
                       Colors.white, //todo: will investigate color father
                   child: ColorFiltered(
