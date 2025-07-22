@@ -1,6 +1,7 @@
 import 'dart:async';
 
 
+import 'package:Cooply/screens/verification_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppConstants.dart';
@@ -17,7 +18,10 @@ class SplashScreen extends StatelessWidget {
     Future.delayed(Duration(seconds: 5), () {
       //todo: open the home screen
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          context, MaterialPageRoute(builder: (context) =>  VerificationScreen()
+          //HomeScreen()
+
+      ));
     });
 
     double screenWidth = MediaQuery.of(context).size.width;
