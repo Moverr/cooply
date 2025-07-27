@@ -5,7 +5,7 @@ import 'role.dart';
 class LoginResponse{
 
   String username;
-  bool isSuccessful;
+  String status;
   String message;
   String auth_token;
   String refresh_token;
@@ -16,7 +16,7 @@ class LoginResponse{
 
   LoginResponse({
     required this.username,
-    required this.isSuccessful,
+    required this.status,
     required this.message,
     required this.auth_token,
     required this.refresh_token,
@@ -33,7 +33,7 @@ class LoginResponse{
 
   factory LoginResponse.fromJson(Map<String, Object?> json) => LoginResponse(
     username: json["username"] as String,
-    isSuccessful: json["is_successful"] as bool,
+    status: json["status"] as String,
     message: json["message"] as String,
     auth_token: json["auth_token"] as String,
     refresh_token: json["refresh_token"] as String,
@@ -46,7 +46,7 @@ class LoginResponse{
   );
 
   Map<String, dynamic> toJson() => {
-    "is_successful": isSuccessful,
+    "status": status,
     "message": message,
     "auth_token": auth_token,
     "refresh_token": refresh_token,

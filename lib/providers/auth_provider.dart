@@ -2,6 +2,7 @@ import 'package:Cooply/services/AuthService.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/dtos/loginResponse.dart';
+import '../models/dtos/message_response.dart';
 import '../models/dtos/role.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -10,6 +11,7 @@ class AuthProvider with ChangeNotifier {
   AuthProvider(this._authService);
 
   bool _isLoggedIn = false;
+  bool _isUserACtive = false;
 
   String? _username;
   String? _message;
@@ -49,6 +51,37 @@ class AuthProvider with ChangeNotifier {
 
   }
 
+
+  Future<void> validateOTP(String otpCode) async {
+
+    try {
+      MessageResponse? response  = await _authService.validateToken(otpCode);
+
+      if (response?.status == "declined") {
+        _isregistered = false;
+      } else {
+        _isregistered = true;
+      }
+
+    }
+    catch(e) {
+
+      _isregistered = false;
+      _message = "An unexpected error occurred.";
+      _errorMessage = "Error: $e"; // More useful for debugging/logging
+      debugPrintStack();
+
+    }
+    finally{
+      notifyListeners();
+    }
+
+
+
+  }
+
+
+
   LoginResponse? logResponse;
 
   Future<void> login(String username, String password) async {
@@ -56,17 +89,62 @@ class AuthProvider with ChangeNotifier {
       LoginResponse? loginDataResponse =
           await _authService.loginUser(username, password);
 
-      if (loginDataResponse != null && loginDataResponse.isSuccessful) {
-        _username = loginDataResponse.username;
-        _isLoggedIn = true;
-        _authToken = loginDataResponse.auth_token;
-        _message = loginDataResponse.message ?? "Login successful";
-        _roles = loginDataResponse.roles;
-        _errorMessage = null; // Clear any previous errors
+      if (loginDataResponse != null ) {
+        switch(loginDataResponse.status.toUpperCase()){
+          case "ACTIVE":{
+            _username = loginDataResponse.username;
+            _isLoggedIn = true;
+            _isUserACtive = true;
+            _authToken = loginDataResponse.auth_token;
+            _message = loginDataResponse.message ?? "Login successful";
+            _roles = loginDataResponse.roles;
+            _errorMessage = null; // Clear any previous errors
 
-        logResponse = loginDataResponse;
-        // TODO: Handle post-login actions (e.g., navigation, token storage)
+            logResponse = loginDataResponse;
+          }
+            break;
+          case "PENDING":
+            {
+              _username = loginDataResponse.username;
+              _isLoggedIn = true;
+              _isUserACtive = false;
+              _authToken = loginDataResponse.auth_token;
+              _message = loginDataResponse.message ?? "Login Failed";
+              _roles = loginDataResponse.roles;
+              _errorMessage = null; // Clear any previous errors
+
+              logResponse = loginDataResponse;
+
+              _errorMessage = "User Is not Active "; // Shown in UI
+
+
+            }
+            break;
+          default:
+            {
+              _username = loginDataResponse.username;
+              _isLoggedIn = false;
+              _isUserACtive = false;
+              _authToken = null;
+              _message =  null;
+              _roles = null;
+              _errorMessage = null; // Clear any previous errors
+
+              logResponse = null;
+
+              _errorMessage = "User Is not Active "; // Shown in UI
+
+
+            }
+
+            break;
+
+        }
+
       } else {
+
+
+        _isUserACtive = false;
         _isLoggedIn = false;
         _authToken = "";
         _message = loginDataResponse?.message ?? "Login failed. Please try again.";
@@ -102,6 +180,8 @@ class AuthProvider with ChangeNotifier {
   String? get loginAuthToken => _authToken;
   String? get errorMessage => _errorMessage;
   bool get isLoggedIn => _isLoggedIn;
+  bool get isUserActive => _isUserACtive;
+
 
   bool get isRegistered => _isregistered;
 
