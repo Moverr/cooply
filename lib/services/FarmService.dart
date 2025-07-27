@@ -10,7 +10,7 @@ class FarmService {
 
 
   final String baseUrl = "${AppConstants.BASE_URL}${AppConstants.FARMENDPOINT}";
-  final String baseApi = "http://52.207.255.31:8082/v1";
+  final String baseApi = "${AppConstants.BASE_URL}v1";
 
   get token => "Token and also"; //todo: get the token from other apps
 

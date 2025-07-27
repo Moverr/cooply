@@ -1,4 +1,5 @@
 import 'package:Cooply/providers/auth_provider.dart';
+import 'package:Cooply/screens/verification_screen.dart';
 import 'package:Cooply/utils/log_service.dart';
 import 'package:Cooply/widgets/loadingDialog.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,6 @@ import '../widgets/Auth2RowWidget.dart';
 import 'dashboard/dashboard_screen.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement build
     return Scaffold(
         body: Container(
-
+      height: double.infinity,
       color: Colors.white,
       child: SingleChildScrollView(
         child: Padding(
@@ -50,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -137,8 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         SizedBox(width: 8),
                         IconButton(
-                          onPressed: null, icon: FaIcon(FontAwesomeIcons.lock)
-                          ,iconSize:18 ,
+                          onPressed: null,
+                          icon: FaIcon(FontAwesomeIcons.lock),
+                          iconSize: 18,
                         ), // Replace with your desired icon
                       ],
                     ),
@@ -154,8 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     ));
   }
-
-
 
   /// Login Action
 
@@ -176,7 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
         LoadingDialog.hide(context);
 
-        if (authProvider.isLoggedIn == true) {
+        if (authProvider.isLoggedIn == true &&
+            authProvider.isUserActive == true) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Login Succesfully"),
@@ -187,8 +185,18 @@ class _LoginScreenState extends State<LoginScreen> {
           //todo: go to dashboard
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Dashboard()));
+        } else if (authProvider.isLoggedIn == true &&
+            authProvider.isUserActive == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Activate Your Account"),
+              backgroundColor: Colors.green,
+            ),
+          );
 
-
+          //todo: go to verification screen
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => VerificationScreen()));
         } else {
           // Simulate login action
           ScaffoldMessenger.of(context).showSnackBar(

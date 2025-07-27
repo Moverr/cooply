@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Cooply/models/dtos/message_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/dtos/loginResponse.dart';
@@ -9,7 +10,7 @@ import 'package:dio/dio.dart'; //import dio in exchange for http
 
 class AuthService {
   final String baseUrl = "${AppConstants.BASE_URL}${AppConstants.AUTHENDPOINT}";
-  final String baseApi = "http://52.207.255.31:8082/v1";
+  final String baseApi = "${AppConstants.BASE_URL}v1";
 
   initDio(String baseUrl) => Dio(
         BaseOptions(
@@ -93,6 +94,48 @@ class AuthService {
     }
   }
 
+
+
+  Future<MessageResponse?> validateToken(String token) async {
+    print("Method Validate OTP");
+
+    try {
+      final response = await initDio(AppConstants.BASE_URL).post(
+        '/v1/auth/validate/otp',
+        data: {"token": token}, // No need for jsonEncode if Dio is handling JSON
+      );
+
+      print("Status Code: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+
+        return MessageResponse(
+            message: "Account Activated Succesfuly",
+            status: "approved"
+        );
+      }
+
+      return MessageResponse(
+        message: "Was not able to successfully validate the OTP.",
+        status: "declined"
+      );
+    } on DioException catch (e) {
+      print("Dio Error: ${e.message}");
+      print("Response Data: ${e.response?.data}");
+      return MessageResponse(
+          message: "OTP validation failed. Please try again.",
+        status: "declined"
+      );
+    } catch (e) {
+      print("Unexpected error: $e");
+      return MessageResponse(
+          message: "An unexpected error occurred.",
+      status: "declined");
+    }
+  }
+
+
+
   Future<void> logout() async {
     //todo: register logout session for the user
     final prefs = await SharedPreferences.getInstance();
@@ -109,4 +152,6 @@ class AuthService {
     }
     return null;
   }
+
+
 }
