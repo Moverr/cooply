@@ -1,5 +1,5 @@
 import 'package:Cooply/screens/verification_screen.dart';
-import 'package:Cooply/services/AuthService.dart';
+import 'package:Cooply/services/auth_service.dart';
 import 'package:Cooply/widgets/Auth2RowWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

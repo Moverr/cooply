@@ -9,7 +9,7 @@ import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
 import 'package:Cooply/screens/dashboard/overview_screen.dart';
 import 'package:Cooply/screens/home_screen.dart';
 import 'package:Cooply/screens/splash_screen.dart';
-import 'package:Cooply/services/AuthService.dart';
+import 'package:Cooply/services/auth_service.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -134,13 +134,44 @@ class _DashboardState extends State<Dashboard> {
 
   String selectedMenu = "overview";
 
+  late final List<Widget>? _mainPages;
+/*  = [
+    ExploreScreen(),
+    ReportScreen(),
+    ScheduleScreen(),
+    MessageScreen(),
+    if(loginData != null)
+      ProfileScreen(loginResponse: loginData!),
+  ];
+*/
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    authService.getStoredLoginData().then((result) => {
-          if (result != null) {username = result.username}
-        });
+    authService.getStoredLoginData().then((result) {
+      loginData = result;
+      if (result != null) {
+        username = result.username;
+      }
+
+
+      setState(() {
+        _mainPages = [
+          ExploreScreen(),
+          ReportScreen(),
+          ScheduleScreen(),
+          MessageScreen(),
+          ProfileScreen(loginResponse: result)
+
+        ];
+      });
+
+
+
+
+
+    });
 
     _loadTabIndex();
 
@@ -167,13 +198,6 @@ class _DashboardState extends State<Dashboard> {
 
 
 
-  final List<Widget> _mainPages = [
-    ExploreScreen(),
-    ReportScreen(),
-    ScheduleScreen(),
-    MessageScreen(),
-    ProfileScreen(),
-  ];
 
   Future<SharedPreferences> getPref() async {
     final prefs = await SharedPreferences.getInstance();
@@ -246,7 +270,7 @@ class _DashboardState extends State<Dashboard> {
       ),
 
 
-      body: _mainPages[_currentIndex],
+      body: _mainPages?[_currentIndex],
           /*
       Center(
         child: Row(

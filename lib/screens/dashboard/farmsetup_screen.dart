@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/farm.dart';
-import '../../services/FarmService.dart';
+import '../../services/farm_service.dart';
 
 class FarmSetupScreen extends StatefulWidget {
   @override
