@@ -4,11 +4,18 @@ import 'package:flutter/material.dart';
 
 import '../../../cards/account_credit_card.dart';
 import '../../../cards/farm_card.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../models/dtos/loginResponse.dart';
+import '../../../services/auth_service.dart';
 import '../../../utils/AppConstants.dart';
 import '../../../utils/util.dart';
 import '../../home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final LoginResponse? loginResponse;
+
+  const ProfileScreen({super.key, required this.loginResponse});
+
   @override
   State<StatefulWidget> createState() => _ProfileState();
 }
@@ -16,6 +23,22 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileState extends State<ProfileScreen> {
   String selectedValue = 'Apple';
   final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
+
+  AuthService authService = getIt<AuthService>();
+  late LoginResponse loginResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    loginResponse = widget.loginResponse!;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  int x = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +49,18 @@ class _ProfileState extends State<ProfileScreen> {
         color: Colors.white,
         child: Column(children: [
           //Profile Section
-          ProfileCard(),
+          ProfileCard(loginResponse),
           SizedBox(height: 20),
-          FarmCard(),
+
+          ...(loginResponse?.roles?.any((role) => role.permissions.any(
+                      (permission) =>
+                          permission.resourceName == "farm" &&
+                          permission.create == "ALL")) ==
+                  true
+              ? [FarmCard(loginResponse: loginResponse), SizedBox(height: 20)]
+              : []),
+
+          FarmCard(loginResponse: loginResponse),
           SizedBox(height: 20),
           TeamCard(),
           SizedBox(height: 20),

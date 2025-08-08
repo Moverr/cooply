@@ -5,7 +5,7 @@ import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'services/AuthService.dart';
+import 'services/auth_service.dart';
 
 void main() {
   setupLocator();

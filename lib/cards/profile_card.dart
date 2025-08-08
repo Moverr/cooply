@@ -1,19 +1,32 @@
 
 
+import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../utils/AppConstants.dart';
 import '../utils/util.dart';
 
 class ProfileCard extends StatefulWidget{
+   final LoginResponse loginResponse;
+
+   ProfileCard(this.loginResponse);
   @override
   State<StatefulWidget> createState()  => _ProfileCardState();
 
 }
 
 class _ProfileCardState extends State<ProfileCard>{
+  late LoginResponse loginResponse;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loginResponse = widget.loginResponse;
+
+  }
   @override
   Widget build(BuildContext context)  => profileCard(context);
+
 
 
 
@@ -81,7 +94,7 @@ class _ProfileCardState extends State<ProfileCard>{
             ],
           ),
           Text(
-            "Muyinda Rogers",
+           loginResponse.username,
             style: TextStyle(
                 fontSize: Util.scaleWidthFromDesign(context, 16),
                 fontFamily: AppConstants.defaultFont),

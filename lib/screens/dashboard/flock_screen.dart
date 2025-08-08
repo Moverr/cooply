@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/farm.dart';
-import '../../services/FarmService.dart';
+import '../../services/farm_service.dart';
 import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
 import '../../widgets/custom_expansion_tile.dart';
@@ -482,7 +482,7 @@ class FarmDataSource extends DataTableSource {
 
     final offset = pageIndex * rowsPerPage;
     try {
-      final response = await farmService.fetchFarms(
+      final response = await farmService.getFarms(
           accountId: 16,
           offset: offset,
           limit: rowsPerPage,

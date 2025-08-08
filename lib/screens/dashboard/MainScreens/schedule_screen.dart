@@ -11,7 +11,7 @@ import '../../../models/dtos/Farm.dart';
 import '../../../models/dtos/feed_inventory.dart';
 import '../../../models/dtos/loginResponse.dart';
 import '../../../models/dtos/schedule.dart';
-import '../../../services/FarmService.dart';
+import '../../../services/farm_service.dart';
 
 class ScheduleScreen extends StatefulWidget {
   @override
@@ -284,7 +284,7 @@ class FarmDataSource extends DataTableSource {
 
     final offset = pageIndex * rowsPerPage;
     try {
-      final response = await farmService.fetchFarms(
+      final response = await farmService.getFarms(
           accountId: 16,
           offset: offset,
           limit: rowsPerPage,

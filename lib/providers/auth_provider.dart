@@ -1,4 +1,4 @@
-import 'package:Cooply/services/AuthService.dart';
+import 'package:Cooply/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/dtos/loginResponse.dart';

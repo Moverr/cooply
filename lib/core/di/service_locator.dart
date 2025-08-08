@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import '../../providers/auth_provider.dart';
-import '../../services/AuthService.dart';
+import '../../services/auth_service.dart';
 
 final GetIt getIt = GetIt.instance;
 
