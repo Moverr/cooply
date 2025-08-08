@@ -30,9 +30,9 @@ class FarmService {
 
   Future<PaginatedFarmsResponse?> getFarms(
       {
-        required int accountId,
-      required int offset,
-      required int limit,
+          int? accountId,
+        int? offset,
+        int? limit,
       required LoginResponse? loginResponse}) async
   {
     print('URL  : ${AppConstants.BASE_URL}v1/farm');
@@ -96,7 +96,7 @@ class FarmService {
 
   Future<void> createFarm({
     required FarmRequest farm,
-    required LoginResponse? loginResponse,
+     LoginResponse? loginResponse,
     required int accountId,
   }) async {
     print('URL  : ${AppConstants.BASE_URL}v1/farm');
