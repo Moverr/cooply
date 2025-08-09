@@ -1,3 +1,4 @@
+import 'package:Cooply/models/dtos/accountResponse.dart';
 import 'package:Cooply/models/dtos/requests/farm_request.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,7 +41,7 @@ class FarmBloc extends Bloc<FarmEvent, FarmState> {
             isOnline: event.isOnline);
 
         FarmRequest fr = event.farm;
-        Farm fm =  new Farm(id: 0, name: fr.name, author: "Unknown", status: null, account: account, createdOn: null, modifiedOn: null, coops: null, flock: null);
+        Farm fm = getFarm(fr);
 
           emit(FarmLoaded(List.from(current)
           ..add(fm)));
@@ -59,7 +60,8 @@ class FarmBloc extends Bloc<FarmEvent, FarmState> {
 
   }
 
-  get account => null;
+  Farm getFarm(FarmRequest fr) =>    Farm(id: 0, name: fr.name, author: "Unknown", status: null, account:  AccountResponse(id: 1, name: "UNKNOWN", author: "UNKNOWN", referenceId: "UNKNOWN"), createdOn: null, modifiedOn: null, coops: null, flock: null);
+
 
 
   }
