@@ -1,4 +1,7 @@
+import 'package:Cooply/models/dtos/address.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
+import 'package:Cooply/models/dtos/requests/farm_request.dart';
+import 'package:Cooply/services/farm_service.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../utils/AppConstants.dart';
 import '../utils/util.dart';
+import 'farm_location_input.dart';
 
 class FarmCard extends StatefulWidget {
   final LoginResponse? loginResponse;
@@ -21,9 +25,11 @@ class _FarmCardState extends State<FarmCard> {
 
   late LoginResponse loginResponse;
 
-  final TextEditingController _farmTextController = TextEditingController();
+  final TextEditingController _farmNameController = TextEditingController();
   final TextEditingController _farmLocationController = TextEditingController();
   final TextEditingController _farmDetailsController = TextEditingController();
+
+  late Address address;
 
   @override
   void initState() {
@@ -319,45 +325,36 @@ class _FarmCardState extends State<FarmCard> {
                       fontWeight: FontWeight.bold),
                 ),
 
-
                 //todo: create new farm button
-
               ),
-
               SizedBox(
                 height: 25,
               ),
               Container(
                 alignment: Alignment.centerLeft,
-                child:
-                    SizedBox(
-                      width: 200,
-                    
-                    child:
-
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Color(0xFFB4C78C)),
-                    foregroundColor: WidgetStateProperty.all(Color(0xFFFFFFFF)),
-
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5), // Border radius here
+                child: SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          WidgetStateProperty.all(Color(0xFFB4C78C)),
+                      foregroundColor:
+                          WidgetStateProperty.all(Color(0xFFFFFFFF)),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(5), // Border radius here
+                        ),
+                        // Custom color
                       ),
-                      // Custom color
+                    ),
+                    onPressed: () {
+                      showCreateFarmBottomSheet(context);
+                    },
+                    child: const Text("CREATE FARM"),
                   ),
-                  ),
-
-                  onPressed: () {
-                    showCreateFarmBottomSheet(context);
-
-                  },
-                  child: const Text("CREATE FARM"),
                 ),
               ),
-              ),
-
-
             ],
           ),
         ),
@@ -365,12 +362,13 @@ class _FarmCardState extends State<FarmCard> {
     }
   }
 
-
   void showCreateFarmBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // allow full height control
-      backgroundColor: Colors.transparent, // to allow rounded corners or shadows
+      isScrollControlled: true,
+      // allow full height control
+      backgroundColor: Colors.transparent,
+      // to allow rounded corners or shadows
       builder: (context) {
         return FractionallySizedBox(
           heightFactor: 0.8, // 80% of screen height
@@ -378,65 +376,56 @@ class _FarmCardState extends State<FarmCard> {
             // margin: const EdgeInsets.only(bottom: 80),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all( Radius.circular(10)),
-
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: Padding(
               padding: EdgeInsets.only(
                 left: 16,
                 right: 16,
                 top: 16,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24, // handle keyboard + spacing
+                bottom: MediaQuery.of(context).viewInsets.bottom +
+                    24, // handle keyboard + spacing
               ),
               child: ListView(
                 children: [
                   const Text(
                     "Create Farm",
-                    style: TextStyle(fontFamily: AppConstants.defaultFont, fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _farmTextController,
+                    controller: _farmNameController,
                     decoration: InputDecoration(
                       labelText: ' Farm Name',
                       border: const OutlineInputBorder(),
                     ),
-
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'enter farm name';
                       }
                       return null;
                     },
-
-
                   ),
-                   const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-
-                  TextFormField(
+                  // Farm Location autocomplete field
+                  FarmLocationInput(
                     controller: _farmLocationController,
-                    decoration: InputDecoration(
-                      labelText: ' Farm Location',
-                      border: const OutlineInputBorder(),
-                    ),
-
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return ' enter farm location  ';
-                      }
-                      return null;
+                    onLocationSelected: (selectedAddress) {
+                      address = selectedAddress;
+                      // new Address(addressLevel: "location", street: street, city: city, state: state, zipCode: zipCode, latitude: latitude, longitude: longitude)
                     },
-
-
                   ),
-
 
                   const SizedBox(height: 12),
                   TextField(
                     controller: _farmDetailsController,
-                    decoration: const InputDecoration(labelText: "Description",
+                    decoration: const InputDecoration(
+                      labelText: "Description",
                       border: const OutlineInputBorder(),
                     ),
                     maxLines: 3,
@@ -446,16 +435,83 @@ class _FarmCardState extends State<FarmCard> {
                     height: 50,
                     width: 100,
                     child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[600],
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[600],
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: () async {
+
+                        if (address == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please select a valid address')),
+                          );
+                          return;
+                        }
+
+
+                        // Create the FarmRequest with the selected address
+                        FarmRequest fr = FarmRequest(
+                          accountId: loginResponse!.defaultAccount.id,
+                          name: _farmNameController.text,
+                          addresses: [address], // your Address instance
+                        );
+
+                        // Show loading dialog
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => const Center(child: CircularProgressIndicator()),
+                        );
+
+
+                        // FarmService fmService = new FarmService();
+                        // fmService.createFarm(farm: fr, loginResponse: loginResponse, accountId: loginResponse.defaultAccount.id);
+
+
+
+
+                        try {
+                          FarmService fmService = FarmService();
+
+                          final result = await fmService.createFarm(
+                            farm: fr,
+                            loginResponse: loginResponse,
+                            accountId: loginResponse.defaultAccount.id,
+                          );
+
+                          // Remove loader
+                          Navigator.of(context).pop();
+
+                          if (result.success) {
+                            // Close the form screen and pass result
+                            Navigator.pop(context, fr);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Farm saved successfully')),
+                            );
+                          } else {
+                            // Show server error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(result.errorMessage ?? 'Failed to save farm')),
+                            );
+                          }
+                        } catch (e) {
+                          Navigator.of(context).pop(); // remove loader
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('An error occurred: $e')),
+                          );
+                        }
+
+                        // Navigator.pop(context, fr);
+                      },
+                      child: const Text(
+                        "SAVE",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: AppConstants.defaultFont,
+                            color: Color(0XFFFFFFFF)),
+                      ),
                     ),
-                    onPressed: () => {
-                      //todo: work on the works
-                      Navigator.pop(context)
-                    },
-                    child: const Text("SAVE",  style: TextStyle(fontSize: 16, fontFamily:AppConstants.defaultFont,color: Color(0XFFFFFFFF)),),
-                  ),
                   ),
                 ],
               ),
@@ -465,6 +521,4 @@ class _FarmCardState extends State<FarmCard> {
       },
     );
   }
-
-
 }

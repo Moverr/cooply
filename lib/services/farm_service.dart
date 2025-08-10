@@ -1,4 +1,5 @@
 import 'package:Cooply/providers/auth_provider.dart';
+import 'package:Cooply/services/service_result.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -29,20 +30,14 @@ class FarmService {
   }
 
   Future<PaginatedFarmsResponse?> getFarms(
-      {
-          int? accountId,
-        int? offset,
-        int? limit,
-      required LoginResponse? loginResponse}) async
-  {
+      {int? accountId,
+      int? offset,
+      int? limit,
+      required LoginResponse? loginResponse}) async {
     print('URL  : ${AppConstants.BASE_URL}v1/farm');
-
-    // print('Inside  : ${authProvider.refreshToken}');
 
     print('Account ID  : $accountId');
 
-    //todo: always do a service side health check. before pushing.
-    //todo: get the signals
     debugPrint("logResponse ${loginResponse?.auth_token}");
     final dio = initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
 
@@ -51,9 +46,9 @@ class FarmService {
 
       final response = await dio.get(
         'v1/farm',
-        // 'actuator',
         queryParameters: {
-          'account_id': accountId, // the calling agent, will determine the account to choose
+          'account_id':
+              accountId, // the calling agent, will determine the account to choose
           'offset': '${offset}',
           'limit': '${limit}',
           'sort_by': 'id',
@@ -94,29 +89,54 @@ class FarmService {
     return null;
   }
 
-  Future<void> createFarm({
+  Future<ServiceResult> createFarm({
     required FarmRequest farm,
-     LoginResponse? loginResponse,
+    LoginResponse? loginResponse,
     required int accountId,
   }) async {
     print('URL  : ${AppConstants.BASE_URL}v1/farm');
-
-    // print('Inside  : ${authProvider.refreshToken}');
-
     print('Account ID  : $accountId');
-
-    //todo: always do a service side health check. before pushing.
-    //todo: get the signals
     debugPrint("logResponse ${loginResponse?.auth_token}");
+
     final dio = initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
 
-    await dio.post('/v1/farm', data: {
-      "account_id": accountId, // Replace or pass dynamically
-      "name": farm.name,
-      "addresses": farm.addresses.map((a) => a.toJson()).toList()
-    });
-  }
+    try {
+      final response = await dio.post(
+        '/v1/farm',
+        data: {
+          "account_id": accountId,
+          "name": farm.name,
+          "addresses": farm.addresses.map((a) => a.toJson()).toList(),
+        },
+      );
 
+      // Optionally check response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ServiceResult(success: true);
+      } else {
+        return ServiceResult(
+          success: false,
+          errorMessage: 'Unexpected status code: ${response.statusCode}',
+        );
+      }
+    } on DioError catch (e) {
+      // Handle API errors
+      String message = 'Failed to save farm';
+      if (e.response != null && e.response?.data != null) {
+        // Try to extract server error message
+        final data = e.response?.data;
+        if (data is Map && data['message'] != null) {
+          message = data['message'];
+        } else if (data is String) {
+          message = data;
+        }
+      }
+      return ServiceResult(success: false, errorMessage: message);
+    } catch (e) {
+      // Any other error
+      return ServiceResult(success: false, errorMessage: e.toString());
+    }
+  }
 
   Future<void> updateFarm({
     required FarmRequest farm,
@@ -141,16 +161,13 @@ class FarmService {
     });
   }
 
-
-
-  Future<void> deleteFarm({
-  required int  accountId,required int id,
-    required LoginResponse? loginResponse
-}) async {
-
+  Future<void> deleteFarm(
+      {required int accountId,
+      required int id,
+      required LoginResponse? loginResponse}) async {
     try {
-      final dio = initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
-
+      final dio =
+          initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
 
       final response = await dio.delete(
         '/v1/farm/delete/$id',
@@ -172,7 +189,5 @@ class FarmService {
     } catch (e) {
       print("Unexpected error: $e");
     }
-
-
   }
 }
