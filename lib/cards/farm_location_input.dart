@@ -29,8 +29,6 @@ class _FarmLocationInputState extends State<FarmLocationInput> {
   List<Map<String, dynamic>> _suggestions = [];
   Timer? _debounce;
 
-  double? _selectedLat;
-  double? _selectedLon;
 
 
 
@@ -56,9 +54,6 @@ class _FarmLocationInputState extends State<FarmLocationInput> {
     _suggestions = [];
     final String userAddress = widget.controller.text;
 
-
-    final lat = double.tryParse(place['lat'] ?? '');
-    final lon = double.tryParse(place['lon'] ?? '');
 
     Address selectedAddress = _parseAddress(place,userAddress);
 

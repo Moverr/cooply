@@ -59,6 +59,8 @@ class FarmService {
       // Optionally check or log response
       if (response.statusCode == 200) {
         final data = response.data;
+
+        print("Data ${data}");
         return PaginatedFarmsResponse.fromJson(data);
 
         // Handle data

@@ -1,11 +1,8 @@
 import 'dart:convert';
 
-import 'package:Cooply/models/dtos/accountResponse.dart';
 import 'package:Cooply/models/dtos/coop.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
-import 'package:Cooply/utils/util.dart';
-import 'package:Cooply/widgets/farmListTyle.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

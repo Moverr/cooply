@@ -60,7 +60,7 @@ class FarmBloc extends Bloc<FarmEvent, FarmState> {
 
   }
 
-  Farm getFarm(FarmRequest fr) =>    Farm(id: 0, name: fr.name, author: "Unknown", status: null, account:  AccountResponse(id: 1, name: "UNKNOWN", author: "UNKNOWN", referenceId: "UNKNOWN"), createdOn: null, modifiedOn: null, coops: null, flock: null);
+  Farm getFarm(FarmRequest fr) =>    Farm(id: 0, name: fr.name, author: "Unknown", status: null, account:  AccountResponse(id: 1, name: "UNKNOWN", author: "UNKNOWN", referenceId: "UNKNOWN"), createdOn: null, modifiedOn: null, coops: null, flock: null,isDefault: false);
 
 
 

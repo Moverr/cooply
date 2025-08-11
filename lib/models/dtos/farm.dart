@@ -13,6 +13,7 @@ class Farm {
     String? modifiedOn;
     double? coops;
     double? flock;
+    bool isDefault = false;
 
   Farm({
     required this.id,
@@ -24,6 +25,7 @@ class Farm {
      this.modifiedOn,
      this.coops,
      this.flock,
+    required this.isDefault,
   });
 
   factory Farm.fromJson(Map<String, Object?> json) {
@@ -47,6 +49,8 @@ class Farm {
           ? (json['flock'] as int).toDouble()
           : json['flock'] as double)
           : null,
+
+      isDefault: json['is_default'] as bool,
     );
   }
 
