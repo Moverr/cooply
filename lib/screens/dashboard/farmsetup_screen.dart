@@ -115,6 +115,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       name: "Mwamba Farrm",
       author: "Rogers",
       status: "Active",
+      isDefault: false,
       account: AccountResponse(
           id: 1,
           name: "Default Account",
@@ -130,6 +131,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       name: "Junju Farrm",
       author: "Rogers",
       status: "Active",
+      isDefault: false,
       account: AccountResponse(
           id: 1,
           name: "Default Account",
@@ -145,6 +147,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       name: "Migori Farrm",
       author: "Rogers",
       status: "Active",
+      isDefault: false,
       account: AccountResponse(
           id: 1,
           name: "Default Account",
@@ -160,6 +163,7 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
       name: "Zaiter Farrm",
       author: "Rogers",
       status: "Active",
+      isDefault: false,
       account: AccountResponse(
           id: 1,
           name: "Default Account",

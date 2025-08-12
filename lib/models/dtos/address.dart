@@ -6,9 +6,11 @@ class Address{
   String city;
   String state;
   String zipCode;
-  int latitude;
-  int longitude;
+  double latitude;
+  double longitude;
+  String details;
 
+  //    private String details;
   Address({
     required this.addressLevel,
     required this.street,
@@ -17,6 +19,7 @@ class Address{
     required this.zipCode,
     required this.latitude,
     required this.longitude,
+    required this.details,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
@@ -27,6 +30,7 @@ class Address{
     zipCode: json["zip_code"],
     latitude: json["latitude"],
     longitude: json["longitude"],
+    details: json["details"],
   );
 
 
@@ -38,6 +42,7 @@ class Address{
     "zip_code": zipCode,
     "latitude": latitude,
     "longitude": longitude,
+    "details": details,
   };
 
 

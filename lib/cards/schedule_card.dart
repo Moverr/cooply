@@ -1,4 +1,3 @@
-import 'dart:collection';
 
 import 'package:Cooply/models/dtos/schedule.dart';
 import 'package:Cooply/utils/util.dart';

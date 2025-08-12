@@ -43,7 +43,7 @@ class FarmRepository {
     } else {
       //todo: generate farmResponse
 
-      Farm farm = new Farm(id: 0, name: farmRequest.name, author: "", status: null, createdOn: null, modifiedOn: null, coops: null, flock: null);
+      Farm farm = new Farm(id: 0, name: farmRequest.name, author: "", status: null, createdOn: null, modifiedOn: null, coops: null, flock: null,isDefault: false);
 
       await local.queueFarm(farm);
     }
