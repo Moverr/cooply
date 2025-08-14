@@ -11,12 +11,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/dtos/farm.dart';
 import '../../services/farm_service.dart';
 
-class FarmSetupScreen extends StatefulWidget {
+class FarmOverviewScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _FarmSetupSate();
+  State<StatefulWidget> createState() => _FarmOverviewState();
 }
 
-class _FarmSetupSate extends State<FarmSetupScreen> {
+class _FarmOverviewState extends State<FarmOverviewScreen> {
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
@@ -176,42 +176,37 @@ class _FarmSetupSate extends State<FarmSetupScreen> {
     )
   ];
 
+  bool x = false;
   @override
   Widget build(BuildContext context) {
     _initializeData();
 
     return Scaffold(
-      // appBar: AppBar(
-      // title: Text(
-      //   "Farm Management",
-      //   style: TextStyle(
-      //       fontFamily: AppConstants.fontFamily,
-      //       fontSize: 15,
-      //       fontWeight: FontWeight.bold),
-      // ),
-      // actions: [
-      //   IconButton(
-      //     icon: Icon(Icons.search),
-      //     onPressed: () {
-      //       // Handle search action
-      //     },
-      //   ),
-      //   IconButton(
-      //     icon: Icon(Icons.settings),
-      //     onPressed: () {
-      //       // Handle settings action
-      //     },
-      //   ),
-      // ],
-      // ),
+      appBar: x == true
+          ? AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text('Farms'),
+            )
+          : null,
       body: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ExpansionTile(
-              title: Text(
-                "Farms",
-                style: TextStyle(
-                    fontSize: 20, fontFamily: AppConstants.defaultFont),
+              title: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  Text(
+                    "Farms",
+                    style: TextStyle(
+                        fontSize: 20, fontFamily: AppConstants.defaultFont),
+                  ),
+                ],
               ),
               children: [
                 Padding(

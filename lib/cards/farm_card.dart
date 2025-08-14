@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../models/dtos/farm.dart';
+import '../screens/dashboard/farms_overview_screen.dart';
 import '../services/service_result.dart';
 import '../utils/AppConstants.dart';
 import '../utils/util.dart';
@@ -23,10 +24,7 @@ class FarmCard extends StatefulWidget {
   State<StatefulWidget> createState() => _FarmCardState();
 }
 
-
 class _FarmCardState extends State<FarmCard> {
-  final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
-
   late LoginResponse loginResponse;
 
   final TextEditingController _farmNameController = TextEditingController();
@@ -37,14 +35,15 @@ class _FarmCardState extends State<FarmCard> {
 
   FarmService fmService = FarmService();
 
-  List<Farm> farms = [];
+  late List<Farm> farms = [];
+
+   Farm defaultFarm = new Farm(id: 01, name: "N/A", isDefault: true);
 
   @override
   void initState() {
     super.initState();
     loginResponse = widget.loginResponse!;
     fetchFarms();
-
   }
 
   Future<void> fetchFarms() async {
@@ -52,30 +51,41 @@ class _FarmCardState extends State<FarmCard> {
       loading = true;
     });
 
-    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(accountId: loginResponse.defaultAccount.id,offset: 0,limit: 20,loginResponse: loginResponse); // your async fetch method
+    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
+        accountId: loginResponse.defaultAccount.id,
+        offset: 0,
+        limit: 20,
+        loginResponse: loginResponse); // your async fetch method
 
     setState(() {
-   if(farmsResponse!.content.isNotEmpty) {
-     loading = false;
-     existingFarms = true;
-     farms = farmsResponse.content;
-   }
-   // true if farms fetched, else false
+      loading = false;
+      if (farmsResponse!.content.isNotEmpty) {
+        existingFarms = true;
+        farms = farmsResponse.content;
+
+        // defaultFarm = farms.first;
+
+          if(farms.isNotEmpty) {
+            farms.forEach((x) {
+              if (x.isDefault == true) {
+                defaultFarm = x;
+              }
+            });
+          }else
+            {
+              defaultFarm = new Farm(id: 01, name: "N/A", isDefault: true);
+            }
+
+      }
+      // true if farms fetched, else false
     });
   }
 
-
-
-
   bool existingFarms = false;
   bool loading = false;
- 
+
   @override
   Widget build(BuildContext context) => farmCard(context);
-
- 
-
-
 
   Container farmCard(BuildContext context) {
     return Container(
@@ -90,8 +100,7 @@ class _FarmCardState extends State<FarmCard> {
   }
 
   Column loadFarms(BuildContext context) {
-    if(loading ==true){
-
+    if (loading == true) {
       return Column(children: [
         Container(
           width: double.infinity,
@@ -113,21 +122,15 @@ class _FarmCardState extends State<FarmCard> {
                 height: 25,
               ),
               Container(
-                alignment: Alignment.centerLeft,
-                child: Text("Loading ....")
-              ),
+                  alignment: Alignment.centerLeft, child: Text("Loading ....")),
             ],
           ),
         ),
       ]);
-      
-      
-      
     }
-    if (existingFarms == true){
-    return  displayFarms(context);
-    }
-    else {
+    if (existingFarms == true) {
+      return displayFarms(context);
+    } else {
       return Column(children: [
         Container(
           width: double.infinity,
@@ -148,31 +151,7 @@ class _FarmCardState extends State<FarmCard> {
               SizedBox(
                 height: 25,
               ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStateProperty.all(Color(0xFFB4C78C)),
-                      foregroundColor:
-                          WidgetStateProperty.all(Color(0xFFFFFFFF)),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(5), // Border radius here
-                        ),
-                        // Custom color
-                      ),
-                    ),
-                    onPressed: () {
-                      showCreateFarmBottomSheet(context);
-                    },
-                    child: const Text("CREATE FARM"),
-                  ),
-                ),
-              ),
+              createFarmButton(context),
             ],
           ),
         ),
@@ -180,8 +159,33 @@ class _FarmCardState extends State<FarmCard> {
     }
   }
 
+  Container createFarmButton(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: SizedBox(
+        width: 200,
+        child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(Color(0xFFB4C78C)),
+            foregroundColor: WidgetStateProperty.all(Color(0xFFFFFFFF)),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5), // Border radius here
+              ),
+              // Custom color
+            ),
+          ),
+          onPressed: () {
+            showCreateFarmBottomSheet(context);
+          },
+          child: const Text("CREATE FARM"),
+        ),
+      ),
+    );
+  }
+
   Column displayFarms(BuildContext context) {
-     return Column(
+    return Column(
       children: [
         Container(
             width: double.infinity,
@@ -218,116 +222,46 @@ class _FarmCardState extends State<FarmCard> {
                                         style: TextStyle(
                                             fontFamily:
                                                 AppConstants.defaultFont,
-                                            fontSize:
-                                                Util.scaleWidthFromDesign(
-                                                    context, 7),
+                                            fontSize: Util.scaleWidthFromDesign(
+                                                context, 7),
                                             fontWeight: FontWeight.normal),
                                       ),
                                     ),
                                     Container(
                                       alignment: Alignment.topLeft,
                                       child: Text(
-                                        farms[0].name,
+                                        //todo: default farm
+                                          defaultFarm!.name ?? "N/A",
                                         style: TextStyle(
                                             fontFamily:
                                                 AppConstants.defaultFont,
-                                            fontSize:
-                                                Util.scaleWidthFromDesign(
-                                                    context, 12),
+                                            fontSize: Util.scaleWidthFromDesign(
+                                                context, 12),
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
-
-                                    Container(
-                                      padding: EdgeInsets.only(top: 10), //padding top
-                                      alignment: Alignment.topLeft,
-                                      // color: Colors.red,
-                                      width: Util.scaleWidthFromDesign(
-                                          context, 120),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownSearch<String>(
-                                          items: dropDownItems,
-                                          popupProps: PopupProps.menu(
-                                            // showSearchBox: true,
-                                            searchFieldProps: TextFieldProps(
-                                              decoration: InputDecoration(
-                                                // hintText: "Search farm...",
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 4,
-                                                        vertical: 4),
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          13),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white,
-                                              ),
-                                              style: TextStyle(
-                                                  fontSize: Util
-                                                      .scaleWidthFromDesign(
-                                                          context, 8)),
-                                            ),
-                                            fit: FlexFit.loose,
-                                            // constraints: BoxConstraints(maxHeight: 100),
-                                          ),
-                                          dropdownDecoratorProps:
-                                              DropDownDecoratorProps(
-                                            dropdownSearchDecoration:
-                                                InputDecoration(
-                                              fillColor: Colors.white,
-                                              labelText: "Select Farm",
-                                              // hintText: "Choose a farm",
-                                              labelStyle: TextStyle(
-                                                  fontSize: Util
-                                                      .scaleWidthFromDesign(
-                                                          context, 8)),
-                                              filled: true,
-                                              // fillColor: Colors.grey.shade100,
-                                              // contentPadding: EdgeInsets.symmetric(
-                                              //     horizontal: 4, vertical: 4),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                          ),
-                                          dropdownBuilder:
-                                              (context, selectedItem) => Text(
-                                            selectedItem ?? "",
-                                            style: TextStyle(
-                                                fontSize:
-                                                    Util.scaleWidthFromDesign(
-                                                        context,
-                                                        8)), // 👈 selected item font
-                                          ),
-                                          itemAsString: (item) => item,
-                                          onChanged: (value) =>
-                                              print("You selected $value"),
-                                        ),
-                                      ),
-    
-                                      //swith drop down
-                                    ),
+                                    farms.length > 1
+                                        ? dropDownFarmSelection(context)
+                                        : createFarmButton(context),
                                   ],
                                 ),
                               ],
                             )),
                       ],
                     )),
+
                 Container(
-                    width: Util.scaleWidthFromDesign(context, 30),
+                    width: Util.scaleWidthFromDesign(context, 100),
                     margin: EdgeInsets.only(
                         top: Util.scaleWidthFromDesign(context, 35)),
-    
+
                     // color: Colors.green,
                     child: Column(
                       children: [
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "3",
+                            "${farms.length}",
                             style: TextStyle(
                                 fontFamily: AppConstants.defaultFont,
                                 fontSize:
@@ -341,8 +275,7 @@ class _FarmCardState extends State<FarmCard> {
                             "Farms",
                             style: TextStyle(
                                 fontFamily: AppConstants.defaultFont,
-                                fontSize:
-                                    Util.scaleWidthFromDesign(context, 7),
+                                fontSize: Util.scaleWidthFromDesign(context, 7),
                                 fontWeight: FontWeight.normal),
                           ),
                         ),
@@ -351,79 +284,26 @@ class _FarmCardState extends State<FarmCard> {
                 SizedBox(
                   width: 10,
                 ),
-                Container(
-                    width: Util.scaleWidthFromDesign(context, 40),
-                    margin: EdgeInsets.only(
-                        top: Util.scaleWidthFromDesign(context, 35)),
-    
-                    // color: Colors.green,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "345",
-                            style: TextStyle(
-                                fontFamily: AppConstants.defaultFont,
-                                fontSize:
-                                    Util.scaleWidthFromDesign(context, 13),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Coops",
-                            style: TextStyle(
-                                fontFamily: AppConstants.defaultFont,
-                                fontSize:
-                                    Util.scaleWidthFromDesign(context, 7),
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ),
-                      ],
-                    )),
+                // coopSummary(context), //get coop summary
                 SizedBox(
                   width: 10,
                 ),
-                Container(
-                    margin: EdgeInsets.only(
-                        top: Util.scaleWidthFromDesign(context, 35)),
-                    width: Util.scaleWidthFromDesign(context, 40),
-                    // color: Colors.green,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "2.3M",
-                            style: TextStyle(
-                                fontFamily: AppConstants.defaultFont,
-                                fontSize:
-                                    Util.scaleWidthFromDesign(context, 13),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Flock",
-                            style: TextStyle(
-                                fontFamily: AppConstants.defaultFont,
-                                fontSize:
-                                    Util.scaleWidthFromDesign(context, 7),
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ),
-                      ],
-                    )),
-                Container(
-                  margin: EdgeInsets.only(
-                      top: Util.scaleWidthFromDesign(context, 0)),
-                  width: Util.scaleWidthFromDesign(context, 15),
+                // flockSummary(context), // get Flock Summary
+                SizedBox(
+
+                  width: Util.scaleWidthFromDesign(context, 25),
                   // color: Colors.green,
                   child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => FarmOverviewScreen()),
+                        );
+
+
+
+                      },
                       icon: Icon(
                         FontAwesomeIcons.penToSquare,
                         size: Util.scaleWidthFromDesign(context, 15),
@@ -432,6 +312,194 @@ class _FarmCardState extends State<FarmCard> {
               ],
             )),
       ],
+    );
+  }
+
+  Container flockSummary(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(top: Util.scaleWidthFromDesign(context, 35)),
+        width: Util.scaleWidthFromDesign(context, 40),
+        // color: Colors.green,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "2.3M",
+                style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontSize: Util.scaleWidthFromDesign(context, 13),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Flock",
+                style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontSize: Util.scaleWidthFromDesign(context, 7),
+                    fontWeight: FontWeight.normal),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Container coopSummary(BuildContext context) {
+    return Container(
+        width: Util.scaleWidthFromDesign(context, 40),
+        margin: EdgeInsets.only(top: Util.scaleWidthFromDesign(context, 35)),
+
+        // color: Colors.green,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "345",
+                style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontSize: Util.scaleWidthFromDesign(context, 13),
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Coops",
+                style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontSize: Util.scaleWidthFromDesign(context, 7),
+                    fontWeight: FontWeight.normal),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  //todo: work upon the miles
+  Container dropDownFarmSelection(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 10), //padding top
+      alignment: Alignment.topLeft,
+      // color: Colors.red,
+      width: Util.scaleWidthFromDesign(context, 120),
+      child: DropdownButtonHideUnderline(
+        child: DropdownSearch<Farm>(
+            items: farms,
+            popupProps: PopupProps.menu(
+              // showSearchBox: true,
+              searchFieldProps: TextFieldProps(
+                decoration: InputDecoration(
+                  // hintText: "Search farm...",
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                style:
+                    TextStyle(fontSize: Util.scaleWidthFromDesign(context, 8)),
+              ),
+              fit: FlexFit.loose,
+              // constraints: BoxConstraints(maxHeight: 100),
+            ),
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                fillColor: Colors.white,
+                labelText: "Switch Farm",
+                // hintText: "Choose a farm",
+                labelStyle:
+                    TextStyle(fontSize: Util.scaleWidthFromDesign(context, 8)),
+                filled: true,
+                // fillColor: Colors.grey.shade100,
+                // contentPadding: EdgeInsets.symmetric(
+                //     horizontal: 4, vertical: 4),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            dropdownBuilder: (context, Farm? selectedItem) => Text(
+                  selectedItem?.name ?? "",
+                  style: TextStyle(
+                      fontSize: Util.scaleWidthFromDesign(
+                          context, 8)), // 👈 selected item font
+                ),
+            selectedItem: defaultFarm,
+            itemAsString: (Farm farm) => farm.name,
+            onChanged: (Farm? farm) async {
+              //todo: call the service and move
+
+              // Show loading dialog
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) =>
+                    const Center(child: CircularProgressIndicator()),
+              );
+
+              try {
+                ServiceResult result = await fmService.setDefaultFarm(
+                  farmId: farm!.id,
+                  loginResponse: loginResponse,
+                  accountId: loginResponse.defaultAccount.id,
+                );
+
+                // Remove loader
+                // Navigator.of(context).pop();
+
+                if (result.success) {
+                  // Close the form screen and pass result
+                   Navigator.pop(context, farm);
+
+
+                  setState(() {
+                    farms = [];
+                  });
+                  /*
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    builder: (context) => const CustomOverlay(
+                      message: "Record Updated succesfully",
+                      isSuccess: true,
+                    ),
+                  );
+                  */
+
+                  //todo: work on the fetching of  data
+                  fetchFarms();
+                } else {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    builder: (context) => CustomOverlay(
+                      message: result.errorMessage ?? "Failed to Update Record ",
+                      isSuccess: false,
+                    ),
+                  );
+                }
+              } catch (e) {
+                Navigator.of(context).pop(); // remove loader
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('An error occurred: $e')),
+                );
+              }
+
+              //todo: finish
+            }
+            // print("Selected Farm ID  ${farm?.id}"),
+
+            ),
+      ),
+
+      //swith drop down
     );
   }
 
@@ -513,7 +581,6 @@ class _FarmCardState extends State<FarmCard> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       onPressed: () async {
-
                         FarmRequest fr = FarmRequest(
                           accountId: loginResponse.defaultAccount.id,
                           name: _farmNameController.text,
@@ -524,18 +591,11 @@ class _FarmCardState extends State<FarmCard> {
                         showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (_) => const Center(child: CircularProgressIndicator()),
+                          builder: (_) =>
+                              const Center(child: CircularProgressIndicator()),
                         );
 
-
-                        // FarmService fmService = new FarmService();
-                        // fmService.createFarm(farm: fr, loginResponse: loginResponse, accountId: loginResponse.defaultAccount.id);
-
-
-
-
                         try {
-
                           ServiceResult result = await fmService.createFarm(
                             farm: fr,
                             loginResponse: loginResponse,
@@ -549,8 +609,6 @@ class _FarmCardState extends State<FarmCard> {
                             // Close the form screen and pass result
                             Navigator.pop(context, fr);
 
-
-
                             showDialog(
                               context: context,
                               barrierDismissible: true,
@@ -561,20 +619,19 @@ class _FarmCardState extends State<FarmCard> {
                               ),
                             );
 
-
+                            //todo: work on the fetching of  data
+                            fetchFarms();
                           } else {
-
                             showDialog(
                               context: context,
                               barrierDismissible: true,
                               barrierColor: Colors.black.withOpacity(0.5),
                               builder: (context) => CustomOverlay(
-                                message: result.errorMessage ??  "Failed to create a farm",
+                                message: result.errorMessage ??
+                                    "Failed to create a farm",
                                 isSuccess: false,
                               ),
                             );
-
-
                           }
                         } catch (e) {
                           Navigator.of(context).pop(); // remove loader

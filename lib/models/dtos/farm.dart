@@ -13,7 +13,7 @@ class Farm {
     String? modifiedOn;
     double? coops;
     double? flock;
-    bool isDefault = false;
+    bool isDefault;
 
   Farm({
     required this.id,

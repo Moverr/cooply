@@ -2,9 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import '../models/dtos/farm.dart';
 import '../models/dtos/schedule.dart';
 
 class Util{
+
  static  String  findPercentage(double? a, double? b)=>
        (a == null || b == null) ? "0":
        ((a/b) * 100).toStringAsFixed(1);
