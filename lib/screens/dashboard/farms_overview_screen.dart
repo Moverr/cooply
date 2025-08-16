@@ -369,13 +369,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => FarmOverviewScreen(
-                              loginResponse: loginResponse,
-                            )),
-                  );
+                   //todo: implement Edit
                 },
                 icon: Icon(
                   FontAwesomeIcons.penToSquare,
@@ -552,13 +546,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                     Spacer(),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => FarmOverviewScreen(
-                                    loginResponse: loginResponse,
-                                  )),
-                        );
+                        //todo: not yet implemented
                       },
                       icon: Icon(
                         FontAwesomeIcons.penToSquare,
