@@ -5,7 +5,7 @@ import 'package:Cooply/screens/dashboard/MainScreens/messages_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/profie_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/reports_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/schedule_screen.dart';
-import 'package:Cooply/screens/dashboard/farmsetup_screen.dart';
+import 'package:Cooply/screens/dashboard/farms_overview_screen.dart';
 import 'package:Cooply/screens/dashboard/overview_screen.dart';
 import 'package:Cooply/screens/home_screen.dart';
 import 'package:Cooply/screens/splash_screen.dart';
@@ -409,7 +409,7 @@ class _DashboardState extends State<Dashboard> {
 
 
       case 'farm_setup':
-          return FarmSetupScreen();
+          return FarmOverviewScreen(loginResponse: loginData,);
 
 
 

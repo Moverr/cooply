@@ -91,6 +91,7 @@ class FarmService {
     return null;
   }
 
+
   Future<ServiceResult> createFarm({
     required FarmRequest farm,
     LoginResponse? loginResponse,
@@ -139,6 +140,58 @@ class FarmService {
       return ServiceResult(success: false, errorMessage: e.toString());
     }
   }
+
+
+  Future<ServiceResult> setDefaultFarm({
+     required int farmId,
+    LoginResponse? loginResponse,
+    required int accountId,
+  }) async {
+    print('URL  : ${AppConstants.BASE_URL}v1/farm/default');
+    print('Account ID  : $accountId');
+    debugPrint("logResponse ${loginResponse?.auth_token}");
+
+    final dio = initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
+
+    try {
+      final response = await dio.post(
+        '/v1/farm/default',
+        data: {
+          "account_id": accountId,
+          "farm_id": farmId,
+
+        },
+      );
+
+      // Optionally check response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ServiceResult(success: true);
+      } else {
+        return ServiceResult(
+          success: false,
+          errorMessage: 'Unexpected status code: ${response.statusCode}',
+        );
+      }
+    } on DioError catch (e) {
+      // Handle API errors
+      String message = 'Failed to save farm';
+      if (e.response != null && e.response?.data != null) {
+        // Try to extract server error message
+        final data = e.response?.data;
+        if (data is Map && data['message'] != null) {
+          message = data['message'];
+        } else if (data is String) {
+          message = data;
+        }
+      }
+      return ServiceResult(success: false, errorMessage: message);
+    } catch (e) {
+      // Any other error
+      return ServiceResult(success: false, errorMessage: e.toString());
+    }
+  }
+
+
 
   Future<void> updateFarm({
     required FarmRequest farm,
