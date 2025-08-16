@@ -409,7 +409,7 @@ class _DashboardState extends State<Dashboard> {
 
 
       case 'farm_setup':
-          return FarmOverviewScreen();
+          return FarmOverviewScreen(loginResponse: loginData,);
 
 
 

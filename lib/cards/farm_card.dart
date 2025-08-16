@@ -37,7 +37,7 @@ class _FarmCardState extends State<FarmCard> {
 
   late List<Farm> farms = [];
 
-   Farm defaultFarm = new Farm(id: 01, name: "N/A", isDefault: true);
+   Farm defaultFarm = new Farm(id: 01, name: "N/A", isDefault: true, details: '');
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _FarmCardState extends State<FarmCard> {
             });
           }else
             {
-              defaultFarm = new Farm(id: 01, name: "N/A", isDefault: true);
+              defaultFarm = new Farm(id: 01, name: "N/A", isDefault: true, details: '');
             }
 
       }
@@ -298,9 +298,8 @@ class _FarmCardState extends State<FarmCard> {
 
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => FarmOverviewScreen()),
+                          MaterialPageRoute(builder: (_) => FarmOverviewScreen(loginResponse: loginResponse,)),
                         );
-
 
 
                       },

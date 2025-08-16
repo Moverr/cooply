@@ -1,14 +1,14 @@
 
 
 class Address{
-  String addressLevel;
-  String street;
-  String city;
-  String state;
-  String zipCode;
+  String? addressLevel;
+  String? street;
+  String? city;
+  String? state;
+  String? zipCode;
   double latitude;
   double longitude;
-  String details;
+  String? details;
 
   //    private String details;
   Address({
@@ -17,20 +17,20 @@ class Address{
     required this.city,
     required this.state,
     required this.zipCode,
-    required this.latitude,
-    required this.longitude,
+      this.latitude = 0.0,
+      this.longitude = 0.0,
     required this.details,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-    addressLevel: json["address_level"],
-    street: json["street"],
-    city: json["city"],
-    state: json["state"],
+    addressLevel: json["address_level"] ?? "",
+    street: json["street"]?? "",
+    city: json["city"]?? "",
+    state: json["state"]?? "",
     zipCode: json["zip_code"],
     latitude: json["latitude"],
     longitude: json["longitude"],
-    details: json["details"],
+    details: json["details"]?? "",
   );
 
 

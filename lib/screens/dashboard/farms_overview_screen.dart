@@ -6,17 +6,28 @@ import 'package:Cooply/utils/AppConstants.dart';
 import 'package:Cooply/widgets/farmListTyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../cards/map_card.dart';
+import '../../models/dtos/address.dart';
 import '../../models/dtos/farm.dart';
 import '../../services/farm_service.dart';
+import '../../utils/util.dart';
 
 class FarmOverviewScreen extends StatefulWidget {
+  final LoginResponse? loginResponse;
+
+  FarmOverviewScreen({super.key, required this.loginResponse});
+
   @override
   State<StatefulWidget> createState() => _FarmOverviewState();
 }
 
 class _FarmOverviewState extends State<FarmOverviewScreen> {
+  late LoginResponse loginResponse;
+
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
@@ -24,21 +35,58 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
   late FarmDataSource _farmDataSource;
   final FarmService _farmService = FarmService();
 
+  // Coordinates for Musima, Jinja, Uganda (approx)
+  final LatLng _location = LatLng(0.4564, 33.1892);
+
+  //todo: getting the farm data
+  Farm defaultFarm =
+      new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+  late List<Farm> farms = [];
+  bool existingFarms = false;
+  bool loading = false;
+  FarmService fmService = FarmService();
+
   @override
   void initState() {
     super.initState();
-    _farmDataSource = FarmDataSource(context);
-    _farmDataSource.fetchPage(0);
-    /*
-    loadUser();
+    loginResponse = widget.loginResponse!;
+    // _farmDataSource = FarmDataSource(context);
+    // _farmDataSource.fetchPage(0);
+    fetchFarms();
+  }
 
-    _farmDataSource = FarmDataSource(context,loginResponse);
-     _farmDataSource.fetchPage(0);
-     */
+  Future<void> fetchFarms() async {
+    setState(() {
+      loading = true;
+    });
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //
-    // });
+    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
+        accountId: loginResponse?.defaultAccount.id,
+        offset: 0,
+        limit: 20,
+        loginResponse: loginResponse); // your async fetch method
+
+    setState(() {
+      loading = false;
+      if (farmsResponse!.content.isNotEmpty) {
+        existingFarms = true;
+        farms = farmsResponse.content;
+
+        // defaultFarm = farms.first;
+
+        if (farms.isNotEmpty) {
+          farms.forEach((x) {
+            if (x.isDefault == true) {
+              defaultFarm = x;
+            }
+          });
+        } else {
+          defaultFarm =
+              new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+        }
+      }
+      // true if farms fetched, else false
+    });
   }
 
   // FarmDataSource initFarmDatasource = (context,loginResponse) => FarmDataSource(context, loginResponse) ;
@@ -75,7 +123,6 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
     */
   }
 
-  late LoginResponse? loginResponse;
   Future<LoginResponse?> loadUser() async {
     final user = await getLoginResponse();
     if (user != null) {
@@ -109,176 +156,15 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
 
   bool _isLoading = true;
 
-  final List<Farm> items = [
-    Farm(
-      id: 1,
-      name: "Mwamba Farrm",
-      author: "Rogers",
-      status: "Active",
-      isDefault: false,
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(34000.toString()),
-      coops: double.parse(3.toString()),
-    ),
-    Farm(
-      id: 1,
-      name: "Junju Farrm",
-      author: "Rogers",
-      status: "Active",
-      isDefault: false,
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(35400.toString()),
-      coops: double.parse(5.toString()),
-    ),
-    Farm(
-      id: 1,
-      name: "Migori Farrm",
-      author: "Rogers",
-      status: "Active",
-      isDefault: false,
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(1200.toString()),
-      coops: double.parse(6.toString()),
-    ),
-    Farm(
-      id: 1,
-      name: "Zaiter Farrm",
-      author: "Rogers",
-      status: "Active",
-      isDefault: false,
-      account: AccountResponse(
-          id: 1,
-          name: "Default Account",
-          author: "Muyinda Rogers",
-          referenceId: "12345"),
-      createdOn: null,
-      modifiedOn: null,
-      flock: double.parse(34000.toString()),
-      coops: double.parse(5.toString()),
-    )
-  ];
-
   bool x = false;
+
   @override
   Widget build(BuildContext context) {
     _initializeData();
 
     return Scaffold(
-      appBar: x == true
-          ? AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: Text('Farms'),
-            )
-          : null,
-      body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExpansionTile(
-              title: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Text(
-                    "Farms",
-                    style: TextStyle(
-                        fontSize: 20, fontFamily: AppConstants.defaultFont),
-                  ),
-                ],
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      labelText: 'Search',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      ),
-                      prefixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
-              ]),
-          Expanded(
-              child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return farmListTyle(
-                farm: items[index],
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Tapped ${items[index]}')),
-                  );
-                },
-              );
-              // return ListTile(
-              //   title: Text('Item ${index + 1}'),
-              // );
-            },
-          )),
-
-          /*    const SizedBox(height: 20),
-          Expanded(
-            child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                // child: SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                child: PaginatedDataTable(
-                    // header: Text("Manage Farm Profiles"),
-                    rowsPerPage: 2,
-                    columnSpacing: 40,
-                    headingRowColor:
-                        WidgetStateProperty.all(Colors.blueGrey.shade700),
-                    columns: [
-                      // DataColumn(label: Text('Account', style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Name',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Status',
-                              style: TextStyle(color: Colors.white))),
-                      // DataColumn(label: Text('Author', style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Date Created',
-                              style: TextStyle(color: Colors.white))),
-                      DataColumn(
-                          label: Text('Action',
-                              style: TextStyle(color: Colors.white))),
-                    ],
-                    source: _farmDataSource
-                    //FarmDataSource(filteredData: _filteredData),
-                    )
-
-                // ),
-                ),
-          ),
-          */
-        ],
-      ),
+      body: getFarmsWidget(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Your action here
@@ -286,48 +172,470 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
         icon: Icon(Icons.add),
         label: Text("Add"),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      /* bottomNavigationBar: Container(
+    );
+  }
+
+  Widget getFarmsWidget(BuildContext context) {
+    if (loading == true) {
+      return Container(
         color: Colors.white,
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // View action
-                },
-                icon: Icon(Icons.visibility),
-                label: Text("View"),
-              ),
+            ExpansionTile(
+                title: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text(
+                      "Farms",
+                      style: TextStyle(
+                          fontSize: Util.scaleWidthFromDesign(context, 20),
+                          fontFamily: AppConstants.defaultFont),
+                    ),
+                  ],
+                ),
+                children: [
+                  //todo: work on the default Div
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        labelText: 'Search',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ]),
+            Expanded(child: getGhostLook()),
+            SizedBox(
+              height: 2,
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Edit action
-                },
-                icon: Icon(Icons.edit),
-                label: Text("Edit"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              ),
+            Expanded(child: getGhostLook()),
+            SizedBox(
+              height: 2,
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Delete action
-                },
-                icon: Icon(Icons.delete),
-                label: Text("Delete"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              ),
+            Expanded(child: getGhostLook()),
+            SizedBox(
+              height: 2,
             ),
           ],
         ),
+      );
+    } else {
+      return Container(
+        color: Colors.white,
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ExpansionTile(
+                title: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text(
+                      "Farms",
+                      style: TextStyle(
+                          fontSize: Util.scaleWidthFromDesign(context, 20),
+                          fontFamily: AppConstants.defaultFont),
+                    ),
+                  ],
+                ),
+                children: [
+                  //todo: work on the default Div
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        labelText: 'Search',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ]),
+            Expanded(child: getDefaultFarm(context)),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(child: otherFarms(context)),
+          ],
+        ),
+      );
+    }
+  }
+
+  Padding getGhostLook() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              height: 20,
+              width: 150,
+              color: Colors.grey.shade300), // fake title
+          const SizedBox(height: 8),
+          Container(
+              height: 100,
+              width: double.infinity,
+              color: Colors.grey.shade300), // fake content
+        ],
       ),
-      */
+    );
+  }
+
+  Widget getDefaultFarm(BuildContext context) {
+    return Container(
+      height: Util.scaleWidthFromDesign(context, 100),
+      margin: EdgeInsets.symmetric(
+        vertical: Util.scaleWidthFromDesign(context, 8),
+        horizontal: Util.scaleWidthFromDesign(context, 16),
+      ),
+      padding: EdgeInsets.all(Util.scaleWidthFromDesign(context, 1)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Container(
+            height: Util.scaleWidthFromDesign(context, 30),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0XFFE4D8B6),
+                  width: 1.0,
+                ),
+              ),
+            ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Current Farm",
+              style: TextStyle(
+                fontFamily: AppConstants.defaultFont,
+                fontWeight: FontWeight.w700,
+                fontSize: Util.scaleWidthFromDesign(context, 13),
+              ),
+            ),
+          ),
+          SizedBox(height: Util.scaleWidthFromDesign(context, 2)),
+
+          // Farm row (icon + name + edit button)
+          Row(
+            children: [
+              Icon(
+                FontAwesomeIcons.buildingColumns,
+                size: Util.scaleWidthFromDesign(context, 15),
+              ),
+              SizedBox(width: Util.scaleWidthFromDesign(context, 10)),
+              Expanded(
+                child: Text(
+                  defaultFarm.name,
+                  style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontWeight: FontWeight.bold,
+                    fontSize: Util.scaleWidthFromDesign(context, 10),
+                    color: Color(0XFFCE4B4B),
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => FarmOverviewScreen(
+                              loginResponse: loginResponse,
+                            )),
+                  );
+                },
+                icon: Icon(
+                  FontAwesomeIcons.penToSquare,
+                  size: Util.scaleWidthFromDesign(context, 10),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: Util.scaleWidthFromDesign(context, 2)),
+
+          // Status / Coops / Location row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+              Text(
+                "Status",
+                style: TextStyle(
+                  fontFamily: AppConstants.defaultFont,
+                  fontWeight: FontWeight.bold,
+                  fontSize: Util.scaleWidthFromDesign(context, 9),
+                  color: Color(0XFF000000),
+                ),
+              ),
+              Text(
+                " : ${defaultFarm.status}",
+                style: TextStyle(
+                  fontFamily: AppConstants.defaultFont,
+                  fontWeight: FontWeight.normal,
+                  fontSize: Util.scaleWidthFromDesign(context, 9),
+                  color: Color(0XFF000000),
+                ),
+              ),
+              SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+              Text(
+                "Coops",
+                style: TextStyle(
+                  fontFamily: AppConstants.defaultFont,
+                  fontWeight: FontWeight.bold,
+                  fontSize: Util.scaleWidthFromDesign(context, 9),
+                  color: Color(0XFF000000),
+                ),
+              ),
+              Text(
+                " : N/A",
+                style: TextStyle(
+                  fontFamily: AppConstants.defaultFont,
+                  fontWeight: FontWeight.normal,
+                  fontSize: Util.scaleWidthFromDesign(context, 9),
+                  color: Color(0XFF000000),
+                ),
+              ),
+              SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+              Text(
+                "Location",
+                style: TextStyle(
+                  fontFamily: AppConstants.defaultFont,
+                  fontWeight: FontWeight.bold,
+                  fontSize: Util.scaleWidthFromDesign(context, 9),
+                  color: Color(0XFF000000),
+                ),
+              ),
+              SizedBox(
+                  width: Util.scaleWidthFromDesign(context, 70),
+                  child: Tooltip(
+                    message:
+                        " ${getPrimaryAddress(defaultFarm).city},${getPrimaryAddress(defaultFarm).street},${getPrimaryAddress(defaultFarm).state}, ",
+                    child: Text(
+                      " : ${getPrimaryAddress(defaultFarm).city},${getPrimaryAddress(defaultFarm).street},${getPrimaryAddress(defaultFarm).state}, ",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.normal,
+                        fontSize: Util.scaleWidthFromDesign(context, 9),
+                        color: Color(0XFF000000),
+                      ),
+
+                      maxLines: 1, // restrict to single line
+                      overflow:
+                          TextOverflow.ellipsis, // hide overflow with "..."
+                    ),
+                  )),
+            ],
+          ),
+          SizedBox(height: Util.scaleWidthFromDesign(context, 2)),
+
+          Expanded(
+            child: MapCard(
+              location: LatLng(getPrimaryAddress(defaultFarm).latitude,
+                  getPrimaryAddress(defaultFarm).longitude),
+            ),
+          )
+          // MapCard placeholder
+        ],
+      ),
+    );
+  }
+
+  Address getPrimaryAddress(Farm farm) {
+    final primaryAddress = farm.addresses.firstWhere(
+      (a) => a.addressLevel?.toUpperCase() == 'PRIMARY', //todo: primary address
+      orElse: () => Address(
+        latitude: 0.0,
+        longitude: 0.0,
+        addressLevel: 'PRIMARY',
+        street: ' na ',
+        city: ' na ',
+        state: ' na ',
+        zipCode: ' na ',
+        details: ' na ',
+      ),
+    );
+
+    // return LatLng(primaryAddress.latitude, primaryAddress.longitude);
+    return primaryAddress;
+  }
+
+  Widget otherFarms(BuildContext context) {
+    return Container(
+      height: Util.scaleWidthFromDesign(context, 100),
+      margin: EdgeInsets.symmetric(
+        vertical: Util.scaleWidthFromDesign(context, 8),
+        horizontal: Util.scaleWidthFromDesign(context, 16),
+      ),
+      padding: EdgeInsets.all(Util.scaleWidthFromDesign(context, 1)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Container(
+            height: Util.scaleWidthFromDesign(context, 30),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0XFFE4D8B6),
+                  width: 1.0,
+                ),
+              ),
+            ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Other Farms",
+              style: TextStyle(
+                fontFamily: AppConstants.defaultFont,
+                fontWeight: FontWeight.w700,
+                fontSize: Util.scaleWidthFromDesign(context, 12),
+              ),
+            ),
+          ),
+
+          SizedBox(height: Util.scaleWidthFromDesign(context, 2)),
+
+          Expanded(
+              child: ListView.builder(
+            itemCount: farms.length,
+            itemBuilder: (context, index) {
+              return Wrap(children: [
+                Row(
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.buildingColumns,
+                      size: Util.scaleWidthFromDesign(context, 15),
+                    ),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 10)),
+                    Text(
+                      farms[index].name,
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: Util.scaleWidthFromDesign(context, 10),
+                        color: Color(0XFFCE4B4B),
+                      ),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => FarmOverviewScreen(
+                                    loginResponse: loginResponse,
+                                  )),
+                        );
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.penToSquare,
+                        size: Util.scaleWidthFromDesign(context, 10),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: Util.scaleWidthFromDesign(context, 2)),
+
+                // Status / Coops / Location row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+                    Text(
+                      "Status",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: Util.scaleWidthFromDesign(context, 9),
+                        color: Color(0XFF000000),
+                      ),
+                    ),
+                    Text(
+                      " : ${farms[index].status}",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.normal,
+                        fontSize: Util.scaleWidthFromDesign(context, 9),
+                        color: Color(0XFF000000),
+                      ),
+                    ),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+                    Text(
+                      "Coops",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: Util.scaleWidthFromDesign(context, 9),
+                        color: Color(0XFF000000),
+                      ),
+                    ),
+                    Text(
+                      " : N/A",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.normal,
+                        fontSize: Util.scaleWidthFromDesign(context, 9),
+                        color: Color(0XFF000000),
+                      ),
+                    ),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+                    Text(
+                      "Location",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.bold,
+                        fontSize: Util.scaleWidthFromDesign(context, 9),
+                        color: Color(0XFF000000),
+                      ),
+                    ),
+
+                    SizedBox(
+                        width: Util.scaleWidthFromDesign(context, 70),
+                        child: Tooltip(
+                          message:
+                          " ${getPrimaryAddress(farms[index]).city},${getPrimaryAddress(farms[index]).street},${getPrimaryAddress(farms[index]).state}, ",
+                          child: Text(
+                            " : ${getPrimaryAddress(farms[index]).city},${getPrimaryAddress(farms[index]).street},${getPrimaryAddress(farms[index]).state}, ",
+                            style: TextStyle(
+                              fontFamily: AppConstants.defaultFont,
+                              fontWeight: FontWeight.normal,
+                              fontSize: Util.scaleWidthFromDesign(context, 9),
+                              color: Color(0XFF000000),
+                            ),
+
+                            maxLines: 1, // restrict to single line
+                            overflow:
+                            TextOverflow.ellipsis, // hide overflow with "..."
+                          ),
+                        )),
+
+
+                  ],
+                ),
+                SizedBox(height: Util.scaleWidthFromDesign(context, 20)),
+              ]);
+            },
+          )),
+
+          // MapCard placeholder
+        ],
+      ),
     );
   }
 }
