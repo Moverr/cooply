@@ -304,8 +304,8 @@ class _FarmCardState extends State<FarmCard> {
 
                       },
                       icon: Icon(
-                        FontAwesomeIcons.penToSquare,
-                        size: Util.scaleWidthFromDesign(context, 15),
+                        FontAwesomeIcons.arrowRight,
+                        size: Util.scaleWidthFromDesign(context, 10),
                       )),
                 ),
               ],
