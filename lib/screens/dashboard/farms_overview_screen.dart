@@ -531,9 +531,9 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                   children: [
                     Icon(
                       FontAwesomeIcons.buildingColumns,
-                      size: Util.scaleWidthFromDesign(context, 15),
+                      size: Util.scaleWidthFromDesign(context, 9),
                     ),
-                    SizedBox(width: Util.scaleWidthFromDesign(context, 10)),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 5)),
                     Text(
                       farms[index].name,
                       style: TextStyle(
@@ -561,7 +561,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 15)),
                     Text(
                       "Status",
                       style: TextStyle(
