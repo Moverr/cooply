@@ -2,10 +2,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import '../models/dtos/address.dart';
 import '../models/dtos/farm.dart';
 import '../models/dtos/schedule.dart';
 
 class Util{
+
+
+  static Address getPrimaryAddress(Farm farm) {
+    final primaryAddress = farm.addresses.firstWhere(
+          (a) => a.addressLevel?.toUpperCase() == 'PRIMARY', //todo: primary address
+      orElse: () => Address(
+        latitude: 0.0,
+        longitude: 0.0,
+        addressLevel: 'PRIMARY',
+        street: ' na ',
+        city: ' na ',
+        state: ' na ',
+        zipCode: ' na ',
+        details: ' na ',
+      ),
+    );
+
+    // return LatLng(primaryAddress.latitude, primaryAddress.longitude);
+    return primaryAddress;
+  }
+
+
 
  static  String  findPercentage(double? a, double? b)=>
        (a == null || b == null) ? "0":

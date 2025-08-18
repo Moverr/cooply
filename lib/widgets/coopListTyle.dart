@@ -1,18 +1,12 @@
 import 'dart:math';
 
-import 'package:Cooply/cards/map_card.dart';
 import 'package:Cooply/models/dtos/coop.dart';
-import 'package:Cooply/models/dtos/farm.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../utils/SvgIcon.dart';
 import '../utils/util.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:latlong2/latlong.dart';
 
 class CoopListTyle extends StatefulWidget {
@@ -30,9 +24,6 @@ class _CoopListTyleState extends State<CoopListTyle> {
   late Coop coop;
   late VoidCallback? onTap;
 
-  // Coordinates for Musima, Jinja, Uganda (approx)
-  final LatLng _location = LatLng(0.4564, 33.1892);
-
   @override
   Widget build(BuildContext context) {
     coop = widget.coop;
@@ -45,7 +36,7 @@ class _CoopListTyleState extends State<CoopListTyle> {
         height: Util.scaleWidthFromDesign(context, 200),
         margin: EdgeInsets.symmetric(
             vertical: Util.scaleWidthFromDesign(context, 8), horizontal: 16),
-        padding: const EdgeInsets.all(5),
+        // padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius:
@@ -63,48 +54,23 @@ class _CoopListTyleState extends State<CoopListTyle> {
         child: Expanded(
             child: Column(
           children: [
-            Row( // top level
+            Row(
               children: [
-                Row(  //first section
+                Row(
                   children: [
-                    Container(
-                      alignment: Alignment.topCenter,
-                      //image Container
-                      padding: EdgeInsets.only(top: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: null,
-                      ),
-                      // color: Colors.yellow,
-                      width: Util.scaleWidthFromDesign(context, 20),
-                      height: Util.scaleWidthFromDesign(context, 125),
-                      child: Icon(
-                        FontAwesomeIcons.buildingColumns,
-                        size: Util.scaleWidthFromDesign(context, 12),
-                      ),
 
-                      //Image.asset("assets/icon/total_stock.png")
-                      //
-                      //Icon( FontAwesomeIcons.penToSquare,size: Util.scaleWidthFromDesign(context,12),)
-                      //SvgPicture.asset('assets/svg/place.svg',)
-                      //Text("🏡",style:TextStyle(fontSize: Util.scaleWidthFromDesign(context, 20)))
-                    ),
-                    Container(
-                      width: Util.scaleWidthFromDesign(context, 2),
-                      height: Util.scaleWidthFromDesign(
-                          context, 130), // You can adjust height as needed
-                      color: Colors.white, // Add your desired color
-                    ),
                     Container(
                       height: Util.scaleWidthFromDesign(context, 125),
                       width: Util.scaleWidthFromDesign(context, 260),
                       // color: Colors.red,
                       padding: const EdgeInsets.all(5),
                       alignment: Alignment.topLeft,
+
+
                       child: Wrap(
                         spacing: 12, // horizontal space between items
-                        runSpacing: 8, // vertical space between lines when wrapped
+                        runSpacing:
+                            8, // vertical space between lines when wrapped
 
                         children: [
                           Container(
@@ -113,18 +79,24 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               "${coop.name} #${coop.reference} ",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: Util.scaleWidthFromDesign(context, 15),
+                                  fontSize:
+                                      Util.scaleWidthFromDesign(context, 15),
                                   fontFamily: AppConstants.defaultFont),
                             ),
                           ),
+
+
+
+
+                          Spacer(), //todo: work on the lignment
 
                           Row(
                             children: [
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                    // color: Colors.blue,
+                                      //t
+                                      // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
                                       child: Image.asset(
                                         "assets/icon/total_stock.png",
@@ -137,15 +109,15 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       " ${Util.formatCount(coop.capacity)}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         shadows: [
                                           Shadow(
                                             offset: Offset(2, 2),
                                             blurRadius: 4.0,
-                                            color: Colors.grey
-                                                .withOpacity(0.5), // Shadow color
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
                                         ],
                                       ),
@@ -160,8 +132,9 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                      padding: EdgeInsets.only(left: 3), // his is
+                                      //t
+                                      padding:
+                                          EdgeInsets.only(left: 3), // his is
                                       // his is
                                       // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
@@ -176,15 +149,15 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       "${Util.findPercentage(coop.acquiredFlock, coop.capacity)}%",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         shadows: [
                                           Shadow(
                                             offset: Offset(2, 2),
                                             blurRadius: 4.0,
-                                            color: Colors.grey
-                                                .withOpacity(0.5), // Shadow color
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
                                         ],
                                       ),
@@ -196,8 +169,9 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                      padding: EdgeInsets.only(left: 3), // his is
+                                      //t
+                                      padding:
+                                          EdgeInsets.only(left: 3), // his is
                                       // his is
                                       // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
@@ -212,15 +186,15 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       "${coop.type}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         shadows: [
                                           Shadow(
                                             offset: Offset(2, 2),
                                             blurRadius: 4.0,
-                                            color: Colors.grey
-                                                .withOpacity(0.5), // Shadow color
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
                                         ],
                                       ),
@@ -236,8 +210,8 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                    // color: Colors.blue,
+                                      //t
+                                      // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
                                       child: Image.asset(
                                         "assets/icon/layer_block.png",
@@ -250,15 +224,15 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       " ${Util.formatCount(coop.currentFlock)}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         shadows: [
                                           Shadow(
                                             offset: Offset(2, 2),
                                             blurRadius: 4.0,
-                                            color: Colors.grey
-                                                .withOpacity(0.5), // Shadow color
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
                                         ],
                                       ),
@@ -271,8 +245,9 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                      padding: EdgeInsets.only(left: 3), // his is
+                                      //t
+                                      padding:
+                                          EdgeInsets.only(left: 3), // his is
                                       // his is
                                       // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
@@ -287,15 +262,15 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       "${Util.findPercentage(coop.currentFlock, coop.acquiredFlock)}%",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         shadows: [
                                           Shadow(
                                             offset: Offset(2, 2),
                                             blurRadius: 4.0,
-                                            color: Colors.grey
-                                                .withOpacity(0.5), // Shadow color
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
                                         ],
                                       ),
@@ -308,8 +283,9 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                      padding: EdgeInsets.only(left: 3), // his is
+                                      //t
+                                      padding:
+                                          EdgeInsets.only(left: 3), // his is
                                       // his is
                                       // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
@@ -332,8 +308,8 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                             Shadow(
                                               offset: Offset(2, 2),
                                               blurRadius: 4.0,
-                                              color: Colors.grey
-                                                  .withOpacity(0.5), // Shadow color
+                                              color: Colors.grey.withOpacity(
+                                                  0.5), // Shadow color
                                             ),
                                           ],
                                         ),
@@ -347,8 +323,9 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                      padding: EdgeInsets.only(left: 3), // his is
+                                      //t
+                                      padding:
+                                          EdgeInsets.only(left: 3), // his is
                                       // his is
                                       // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
@@ -363,15 +340,15 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       " 12% ",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         shadows: [
                                           Shadow(
                                             offset: Offset(2, 2),
                                             blurRadius: 4.0,
-                                            color: Colors.grey
-                                                .withOpacity(0.5), // Shadow color
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
                                         ],
                                       ),
@@ -388,8 +365,8 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               Row(
                                 children: [
                                   Container(
-                                    //t
-                                    // color: Colors.blue,
+                                      //t
+                                      // color: Colors.blue,
                                       alignment: Alignment.centerLeft,
                                       child: Image.asset(
                                         "assets/icon/blocks.png",
@@ -397,26 +374,26 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                       )),
                                   SizedBox(
                                       child: Container(
-                                        // color: Colors.red,
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "  layers",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize:
-                                            Util.scaleWidthFromDesign(context, 11),
-                                            fontFamily: AppConstants.defaultFont,
-                                            shadows: [
-                                              Shadow(
-                                                offset: Offset(2, 2),
-                                                blurRadius: 4.0,
-                                                color: Colors.grey
-                                                    .withOpacity(0.5), // Shadow color
-                                              ),
-                                            ],
+                                    // color: Colors.red,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "  layers",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
+                                        fontFamily: AppConstants.defaultFont,
+                                        shadows: [
+                                          Shadow(
+                                            offset: Offset(2, 2),
+                                            blurRadius: 4.0,
+                                            color: Colors.grey.withOpacity(
+                                                0.5), // Shadow color
                                           ),
-                                        ),
-                                      ))
+                                        ],
+                                      ),
+                                    ),
+                                  ))
                                 ],
                               ),
                             ],
@@ -430,17 +407,18 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                   alignment: Alignment.centerLeft,
                                   child: Icon(
                                     FontAwesomeIcons.houseFlag,
-                                    size: Util.scaleWidthFromDesign(context, 10),
+                                    size:
+                                        Util.scaleWidthFromDesign(context, 10),
                                   )),
                               Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   "  ${coop.farmName}",
                                   style: TextStyle(
-                                    // color: Colors.green.shade200,
+                                      // color: Colors.green.shade200,
                                       fontWeight: FontWeight.w200,
-                                      fontSize:
-                                      Util.scaleWidthFromDesign(context, 10),
+                                      fontSize: Util.scaleWidthFromDesign(
+                                          context, 10),
                                       fontFamily: AppConstants.defaultFont),
                                 ),
                               ),
@@ -448,7 +426,7 @@ class _CoopListTyleState extends State<CoopListTyle> {
                               //todo: location
 
                               Container(
-                                //t
+                                  //t
                                   padding: EdgeInsets.only(left: 3), // his is
                                   // his is
                                   // color: Colors.blue,
@@ -461,22 +439,22 @@ class _CoopListTyleState extends State<CoopListTyle> {
                                 // color: Colors.red,
                                 alignment: Alignment.centerLeft,
                                 child: // Your widget:
-                                MouseRegion(
+                                    MouseRegion(
                                   cursor: SystemMouseCursors
                                       .click, // Show pointer cursor on hover
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
                                         _showMap =
-                                        !_showMap; // Toggle the map visibility
+                                            !_showMap; // Toggle the map visibility
                                       });
                                     },
                                     child: Text(
                                       "musima, jinja, Uganda",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
-                                        fontSize:
-                                        Util.scaleWidthFromDesign(context, 11),
+                                        fontSize: Util.scaleWidthFromDesign(
+                                            context, 11),
                                         fontFamily: AppConstants.defaultFont,
                                         color: Color(0xFF1C71C1),
                                         decoration: TextDecoration
@@ -498,43 +476,30 @@ class _CoopListTyleState extends State<CoopListTyle> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
-                Column( //Right Section
+                Spacer(),
+                Column(
+                  //Right Section
                   children: [
                     Container(
                       alignment: Alignment.topCenter,
-                      height: Util.scaleWidthFromDesign(context, 100)  ,
-
-                      child:  IconButton(onPressed: (){
-
-                      }, icon: Icon( FontAwesomeIcons.penToSquare,size:  Util.scaleWidthFromDesign(context,15),)
-                      ),
-
+                      height: Util.scaleWidthFromDesign(context, 100),
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            FontAwesomeIcons.penToSquare,
+                            size: Util.scaleWidthFromDesign(context, 15),
+                          )),
                     ),
-
                     Container(
                       alignment: Alignment.bottomCenter,
-
-
-                      child: Text(  "  ${coop.status}"),
-
+                      child: Text("  ${coop.status}"),
                     ),
-
-
-
                   ],
                 )
               ],
             ),
-
-
-            //Map Display
-            MapCard(
-              location: _location,
-            ),
-            //bottom, which is the map level
           ],
         )),
       ),

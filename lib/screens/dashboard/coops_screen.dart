@@ -6,10 +6,12 @@ import 'package:Cooply/utils/AppConstants.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/dtos/farm.dart';
 import '../../services/farm_service.dart';
+import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
 import '../../widgets/custom_expansion_tile.dart';
 
@@ -31,6 +33,13 @@ class _CoopState extends State<CoopsScreen> {
   bool _isSearching = false;
 
 
+  //todo: getting the farm data
+  Farm defaultFarm =
+  new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+  bool existingFarms = false;
+  bool loading = false;
+  FarmService fmService = FarmService();
+  late List<Farm> farms = [];
 
   @override
   void initState() {
@@ -47,7 +56,46 @@ class _CoopState extends State<CoopsScreen> {
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //
     // });
+    fetchFarms();
   }
+
+
+  Future<void> fetchFarms() async {
+    setState(() {
+      loading = true;
+    });
+
+    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
+        accountId: loginResponse?.defaultAccount.id,
+        offset: 0,
+        limit: 20,
+        loginResponse: loginResponse); // your async fetch method
+
+    setState(() {
+      loading = false;
+      if (farmsResponse!.content.isNotEmpty) {
+        existingFarms = true;
+        farms = farmsResponse.content;
+
+        // defaultFarm = farms.first;
+
+        if (farms.isNotEmpty) {
+          farms.forEach((x) {
+            if (x.isDefault == true) {
+              defaultFarm = x;
+            }
+          });
+        } else {
+          defaultFarm =
+          new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+        }
+      }
+      // true if farms fetched, else false
+    });
+  }
+
+
+
 
   // FarmDataSource initFarmDatasource = (context,loginResponse) => FarmDataSource(context, loginResponse) ;
 
@@ -119,19 +167,18 @@ class _CoopState extends State<CoopsScreen> {
 
   final List<Coop> items = [
     Coop(
-        id: 1,
-        name: "Gianna",
-        reference: "20250112A",
-        farmName: "Mwamba Farm",
-        author: "Muyinda ROgers",
-        status: "Active",
-        createdOn: "12-10-2024",
-        modifiedOn: "12-10-2024",
+      id: 1,
+      name: "Gianna",
+      reference: "20250112A",
+      farmName: "Mwamba Farm",
+      author: "Muyinda ROgers",
+      status: "Active",
+      createdOn: "12-10-2024",
+      modifiedOn: "12-10-2024",
       capacity: 25000,
-        currentFlock:1000,
-        acquiredFlock:1200,
-        type: "Deep Litre",
-
+      currentFlock: 1000,
+      acquiredFlock: 1200,
+      type: "Deep Litre",
     ),
     Coop(
         id: 1,
@@ -143,7 +190,7 @@ class _CoopState extends State<CoopsScreen> {
         createdOn: "12-10-2024",
         modifiedOn: "12-10-2024",
         currentFlock: 34000,
-        acquiredFlock:34500,
+        acquiredFlock: 34500,
         type: "Battery Cage",
         capacity: 123400),
     Coop(
@@ -156,10 +203,9 @@ class _CoopState extends State<CoopsScreen> {
         createdOn: "12-10-2024",
         modifiedOn: "12-10-2024",
         currentFlock: 34000,
-        acquiredFlock:34500,
+        acquiredFlock: 34500,
         type: "Free Range",
         capacity: 1200),
-
   ];
 
   String selectedValue = 'Apple';
@@ -170,39 +216,42 @@ class _CoopState extends State<CoopsScreen> {
     _initializeData();
 
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         title: _isSearching
             ? TextField(
-          controller: _searchController,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Search coops...',
-            border: InputBorder.none,
-            hintStyle: TextStyle(color: Colors.black38),
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Search coops...',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.black38),
 
-            // border: OutlineInputBorder(
-            //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            //   ),
-            prefixIcon: Icon(Icons.search),
+                  // border: OutlineInputBorder(
+                  //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  //   ),
+                  prefixIcon: Icon(Icons.search),
+                ),
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontFamily: AppConstants.defaultFont,
+                  fontSize: 16,
+                ),
+                onChanged: (query) {
+                  // You can filter your list here
+                  print("Searching for: $query");
+                },
+              )
+            : Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            " 🏠 Coop Management",
+            style: TextStyle(
+              fontFamily: AppConstants.defaultFont,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          style: TextStyle(
-            color: Colors.black38,
-            fontFamily: AppConstants.defaultFont,
-            fontSize: 16,
-          ),
-          onChanged: (query) {
-            // You can filter your list here
-            print("Searching for: $query");
-          },
-        )
-            : Text(
-          " 🏠 Coop Management",
-          style: TextStyle(
-            fontFamily: AppConstants.defaultFont,
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        ) ,
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -216,90 +265,38 @@ class _CoopState extends State<CoopsScreen> {
               });
             },
           ),
-          IconButton(
-            icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
-            onPressed: () {
-              setState(() {
-                _isExpanded = !_isExpanded;
-              });
-            },
-          ),
         ],
       ),
       body: Container(
         color: Colors.white,
         child: Column(
-            children: [
+          children: [
+            getHeaderWidget(context)
 
-              CustomExpansionTile(
-                expanded: _isExpanded,
-                child: Column(
-                  children: [
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownSearch<String>(
-                          items: dropDownItems,
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            searchFieldProps: TextFieldProps(
-                              decoration: InputDecoration(
-                                // hintText: "Search farm...",
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                            ),
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: 300),
-                          ),
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              labelText: "Select Farm",
-                              // hintText: "Choose a farm",
-                              filled: true,
-                              fillColor: Colors.grey.shade100,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 16),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                          onChanged: (value) => print("You selected $value"),
-                        ),
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
+            ,
 
 
-              Expanded(
-                  child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return CoopListTyle(
-                    coop: items[index],
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Tapped ${items[index]}')),
-                      );
-                    },
-                  );
-                  // return ListTile(
-                  //   title: Text('Item ${index + 1}'),
-                  // );
-                },
-              )),
-            ],
-          ),
 
+
+            Expanded(
+                child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return CoopListTyle(
+                  coop: items[index],
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Tapped ${items[index]}')),
+                    );
+                  },
+                );
+                // return ListTile(
+                //   title: Text('Item ${index + 1}'),
+                // );
+              },
+            )),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -309,48 +306,62 @@ class _CoopState extends State<CoopsScreen> {
         label: Text("Add"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      /* bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // View action
-                },
-                icon: Icon(Icons.visibility),
-                label: Text("View"),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Edit action
-                },
-                icon: Icon(Icons.edit),
-                label: Text("Edit"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Delete action
-                },
-                icon: Icon(Icons.delete),
-                label: Text("Delete"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              ),
-            ),
-          ],
-        ),
-      ),
-      */
     );
+  }
+
+  Widget getHeaderWidget(BuildContext context) {
+    return Container(
+              height: Util.scaleWidthFromDesign(context, 30),
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(
+                  vertical: Util.scaleWidthFromDesign(context, 5),
+                  horizontal: 16),
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Color(0XFFE4D8B6),
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Icon(
+                    FontAwesomeIcons.buildingColumns,
+                    size: Util.scaleWidthFromDesign(context, 12),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    defaultFarm.name,
+                    style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontWeight: FontWeight.w700,
+                        fontSize: Util.scaleWidthFromDesign(context, 14),
+                        color: Color(0XFFCE4B4B)),
+                  ),
+                  Spacer(),
+                  Text(
+                    "Location :  ",
+                    style: TextStyle(
+                      fontFamily: AppConstants.defaultFont,
+                      fontWeight: FontWeight.w700,
+                      fontSize: Util.scaleWidthFromDesign(context, 10),
+                    ),
+                  ),
+                  Text(
+                    "Kampala, Uganda ",
+                    style: TextStyle(
+                      fontFamily: AppConstants.defaultFont,
+                      fontWeight: FontWeight.normal,
+                      fontSize: Util.scaleWidthFromDesign(context, 10),
+                    ),
+                  ),
+                ],
+              ));
   }
 }
 

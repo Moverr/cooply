@@ -19,6 +19,7 @@ import '../../services/farm_service.dart';
 import '../../services/service_result.dart';
 import '../../utils/util.dart';
 import '../../widgets/overlays.dart';
+import  '../../utils/util.dart';
 
 class FarmOverviewScreen extends StatefulWidget {
   final LoginResponse? loginResponse;
@@ -436,9 +437,9 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                   width: Util.scaleWidthFromDesign(context, 70),
                   child: Tooltip(
                     message:
-                        " ${getPrimaryAddress(defaultFarm).city},${getPrimaryAddress(defaultFarm).street},${getPrimaryAddress(defaultFarm).state}, ",
+                        " ${Util.getPrimaryAddress(defaultFarm).city},${Util.getPrimaryAddress(defaultFarm).street},${Util.getPrimaryAddress(defaultFarm).state}, ",
                     child: Text(
-                      " : ${getPrimaryAddress(defaultFarm).city},${getPrimaryAddress(defaultFarm).street},${getPrimaryAddress(defaultFarm).state}, ",
+                      " : ${Util.getPrimaryAddress(defaultFarm).city},${Util.getPrimaryAddress(defaultFarm).street},${Util.getPrimaryAddress(defaultFarm).state}, ",
                       style: TextStyle(
                         fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.normal,
@@ -457,8 +458,8 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
 
           Expanded(
             child: MapCard(
-              location: LatLng(getPrimaryAddress(defaultFarm).latitude,
-                  getPrimaryAddress(defaultFarm).longitude),
+              location: LatLng(Util.getPrimaryAddress(defaultFarm).latitude,
+                  Util.getPrimaryAddress(defaultFarm).longitude),
             ),
           )
           // MapCard placeholder
@@ -467,24 +468,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
     );
   }
 
-  Address getPrimaryAddress(Farm farm) {
-    final primaryAddress = farm.addresses.firstWhere(
-      (a) => a.addressLevel?.toUpperCase() == 'PRIMARY', //todo: primary address
-      orElse: () => Address(
-        latitude: 0.0,
-        longitude: 0.0,
-        addressLevel: 'PRIMARY',
-        street: ' na ',
-        city: ' na ',
-        state: ' na ',
-        zipCode: ' na ',
-        details: ' na ',
-      ),
-    );
 
-    // return LatLng(primaryAddress.latitude, primaryAddress.longitude);
-    return primaryAddress;
-  }
 
   Widget otherFarms(BuildContext context) {
     return Container(
@@ -614,9 +598,9 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                         width: Util.scaleWidthFromDesign(context, 70),
                         child: Tooltip(
                           message:
-                          " ${getPrimaryAddress(farms[index]).city},${getPrimaryAddress(farms[index]).street},${getPrimaryAddress(farms[index]).state}, ",
+                          " ${Util.getPrimaryAddress(farms[index]).city},${Util.getPrimaryAddress(farms[index]).street},${Util.getPrimaryAddress(farms[index]).state}, ",
                           child: Text(
-                            " : ${getPrimaryAddress(farms[index]).city},${getPrimaryAddress(farms[index]).street},${getPrimaryAddress(farms[index]).state}, ",
+                            " : ${Util.getPrimaryAddress(farms[index]).city},${Util.getPrimaryAddress(farms[index]).street},${Util.getPrimaryAddress(farms[index]).state}, ",
                             style: TextStyle(
                               fontFamily: AppConstants.defaultFont,
                               fontWeight: FontWeight.normal,
