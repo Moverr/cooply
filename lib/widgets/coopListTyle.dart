@@ -29,482 +29,168 @@ class _CoopListTyleState extends State<CoopListTyle> {
     coop = widget.coop;
     onTap = widget.onTap;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        clipBehavior: Clip.hardEdge,
-        height: Util.scaleWidthFromDesign(context, 200),
-        margin: EdgeInsets.symmetric(
-            vertical: Util.scaleWidthFromDesign(context, 8), horizontal: 16),
-        // padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius:
-              BorderRadius.circular(Util.scaleWidthFromDesign(context, 12)),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0XFFCDB4B4),
-              // blurRadius:  Util.scaleWidthFromDesign(context,1),
-              offset: Offset(Util.scaleWidthFromDesign(context, 0),
-                  Util.scaleWidthFromDesign(context, 0.5)),
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+        vertical: Util.scaleWidthFromDesign(context, 8),
+        horizontal: 16,
+      ),
+      padding: const EdgeInsets.all(8), // add padding instead of translate
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Color(0XFFCDB4B4),
+            offset: Offset(0, Util.scaleWidthFromDesign(context, 0.5)),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top Bar
+          Container(
+            height: Util.scaleWidthFromDesign(context, 22),
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFFE7E0EC).withValues(alpha: 0.8),
+                  const Color(0xFFFDF9F9).withValues(alpha: 0.1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(2),
             ),
-          ],
-        ),
-        alignment: Alignment.centerLeft,
-        child: Expanded(
-            child: Column(
-          children: [
-            Row(
+            child: Row(
               children: [
-                Row(
-                  children: [
-
-                    Container(
-                      height: Util.scaleWidthFromDesign(context, 125),
-                      width: Util.scaleWidthFromDesign(context, 260),
-                      // color: Colors.red,
-                      padding: const EdgeInsets.all(5),
-                      alignment: Alignment.topLeft,
-
-
-                      child: Wrap(
-                        spacing: 12, // horizontal space between items
-                        runSpacing:
-                            8, // vertical space between lines when wrapped
-
-                        children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "${coop.name} #${coop.reference} ",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:
-                                      Util.scaleWidthFromDesign(context, 15),
-                                  fontFamily: AppConstants.defaultFont),
-                            ),
-                          ),
-
-
-
-
-                          Spacer(), //todo: work on the lignment
-
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/total_stock.png",
-                                        width: 13,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      " ${Util.formatCount(coop.capacity)}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-
-//todo : Percentage Flock vs Coop Capacity.  how much of the qckquired flock is in the flock
-// todo: should we look at the acquired flock or current flock. coz some flock might die.
-
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      padding:
-                                          EdgeInsets.only(left: 3), // his is
-                                      // his is
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/capacity_per.png",
-                                        width: 15,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "${Util.findPercentage(coop.acquiredFlock, coop.capacity)}%",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-//todo: type or system being used. deep liter, mixed, or
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      padding:
-                                          EdgeInsets.only(left: 3), // his is
-                                      // his is
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/blocks.png",
-                                        width: 15,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "${coop.type}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/layer_block.png",
-                                        width: 13,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      " ${Util.formatCount(coop.currentFlock)}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-
-//todo : Percentage Current Flock vs Arquired Flock
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      padding:
-                                          EdgeInsets.only(left: 3), // his is
-                                      // his is
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/capacity_per.png",
-                                        width: 15,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "${Util.findPercentage(coop.currentFlock, coop.acquiredFlock)}%",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-
-                              //todo: Stage
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      padding:
-                                          EdgeInsets.only(left: 3), // his is
-                                      // his is
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/chicken.png",
-                                        width: 17,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Flexible(
-                                      child: Text(
-                                        " Grower ",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: Util.scaleWidthFromDesign(
-                                              context, 11),
-                                          fontFamily: AppConstants.defaultFont,
-                                          shadows: [
-                                            Shadow(
-                                              offset: Offset(2, 2),
-                                              blurRadius: 4.0,
-                                              color: Colors.grey.withOpacity(
-                                                  0.5), // Shadow color
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-
-                              //todo: Vaccination
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      padding:
-                                          EdgeInsets.only(left: 3), // his is
-                                      // his is
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/syringe.png",
-                                        width: 17,
-                                      )),
-                                  Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      " 12% ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-
-//todo:  last layer, showing  type of birds,  and pin of the coop
-                          Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                      //t
-                                      // color: Colors.blue,
-                                      alignment: Alignment.centerLeft,
-                                      child: Image.asset(
-                                        "assets/icon/blocks.png",
-                                        width: 13,
-                                      )),
-                                  SizedBox(
-                                      child: Container(
-                                    // color: Colors.red,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "  layers",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(
-                                                0.5), // Shadow color
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ))
-                                ],
-                              ),
-                            ],
-                          ),
-
-//icon: Icon( FontAwesomeIcons.penToSquare,size:  Util.scaleWidthFromDesign(context,15),)
-
-                          Row(
-                            children: [
-                              Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Icon(
-                                    FontAwesomeIcons.houseFlag,
-                                    size:
-                                        Util.scaleWidthFromDesign(context, 10),
-                                  )),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "  ${coop.farmName}",
-                                  style: TextStyle(
-                                      // color: Colors.green.shade200,
-                                      fontWeight: FontWeight.w200,
-                                      fontSize: Util.scaleWidthFromDesign(
-                                          context, 10),
-                                      fontFamily: AppConstants.defaultFont),
-                                ),
-                              ),
-
-                              //todo: location
-
-                              Container(
-                                  //t
-                                  padding: EdgeInsets.only(left: 3), // his is
-                                  // his is
-                                  // color: Colors.blue,
-                                  alignment: Alignment.centerLeft,
-                                  child: Image.asset(
-                                    "assets/icon/map-pin.png",
-                                    width: 17,
-                                  )),
-                              Container(
-                                // color: Colors.red,
-                                alignment: Alignment.centerLeft,
-                                child: // Your widget:
-                                    MouseRegion(
-                                  cursor: SystemMouseCursors
-                                      .click, // Show pointer cursor on hover
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _showMap =
-                                            !_showMap; // Toggle the map visibility
-                                      });
-                                    },
-                                    child: Text(
-                                      "musima, jinja, Uganda",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: Util.scaleWidthFromDesign(
-                                            context, 11),
-                                        fontFamily: AppConstants.defaultFont,
-                                        color: Color(0xFF1C71C1),
-                                        decoration: TextDecoration
-                                            .underline, // underline to look like a link
-                                        shadows: [
-                                          Shadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 4.0,
-                                            color: Colors.grey.withOpacity(0.5),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                Text(
+                  "${coop.name} #${coop.reference} ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Util.scaleWidthFromDesign(context, 12),
+                    fontFamily: AppConstants.defaultFont,
+                  ),
                 ),
                 Spacer(),
-                Column(
-                  //Right Section
-                  children: [
-                    Container(
-                      alignment: Alignment.topCenter,
-                      height: Util.scaleWidthFromDesign(context, 100),
-                      child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            FontAwesomeIcons.penToSquare,
-                            size: Util.scaleWidthFromDesign(context, 15),
-                          )),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Text("  ${coop.status}"),
-                    ),
-                  ],
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    FontAwesomeIcons.penToSquare,
+                    size: Util.scaleWidthFromDesign(context, 12),
+                  ),
                 )
               ],
             ),
-          ],
-        )),
+          ),
+          const SizedBox(height: 6),
+
+          // Info Rows (Area, Capacity, etc.)
+          _buildInfoRow(
+            context,
+            FontAwesomeIcons.borderAll,
+            "Area : 200m   Capacity : 12K",
+          ),
+          _buildProgressRow(context),
+
+          _buildInfoRow(
+            context,
+            FontAwesomeIcons.lightbulb,
+            "Power : Grid(None), Solar (Active)",
+          ),
+          _buildInfoRow(
+            context,
+            FontAwesomeIcons.droplet,
+            "Water : None",
+          ),
+          _buildInfoRow(
+            context,
+            FontAwesomeIcons.twitter,
+            "Breed : Local,Mixed   Stage : Grower,Laying",
+          ),
+          _buildInfoRow(
+            context,
+            FontAwesomeIcons.check,
+            "Status : Active",
+          ),
+          _buildInfoRow(
+            context,
+            FontAwesomeIcons.user,
+            "Manager : Muyinda Rogers   Team : 3 ",
+
+
+          ),
+        ],
+      ),
+    );
+
+  }
+
+  Widget _buildInfoRow(BuildContext context, IconData icon, String text, { IconData? trailingIcon}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon,
+            size: Util.scaleWidthFromDesign(context, 12),
+            color: Colors.blue,
+            shadows: [
+              Shadow(blurRadius: 10, color: Colors.greenAccent.withOpacity(0.8)),
+              Shadow(blurRadius: 20, color: Colors.greenAccent.withOpacity(0.5)),
+            ],
+          ),
+          const SizedBox(width: 5),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: Util.scaleWidthFromDesign(context, 11),
+                fontFamily: AppConstants.defaultFont,
+              ),
+            ),
+          ),
+          if (trailingIcon != null)
+            Icon(trailingIcon, size: Util.scaleWidthFromDesign(context, 12), color: Colors.blue),
+        ],
       ),
     );
   }
+
+  Widget _buildProgressRow(BuildContext context) {
+    double progress = 0.9; // 90% occupied
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "Occupied : 1K  ${ (progress * 100).toStringAsFixed(0)}%",
+                style: TextStyle(
+                  fontSize: Util.scaleWidthFromDesign(context, 11),
+                  fontFamily: AppConstants.defaultFont,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              minHeight: 5,
+              value: progress,
+              backgroundColor: Colors.redAccent.shade700,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade700),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 
   List<String> images = [
     "assets/chicken1.png",

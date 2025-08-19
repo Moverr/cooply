@@ -158,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
 
       setState(() {
         _mainPages = [
-          ExploreScreen(),
+          ExploreScreen(loginResponse: result),
           ReportScreen(),
           ScheduleScreen(),
           MessageScreen(),

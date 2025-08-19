@@ -16,6 +16,13 @@ import '../../widgets/coopListTyle.dart';
 import '../../widgets/custom_expansion_tile.dart';
 
 class CoopsScreen extends StatefulWidget {
+
+  final LoginResponse? loginResponse;
+
+  const CoopsScreen({super.key, required this.loginResponse});
+
+
+
   @override
   State<StatefulWidget> createState() => _CoopState();
 }
@@ -32,20 +39,22 @@ class _CoopState extends State<CoopsScreen> {
 
   bool _isSearching = false;
 
-
   //todo: getting the farm data
   Farm defaultFarm =
-  new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+      new Farm(id: 01, name: "N/A", isDefault: true, details: '');
   bool existingFarms = false;
   bool loading = false;
   FarmService fmService = FarmService();
   late List<Farm> farms = [];
+  late LoginResponse loginResponse;
 
   @override
   void initState() {
     super.initState();
-    _farmDataSource = FarmDataSource(context);
-    _farmDataSource.fetchPage(0);
+    loginResponse = widget.loginResponse!;
+
+    // _farmDataSource = FarmDataSource(context);
+    // _farmDataSource.fetchPage(0);
     /*
     loadUser();
 
@@ -59,14 +68,13 @@ class _CoopState extends State<CoopsScreen> {
     fetchFarms();
   }
 
-
   Future<void> fetchFarms() async {
     setState(() {
       loading = true;
     });
 
     PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
-        accountId: loginResponse?.defaultAccount.id,
+        accountId: loginResponse.defaultAccount.id,
         offset: 0,
         limit: 20,
         loginResponse: loginResponse); // your async fetch method
@@ -77,7 +85,6 @@ class _CoopState extends State<CoopsScreen> {
         existingFarms = true;
         farms = farmsResponse.content;
 
-        // defaultFarm = farms.first;
 
         if (farms.isNotEmpty) {
           farms.forEach((x) {
@@ -87,15 +94,12 @@ class _CoopState extends State<CoopsScreen> {
           });
         } else {
           defaultFarm =
-          new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+              new Farm(id: 01, name: "N/A", isDefault: true, details: '');
         }
       }
       // true if farms fetched, else false
     });
   }
-
-
-
 
   // FarmDataSource initFarmDatasource = (context,loginResponse) => FarmDataSource(context, loginResponse) ;
 
@@ -131,7 +135,6 @@ class _CoopState extends State<CoopsScreen> {
     */
   }
 
-  late LoginResponse? loginResponse;
   Future<LoginResponse?> loadUser() async {
     final user = await getLoginResponse();
     if (user != null) {
@@ -242,16 +245,16 @@ class _CoopState extends State<CoopsScreen> {
                 },
               )
             : Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            " 🏠 Coop Management",
-            style: TextStyle(
-              fontFamily: AppConstants.defaultFont,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ) ,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  " 🏠 Coop Management",
+                  style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -271,13 +274,7 @@ class _CoopState extends State<CoopsScreen> {
         color: Colors.white,
         child: Column(
           children: [
-            getHeaderWidget(context)
-
-            ,
-
-
-
-
+           getHeaderWidget(context),
             Expanded(
                 child: ListView.builder(
               itemCount: items.length,
@@ -310,58 +307,75 @@ class _CoopState extends State<CoopsScreen> {
   }
 
   Widget getHeaderWidget(BuildContext context) {
-    return Container(
-              height: Util.scaleWidthFromDesign(context, 30),
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(
-                  vertical: Util.scaleWidthFromDesign(context, 5),
-                  horizontal: 16),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Color(0XFFE4D8B6),
-                    width: 1.0,
-                  ),
-                ),
-              ),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Icon(
-                    FontAwesomeIcons.buildingColumns,
-                    size: Util.scaleWidthFromDesign(context, 12),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
+    if(loading == true){
+      return SizedBox( height: 50,
+        child:
+        Container(
+          padding: EdgeInsets.only(left: 10),
+        color: Colors.green.shade100,
+        alignment: Alignment.centerLeft,
+        child: Text("Loading ... ", style: TextStyle(fontFamily: AppConstants.defaultFont,fontSize: 12,fontWeight: FontWeight.w100),
+        ),
+        ),
+      ) ;
+    }else {
+      return Container(
+        height: Util.scaleWidthFromDesign(context, 30),
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(
+            vertical: Util.scaleWidthFromDesign(context, 5), horizontal: 16),
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Color(0XFFE4D8B6),
+              width: 1.0,
+            ),
+          ),
+        ),
+        alignment: Alignment.centerLeft,
+        child: Row(
+
+          children: [
+            Icon(
+              FontAwesomeIcons.buildingColumns,
+              size: Util.scaleWidthFromDesign(context, 12),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+           Text(
                     defaultFarm.name,
                     style: TextStyle(
                         fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.w700,
                         fontSize: Util.scaleWidthFromDesign(context, 14),
                         color: Color(0XFFCE4B4B)),
-                  ),
-                  Spacer(),
-                  Text(
+                  )
+               ,
+            Spacer(),
+            Text(
                     "Location :  ",
                     style: TextStyle(
                       fontFamily: AppConstants.defaultFont,
                       fontWeight: FontWeight.w700,
                       fontSize: Util.scaleWidthFromDesign(context, 10),
                     ),
-                  ),
-                  Text(
-                    "Kampala, Uganda ",
+                  )
+               ,
+           Text(
+                    " ${Util.getPrimaryAddress(defaultFarm).city} ${Util.getPrimaryAddress(defaultFarm).street} ${Util.getPrimaryAddress(defaultFarm).state} ",
                     style: TextStyle(
                       fontFamily: AppConstants.defaultFont,
                       fontWeight: FontWeight.normal,
                       fontSize: Util.scaleWidthFromDesign(context, 10),
+                      color: Color(0XFF0E76A3)
                     ),
-                  ),
-                ],
-              ));
+                  )
+                 ,
+          ],
+        ));
+    }
   }
 }
 
