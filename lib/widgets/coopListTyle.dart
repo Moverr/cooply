@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:Cooply/models/dtos/coop.dart';
+import 'package:Cooply/models/dtos/coop_response.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import '../utils/util.dart';
 import 'package:latlong2/latlong.dart';
 
 class CoopListTyle extends StatefulWidget {
-  final Coop coop;
+  final CoopResponse coop;
   final VoidCallback? onTap;
   CoopListTyle({Key? key, required this.coop, this.onTap}) : super(key: key);
 
@@ -21,7 +22,7 @@ class CoopListTyle extends StatefulWidget {
 class _CoopListTyleState extends State<CoopListTyle> {
   bool _showMap = false;
 
-  late Coop coop;
+  late CoopResponse coop;
   late VoidCallback? onTap;
 
   @override
@@ -64,7 +65,7 @@ class _CoopListTyleState extends State<CoopListTyle> {
             child: Row(
               children: [
                 Text(
-                  "${coop.name} #${coop.reference} ",
+                  "${coop.name} #${coop.referenceId} ",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: Util.scaleWidthFromDesign(context, 12),

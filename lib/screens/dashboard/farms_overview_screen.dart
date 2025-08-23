@@ -35,6 +35,8 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
   final TextEditingController _farmNameController = TextEditingController();
   final TextEditingController _farmLocationController = TextEditingController();
   final TextEditingController _farmDetailsController = TextEditingController();
+
+
   late Address address;
 
   late LoginResponse loginResponse;
@@ -176,17 +178,17 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
     return Scaffold(
       body: getFarmsWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showCreateFarmBottomSheet(context);
-        },
-        backgroundColor: Colors.white70,
-        icon: Icon(
-          FontAwesomeIcons.buildingColumns,
-          size: Util.scaleWidthFromDesign(context, 15),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            showCreateFarmBottomSheet(context);
+          },
+          backgroundColor: Colors.white70,
+          icon: Icon(
+            FontAwesomeIcons.buildingColumns,
+            size: Util.scaleWidthFromDesign(context, 15),
+          ),
+          label: Text("Create Farm "),
         ),
-        label: Text("Create Farm "),
-      ),
     );
   }
 
@@ -630,154 +632,181 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
 
 
   void showCreateFarmBottomSheet(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // allow full height control
       backgroundColor: Colors.transparent,
-      // to allow rounded corners or shadows
       builder: (context) {
         return FractionallySizedBox(
-          heightFactor: 0.8, // 80% of screen height
+          heightFactor: 0.85,
           child: Container(
-            // margin: const EdgeInsets.only(bottom: 80),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Padding(
               padding: EdgeInsets.only(
                 left: 16,
                 right: 16,
-                top: 16,
-                bottom: MediaQuery.of(context).viewInsets.bottom +
-                    24, // handle keyboard + spacing
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
               ),
-              child: ListView(
-                children: [
-                  const Text(
-                    "Create Farm",
-                    style: TextStyle(
-                        fontFamily: AppConstants.defaultFont,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _farmNameController,
-                    decoration: InputDecoration(
-                      labelText: ' Farm Name',
-                      border: const OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'enter farm name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Farm Location autocomplete field
-                  FarmLocationInput(
-                    controller: _farmLocationController,
-                    onLocationSelected: (selectedAddress) {
-                      address = selectedAddress;
-                      // new Address(addressLevel: "location", street: street, city: city, state: state, zipCode: zipCode, latitude: latitude, longitude: longitude)
-                    },
-                  ),
-
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _farmDetailsController,
-                    decoration: const InputDecoration(
-                      labelText: "Description",
-                      border: const OutlineInputBorder(),
-                    ),
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: 50,
-                    width: 100,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[600],
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    Center(
+                      child: Container(
+                        height: 5,
+                        width: 50,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      onPressed: () async {
-                        FarmRequest fr = FarmRequest(
-                          accountId: loginResponse.defaultAccount.id,
-                          name: _farmNameController.text,
-                          addresses: [address], // your Address instance
-                        );
+                    ),
+                    const Text(
+                      "Create Farm",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
 
-                        // Show loading dialog
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) =>
-                          const Center(child: CircularProgressIndicator()),
-                        );
+                    // Farm Name
+                    TextFormField(
+                      controller: _farmNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Farm Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Farm name is required';
+                        }
+                        if (value.length < 3) {
+                          return 'Farm name must be at least 3 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
 
-                        try {
-                          ServiceResult result = await fmService.createFarm(
-                            farm: fr,
-                            loginResponse: loginResponse,
+                    // Farm Location
+                    FarmLocationInput(
+                      controller: _farmLocationController,
+                      onLocationSelected: (selectedAddress) {
+                        address = selectedAddress;
+                      },
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Description
+                    TextFormField(
+                      controller: _farmDetailsController,
+                      decoration: InputDecoration(
+                        labelText: "Description",
+                        hintText: "Add a few details about your farm...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 30),
+
+                    // SAVE button
+                    SizedBox(
+                      height: 55,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[600],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (!formKey.currentState!.validate()) return;
+
+                          FarmRequest fr = FarmRequest(
                             accountId: loginResponse.defaultAccount.id,
+                            name: _farmNameController.text.trim(),
+                            addresses: [address],
                           );
 
-                          // Remove loader
-                          Navigator.of(context).pop();
+                          // Show loading
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                            const Center(child: CircularProgressIndicator()),
+                          );
 
-                          if (result.success) {
-                            // Close the form screen and pass result
-                            Navigator.pop(context, fr);
-
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              barrierColor: Colors.black.withOpacity(0.5),
-                              builder: (context) => const CustomOverlay(
-                                message: "Farm saved successfully",
-                                isSuccess: true,
-                              ),
+                          try {
+                            ServiceResult result = await fmService.createFarm(
+                              farm: fr,
+                              loginResponse: loginResponse,
+                              accountId: loginResponse.defaultAccount.id,
                             );
 
-                            //todo: work on the fetching of  data
-                            fetchFarms();
-                          } else {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              barrierColor: Colors.black.withOpacity(0.5),
-                              builder: (context) => CustomOverlay(
-                                message: result.errorMessage ??
-                                    "Failed to create a farm",
-                                isSuccess: false,
-                              ),
+                            Navigator.of(context).pop(); // remove loader
+
+                            if (result.success) {
+                              Navigator.pop(context, fr);
+
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                builder: (context) => const CustomOverlay(
+                                  message: "Farm saved successfully",
+                                  isSuccess: true,
+                                ),
+                              );
+                              fetchFarms();
+                            } else {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                builder: (context) => CustomOverlay(
+                                  message: result.errorMessage ??
+                                      "Failed to create a farm",
+                                  isSuccess: false,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            Navigator.of(context).pop(); // remove loader
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('An error occurred: $e')),
                             );
                           }
-                        } catch (e) {
-                          Navigator.of(context).pop(); // remove loader
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('An error occurred: $e')),
-                          );
-                        }
-
-                        // Navigator.pop(context, fr);
-                      },
-                      child: const Text(
-                        "SAVE",
-                        style: TextStyle(
+                        },
+                        child: const Text(
+                          "SAVE",
+                          style: TextStyle(
                             fontSize: 16,
                             fontFamily: AppConstants.defaultFont,
-                            color: Color(0XFFFFFFFF)),
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -108,15 +108,32 @@ class _FarmCardState extends State<FarmCard> {
             children: [
               Container(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  "Farms",
-                  style: TextStyle(
-                      fontFamily: AppConstants.defaultFont,
-                      fontSize: Util.scaleWidthFromDesign(context, 13),
-                      fontWeight: FontWeight.bold),
-                ),
+                child: Row(
+                  children: [
 
-                //todo: create new farm button
+                    Icon(
+                      FontAwesomeIcons.buildingColumns,
+                      size: Util.scaleWidthFromDesign(context, 10),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+
+
+                    Text(
+                      "Farms",
+                      style: TextStyle(
+                          fontFamily: AppConstants.defaultFont,
+                          fontSize: Util.scaleWidthFromDesign(context, 11),
+                          fontWeight: FontWeight.bold),
+                    ),
+
+
+                  ],
+                )
+
+
+
               ),
               SizedBox(
                 height: 25,
@@ -236,7 +253,7 @@ class _FarmCardState extends State<FarmCard> {
                                             fontFamily:
                                                 AppConstants.defaultFont,
                                             fontSize: Util.scaleWidthFromDesign(
-                                                context, 12),
+                                                context, 11),
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
@@ -265,7 +282,7 @@ class _FarmCardState extends State<FarmCard> {
                             style: TextStyle(
                                 fontFamily: AppConstants.defaultFont,
                                 fontSize:
-                                    Util.scaleWidthFromDesign(context, 13),
+                                    Util.scaleWidthFromDesign(context, 11),
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
