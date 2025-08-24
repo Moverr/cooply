@@ -52,7 +52,7 @@ class _ProfileState extends State<ProfileScreen> {
           ProfileCard(loginResponse),
           SizedBox(height: 20),
 
-          ...(loginResponse?.roles?.any((role) => role.permissions.any(
+          ...(loginResponse.roles.any((role) => role.permissions.any(
                       (permission) =>
                           permission.resourceName == "farm" &&
                           permission.create == "ALL")) ==

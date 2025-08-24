@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:Cooply/models/dtos/coop.dart';
 import 'package:Cooply/models/dtos/coop_response.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/services/coop_service.dart';
@@ -105,11 +103,8 @@ class _CoopState extends State<CoopsScreen> {
 
   Future<void> fetchCoops(Farm farm) async {
     setState(() {
-      loading = true;
       this.coops = [];
     });
-
-    // PaginatedFarmsResponse? farmsResponse = await
 
     cpService
         .getList(
@@ -135,64 +130,7 @@ class _CoopState extends State<CoopsScreen> {
     super.dispose();
   }
 
-  // Filter data based on search query
-  void _filterData() {
-    /*  final query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredData = _dataSource.getData().where((row) {
-        return row['name']!.toLowerCase().contains(query) ||
-            row['account']!.toLowerCase().contains(query) ||
-            row['status']!.toLowerCase().contains(query);
-      }).toList();
-    });
-
-    */
-  }
-
   bool _isLoading = true;
-
-  final List<Coop> items = [
-    Coop(
-      id: 1,
-      name: "Gianna",
-      reference: "20250112A",
-      farmName: "Mwamba Farm",
-      author: "Muyinda ROgers",
-      status: "Active",
-      createdOn: "12-10-2024",
-      modifiedOn: "12-10-2024",
-      capacity: 25000,
-      currentFlock: 1000,
-      acquiredFlock: 1200,
-      type: "Deep Litre",
-    ),
-    Coop(
-        id: 1,
-        name: "Zingu ",
-        farmName: "Mwamba Farm",
-        reference: "20250112B",
-        author: "Muyinda ROgers",
-        status: "Active",
-        createdOn: "12-10-2024",
-        modifiedOn: "12-10-2024",
-        currentFlock: 34000,
-        acquiredFlock: 34500,
-        type: "Battery Cage",
-        capacity: 123400),
-    Coop(
-        id: 1,
-        name: "Bulamu",
-        reference: "20250112C",
-        farmName: "Mwamba Farm",
-        author: "Muyinda ROgers",
-        status: "InActive",
-        createdOn: "12-10-2024",
-        modifiedOn: "12-10-2024",
-        currentFlock: 34000,
-        acquiredFlock: 34500,
-        type: "Free Range",
-        capacity: 1200),
-  ];
 
   String selectedValue = 'Apple';
   final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
@@ -257,7 +195,18 @@ class _CoopState extends State<CoopsScreen> {
           children: [
             getHeaderWidget(context),
             Expanded(
-                child: ListView.builder(
+                child:
+               coops.length == 0 ?
+                getGhostWidget(context)
+                // ListView.builder(
+                //   itemCount: 5,
+                //   itemBuilder: (context, index){
+                //     getGhostWidget(context);
+                //   },
+                // )
+
+                    :
+                ListView.builder(
               itemCount: coops.length,
               itemBuilder: (context, index) {
                 return CoopListTyle(
@@ -268,9 +217,6 @@ class _CoopState extends State<CoopsScreen> {
                     );
                   },
                 );
-                // return ListTile(
-                //   title: Text('Item ${index + 1}'),
-                // );
               },
             )),
           ],
@@ -537,4 +483,48 @@ class _CoopState extends State<CoopsScreen> {
       },
     );
   }
+
+
+
+  Widget getGhostWidget(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top bar
+          Container(
+            width: 150,
+            height: 16,
+            color: Colors.grey.shade400,
+          ),
+          const SizedBox(height: 8),
+          // Multiple lines
+          Container(
+            width: double.infinity,
+            height: 12,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 6),
+          Container(
+            width: double.infinity,
+            height: 12,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 6),
+          Container(
+            width: 100,
+            height: 12,
+            color: Colors.grey.shade300,
+          ),
+        ],
+      ),
+    );
+  }
+
 }

@@ -1,6 +1,3 @@
-
-
-
 import 'dart:core';
 
 import 'package:Cooply/models/dtos/Farm.dart';
@@ -13,8 +10,9 @@ import 'employee_response.dart';
 class CoopResponse {
   final String name;
   final String? referenceId;
- final AuthorResponse? author;
- final Farm? farm;
+  final String? coopId;
+  final AuthorResponse? author;
+  final Farm? farm;
   final String? area;
   final List<PowerResponse>? power;
   final List<WaterResponse>? water;
@@ -23,12 +21,12 @@ class CoopResponse {
   final EmployeeResponse? employee; // made nullable
   final double? capacity;
   final double? occupied;
-
-
+  final String status;
   CoopResponse({
     required this.name,
     this.referenceId,
-     this.author,
+    this.coopId,
+    this.author,
     this.farm,
     this.area,
     required this.power,
@@ -38,17 +36,17 @@ class CoopResponse {
     this.employee, // nullable
     this.capacity,
     this.occupied,
-
+    required this.status,
   });
 
   factory CoopResponse.fromJson(Map<String, dynamic> json) {
     return CoopResponse(
       name: json['name'] as String? ?? '',
       referenceId: json['reference_id'] as String?,
+      coopId: json['coop_id'] as String?,
       author: json['author'] != null
           ? AuthorResponse.fromJson(json['author'] as Map<String, dynamic>)
           : null,
-
       farm: json['farm'] != null
           ? Farm.fromJson(json['farm'] as Map<String, dynamic>)
           : null,
@@ -59,8 +57,10 @@ class CoopResponse {
       water: (json['water'] as List<dynamic>?)
           ?.map((x) => WaterResponse.fromJson(x as Map<String, dynamic>))
           .toList(),
-      breed: (json['breed'] as List<dynamic>?)?.map((x) => x as String?).toList(),
-      stage: (json['stage'] as List<dynamic>?)?.map((x) => x as String?).toList(),
+      breed:
+          (json['breed'] as List<dynamic>?)?.map((x) => x as String?).toList(),
+      stage:
+          (json['stage'] as List<dynamic>?)?.map((x) => x as String?).toList(),
       employee: json['employee'] != null
           ? EmployeeResponse.fromJson(json['employee'] as Map<String, dynamic>)
           : null,
@@ -68,8 +68,7 @@ class CoopResponse {
           ? (json['capacity'] ?? json['cpaacity']).toDouble()
           : null,
       occupied: (json['occupied'] as num?)?.toDouble(),
+      status: json['status'] ?? "ACTIVE",
     );
   }
-
-
 }

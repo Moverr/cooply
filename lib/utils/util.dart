@@ -8,6 +8,11 @@ import '../models/dtos/schedule.dart';
 
 class Util{
 
+ static  double percentOccupied(double? occupied, double? capacity) {
+    if (occupied == null || capacity == null || capacity == 0) return 0;
+    return (occupied / capacity) * 100;
+  }
+
 
   static Address getPrimaryAddress(Farm farm) {
     final primaryAddress = farm.addresses.firstWhere(

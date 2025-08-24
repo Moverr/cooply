@@ -96,7 +96,7 @@ class AuthProvider with ChangeNotifier {
             _isLoggedIn = true;
             _isUserACtive = true;
             _authToken = loginDataResponse.auth_token;
-            _message = loginDataResponse.message ?? "Login successful";
+            _message = loginDataResponse.message ;
             _roles = loginDataResponse.roles;
             _errorMessage = null; // Clear any previous errors
 
@@ -109,7 +109,7 @@ class AuthProvider with ChangeNotifier {
               _isLoggedIn = true;
               _isUserACtive = false;
               _authToken = loginDataResponse.auth_token;
-              _message = loginDataResponse.message ?? "Login Failed";
+              _message = loginDataResponse.message  ;
               _roles = loginDataResponse.roles;
               _errorMessage = null; // Clear any previous errors
 

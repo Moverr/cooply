@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:Cooply/models/dtos/Farm.dart';
 import 'package:flutter/cupertino.dart';
 
 class FeedInventoryLog {

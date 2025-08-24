@@ -1,6 +1,4 @@
-import 'dart:math';
 
-import 'package:Cooply/models/dtos/coop.dart';
 import 'package:Cooply/models/dtos/coop_response.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../utils/util.dart';
-import 'package:latlong2/latlong.dart';
 
 class CoopListTyle extends StatefulWidget {
   final CoopResponse coop;
@@ -64,8 +61,9 @@ class _CoopListTyleState extends State<CoopListTyle> {
             ),
             child: Row(
               children: [
+                if(coop.name.isNotEmpty)
                 Text(
-                  "${coop.name} #${coop.referenceId} ",
+                  "${coop.name}  - ${coop.coopId} ",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: Util.scaleWidthFromDesign(context, 12),
@@ -85,59 +83,85 @@ class _CoopListTyleState extends State<CoopListTyle> {
           ),
           const SizedBox(height: 6),
 
-          // Info Rows (Area, Capacity, etc.)
+
+          if(coop.area != null)
           _buildInfoRow(
             context,
             FontAwesomeIcons.borderAll,
-            "Area : 200m   Capacity : 12K",
+            "Area : ${coop.area ?? "n/a"}   Capacity : ${Util.formatCount(coop.capacity ?? 0)} ",
           ),
-          _buildProgressRow(context),
+          if(coop.area != null)
+          _buildProgressRow(context, coop),
 
+          if (coop.power != null && coop.power!.isNotEmpty)
           _buildInfoRow(
             context,
             FontAwesomeIcons.lightbulb,
             "Power : Grid(None), Solar (Active)",
           ),
+
+
+          if (coop.water != null && coop.water!.isNotEmpty)
           _buildInfoRow(
             context,
             FontAwesomeIcons.droplet,
             "Water : None",
           ),
+          // if(coop.breed!.length > 0)
+
+          // if (coop.breed != null && coop.breed!.isNotEmpty)
           _buildInfoRow(
             context,
             FontAwesomeIcons.twitter,
             "Breed : Local,Mixed   Stage : Grower,Laying",
           ),
+
+          // if(coop.status == "active")
           _buildInfoRow(
             context,
             FontAwesomeIcons.check,
             "Status : Active",
           ),
+
+          /*
+          if(coop.status == "inactive")
+            _buildInfoRow(
+              context,
+              FontAwesomeIcons.triangleExclamation,
+              "Status : Inactive",
+            ),
+          */
+
+          if(coop.employee != null)
           _buildInfoRow(
             context,
             FontAwesomeIcons.user,
             "Manager : Muyinda Rogers   Team : 3 ",
-
-
           ),
         ],
       ),
     );
-
   }
 
-  Widget _buildInfoRow(BuildContext context, IconData icon, String text, { IconData? trailingIcon}) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String text,
+      {IconData? trailingIcon}) {
+
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon,
+          Icon(
+            icon,
             size: Util.scaleWidthFromDesign(context, 12),
             color: Colors.blue,
             shadows: [
-              Shadow(blurRadius: 10, color: Colors.greenAccent.withOpacity(0.8)),
-              Shadow(blurRadius: 20, color: Colors.greenAccent.withOpacity(0.5)),
+              Shadow(
+                  blurRadius: 10, color: Colors.greenAccent.withOpacity(0.8)),
+              Shadow(
+                  blurRadius: 20, color: Colors.greenAccent.withOpacity(0.5)),
             ],
           ),
           const SizedBox(width: 5),
@@ -151,14 +175,19 @@ class _CoopListTyleState extends State<CoopListTyle> {
             ),
           ),
           if (trailingIcon != null)
-            Icon(trailingIcon, size: Util.scaleWidthFromDesign(context, 12), color: Colors.blue),
+            Icon(trailingIcon,
+                size: Util.scaleWidthFromDesign(context, 12),
+                color: Colors.blue),
         ],
       ),
     );
   }
 
-  Widget _buildProgressRow(BuildContext context) {
-    double progress = 0.9; // 90% occupied
+  Widget _buildProgressRow(BuildContext context, CoopResponse coop) {
+    double progress =
+        Util.percentOccupied(coop.occupied ?? 0, coop.capacity ?? 0);
+    //0.9; // 90% occupied
+    //progress = current stock. o
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -168,7 +197,7 @@ class _CoopListTyleState extends State<CoopListTyle> {
           Row(
             children: [
               Text(
-                "Occupied : 1K  ${ (progress * 100).toStringAsFixed(0)}%",
+                "Occupied : ${Util.formatCount(coop.occupied ?? 0)}  ${(progress * 100).toStringAsFixed(0)}%",
                 style: TextStyle(
                   fontSize: Util.scaleWidthFromDesign(context, 11),
                   fontFamily: AppConstants.defaultFont,
@@ -182,29 +211,12 @@ class _CoopListTyleState extends State<CoopListTyle> {
             child: LinearProgressIndicator(
               minHeight: 5,
               value: progress,
-              backgroundColor: Colors.redAccent.shade700,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade700),
+              backgroundColor: Color(0XFFE17A7AFF),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF70B173FF)),
             ),
           ),
         ],
       ),
     );
-  }
-
-
-
-  List<String> images = [
-    "assets/chicken1.png",
-    "assets/chicken2.png",
-    "assets/chicken3.png",
-    "assets/chicken4.png",
-    "assets/chicken5.png",
-    "assets/chicken6.png",
-    "assets/chicken7.png",
-  ];
-  final random = Random();
-  Image getRandomImage() {
-    int number = random.nextInt(7);
-    return Image.asset(images[number]);
   }
 }

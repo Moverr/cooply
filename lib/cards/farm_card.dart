@@ -248,7 +248,7 @@ class _FarmCardState extends State<FarmCard> {
                                       alignment: Alignment.topLeft,
                                       child: Text(
                                         //todo: default farm
-                                          defaultFarm!.name ?? "N/A",
+                                          defaultFarm.name ,
                                         style: TextStyle(
                                             fontFamily:
                                                 AppConstants.defaultFont,
