@@ -31,11 +31,6 @@ class FarmService {
     );
   }
 
-  Future<Farm?> getDefaultFarm() async {
-
-    //todo: need to implement this backend ::
-    return null;
-  }
 
 
   List<Farm> parseFarms(List<dynamic> data) {
@@ -44,6 +39,62 @@ class FarmService {
         .whereType<Farm>()
         .toList();
     return farms;
+  }
+
+  Future<Farm?> getDefaultFarm({
+    int? accountId, required LoginResponse? loginResponse
+}) async {
+    print('Mathod   : getDefaultFarm');
+    print('URL  : ${AppConstants.BASE_URL}v1/farm/default');
+    print('Account ID  : $accountId');
+
+    debugPrint("logResponse ${loginResponse?.auth_token}");
+    final dio = initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
+
+    try {
+      debugPrint("-------- ");
+
+      final response = await dio.get(
+        'v1/farm/default',
+        queryParameters: {
+          'account_id': accountId,
+        },
+      );
+
+      // Optionally check or log response
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        print("Data xxxxx ${data}");
+
+        Farm fr = Farm.fromJson(data);
+        return fr;
+
+      } else {
+        // Handle error
+        //  return PaginatedFarmsResponse.fromJson(a);
+        debugPrint("There is a Null Response");
+        return null;
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        // Server responded with a status code (e.g., 400, 500)
+        print('Status code: ${e.response?.statusCode}');
+        print('Data: ${e.response?.data}');
+        print('Headers: ${e.response?.headers}');
+      } else {
+        // Error due to setting up or sending the request (like network error)
+        print('Error sending request: ${e.message}');
+      }
+    } catch (e, stackTrace) {
+      // Log the error for debugging purposes
+      debugPrint('Error fetching farms: $e');
+      debugPrint('Stack trace: $stackTrace');
+
+      // Optionally, rethrow or throw a custom exception
+      throw Exception('Failed to fetch farms: $e');
+    }
+    return null;
   }
 
   Future< List<Farm>?> getFarms(

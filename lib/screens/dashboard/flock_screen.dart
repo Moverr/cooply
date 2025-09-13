@@ -10,114 +10,178 @@ import 'package:Cooply/widgets/flockListTyle.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/dtos/coop_response.dart';
 import '../../models/dtos/farm.dart';
+import '../../services/coop_service.dart';
 import '../../services/farm_service.dart';
 import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
 import '../../widgets/custom_expansion_tile.dart';
 
 class FlockScreen extends StatefulWidget {
+  final LoginResponse? loginResponse;
+  const FlockScreen({super.key, required this.loginResponse});
+
   @override
   State<StatefulWidget> createState() => _FlockState();
 }
 
 class _FlockState extends State<FlockScreen> {
+  ScrollController _scrollController = ScrollController();
+
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
-
   late FarmDataSource _farmDataSource;
-  final FarmService _farmService = FarmService();
-
+  final FarmService fmService = FarmService();
   final GlobalKey expansionTileKey = GlobalKey();
-  bool _isExpanded = false;
-
+  bool _isExpanded = true;
   bool _isSearching = false;
+
+  bool existingFarms = false;
+  bool loading = false;
+  CoopService cpService = CoopService();
+
+  late List<Farm> farms = [];
+  late List<CoopResponse> coops = [];
+
+  int offset = 0;
+  int limit = 10;
 
   @override
   void initState() {
     super.initState();
+    loginResponse = widget.loginResponse!;
+    getDefaultFarm();
+    handleScrollEvent();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        // safe to use scrollController here
+        print('ScrollController attached. Offset: ${_scrollController.offset}');
+      }
+    });
+
+    _scrollController.addListener(() {
+      if (_scrollController.hasClients) {
+        double currentOffset = _scrollController.offset;
+
+        if (currentOffset > 10) {
+          if (_isScrollingUp == false && _isExpanded == true) {
+            setState(() {
+              _isScrollingUp = true;
+              _isExpanded = false;
+            });
+          }
+        } else {
+          if (_isScrollingUp == true && _isExpanded == false) {
+            setState(() {
+              _isScrollingUp = false;
+              _isExpanded = true;
+            });
+          }
+        }
+
+        print('Scrolling, offset: $currentOffset');
+      }
+    });
+
     _farmDataSource = FarmDataSource(context);
     _farmDataSource.fetchPage(0);
-    /*
-    loadUser();
-
-    _farmDataSource = FarmDataSource(context,loginResponse);
-     _farmDataSource.fetchPage(0);
-     */
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //
-    // });
   }
 
-  // FarmDataSource initFarmDatasource = (context,loginResponse) => FarmDataSource(context, loginResponse) ;
+  double _lastOffset = 0;
+  bool _isScrollingUp = false;
 
-  FarmDataSource Function(BuildContext, LoginResponse) initFarmDataSource =
-      (context, loginResponse) => FarmDataSource(context);
+  void handleScrollEvent() {
+    double currentOffset = 10;
+    if (_scrollController.hasClients) currentOffset = _scrollController.offset;
 
-  // Separate async method for initialization
-  Future<void> _initializeData() async {
-    await loadUser(); // Wait for loginResponse to be ready
-/*
-    _farmDataSource = initFarmDataSource(context, getLoginResponse());
-    _farmDataSource.fetchPage(0);
-    */
+    if (currentOffset < _lastOffset) {
+      // Scrolling up
+      if (!_isScrollingUp) {
+        setState(() {
+          _isScrollingUp = true;
+          _isExpanded = false;
+        });
+        print("Scrolling Up");
+      }
+    } else if (currentOffset > _lastOffset) {
+      // Scrolling down
+      if (_isScrollingUp) {
+        setState(() {
+          _isExpanded = true;
+          _isScrollingUp = false;
+        });
+        print("Scrolling Down");
+      }
+    }
+
+    _lastOffset = currentOffset;
+  }
+
+  Future<void> getDefaultFarm() async {
+    setState(() {
+      loading = true;
+    });
+
+    fmService
+        .getDefaultFarm(
+            accountId: loginResponse.defaultAccount.id,
+            loginResponse: loginResponse)
+        .then((Farm? farmsResponse) {
+      print("Kooool");
+      print(farmsResponse);
+      setState(() {
+        loading = false;
+        if (farmsResponse != null) {
+          defaultFarm = farmsResponse;
+        }
+        //??
+        // new Farm(id: 01, name: "N/A", isDefault: true, details: '');
+      });
+    });
+  }
+
+  Future<void> fetchCoops(Farm farm) async {
+    setState(() {
+      this.coops = [];
+    });
+
+    cpService
+        .getList(
+      farmId: farm.id,
+      offset: offset,
+      limit: limit,
+      loginResponse: loginResponse,
+    )
+        .then((List<CoopResponse> coopResponseList) {
+      setState(() {
+        if (coopResponseList.isNotEmpty) {
+          this.coops = coopResponseList;
+
+          this.offset = 0;
+        }
+      });
+
+      //set the data
+    }); // your async fetch method
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  // Filter data based on search query
-  void _filterData() {
-    /*  final query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredData = _dataSource.getData().where((row) {
-        return row['name']!.toLowerCase().contains(query) ||
-            row['account']!.toLowerCase().contains(query) ||
-            row['status']!.toLowerCase().contains(query);
-      }).toList();
-    });
+  FarmDataSource Function(BuildContext, LoginResponse) initFarmDataSource =
+      (context, loginResponse) => FarmDataSource(context);
 
-    */
-  }
-
-  late LoginResponse? loginResponse;
-  Future<LoginResponse?> loadUser() async {
-    final user = await getLoginResponse();
-    if (user != null) {
-      return user;
-      // _farmDataSource = FarmDataSource(this.context,user);
-    } else {
-      return null;
-    }
-  }
-
-  Future<LoginResponse?> getLoginResponse() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString('login_response');
-
-      if (jsonString == null || jsonString.isEmpty) {
-        debugPrint('⚠️ No login_response found.');
-        return null;
-      }
-
-      final Map<String, dynamic> json = jsonDecode(jsonString);
-      final loginResponse = LoginResponse.fromJson(json);
-
-      debugPrint('✅ Loaded LoginResponse: $json');
-      return loginResponse;
-    } catch (e, stack) {
-      debugPrint('❌ Failed to load LoginResponse: $e\n$stack');
-      return null;
-    }
-  }
+  late LoginResponse loginResponse;
 
   bool _isLoading = true;
 
@@ -185,8 +249,6 @@ class _FlockState extends State<FlockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _initializeData();
-
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -213,14 +275,16 @@ class _FlockState extends State<FlockScreen> {
                   print("Searching for: $query");
                 },
               )
-            : Text(
-                "🐓 Flock Management",
-                style: TextStyle(
-                  fontFamily: AppConstants.defaultFont,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            : Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "🐓 Flock Management",
+                  style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -234,106 +298,88 @@ class _FlockState extends State<FlockScreen> {
               });
             },
           ),
-          IconButton(
-            icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
-            onPressed: () {
-              setState(() {
-                _isExpanded = !_isExpanded;
-              });
-            },
-          ),
         ],
       ),
       body: Container(
         color: Colors.white,
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomExpansionTile(
-              expanded: _isExpanded,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownSearch<String>(
-                        items: dropDownItems,
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
-                              // hintText: "Search farm...",
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+            AnimatedSwitcher(
+              duration: Duration(milliseconds: 300), // fade animation duration
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              child: _isExpanded
+                  ? Container(
+                      child: Wrap(
+                        children: [
+                          // _isExpanded
+                          SizedBox(
+                            height: 10,
+                          ),
+                          getHeaderWidget(context),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              "Coops",
+                              style: TextStyle(
+                                  fontFamily: AppConstants.defaultFont,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Container(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownSearch<String>(
+                                items: dropDownItems,
+                                popupProps: PopupProps.menu(
+                                  showSearchBox: true,
+                                  searchFieldProps: TextFieldProps(
+                                    decoration: InputDecoration(
+                                      // hintText: "Search farm...",
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
+                                  fit: FlexFit.loose,
+                                  constraints: BoxConstraints(maxHeight: 300),
+                                ),
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                  dropdownSearchDecoration: InputDecoration(
+                                    labelText: "Select Coop",
+                                    // hintText: "Choose a farm",
+                                    filled: true,
+                                    fillColor: Colors.grey.shade100,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 16),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (value) =>
+                                    print("You selected $value"),
                               ),
                             ),
                           ),
-                          fit: FlexFit.loose,
-                          constraints: BoxConstraints(maxHeight: 300),
-                        ),
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            labelText: "Select Farm",
-                            // hintText: "Choose a farm",
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 16),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) => print("You selected $value"),
+                        ],
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownSearch<String>(
-                        items: dropDownItems,
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
-                              // hintText: "Search farm...",
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                          fit: FlexFit.loose,
-                          constraints: BoxConstraints(maxHeight: 300),
-                        ),
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            labelText: "Select Coop",
-                            // hintText: "Choose a farm",
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 16),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) => print("You selected $value"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                    )
+                  : SizedBox.shrink(),
             ),
             Expanded(
                 child: ListView.builder(
+              controller: _scrollController,
               itemCount: items.length,
               itemBuilder: (context, index) {
                 return FlockListTyle(
@@ -440,8 +486,82 @@ class _FlockState extends State<FlockScreen> {
       */
     );
   }
+
+  Farm defaultFarm = Farm(id: 01, name: "N/A", isDefault: true, details: '');
+  Widget getHeaderWidget(BuildContext context) {
+    if (loading == true) {
+      return SizedBox(
+        height: 50,
+        child: Container(
+          padding: EdgeInsets.only(left: 10),
+          color: Colors.green.shade100,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Loading ... ",
+            style: TextStyle(
+                fontFamily: AppConstants.defaultFont,
+                fontSize: 12,
+                fontWeight: FontWeight.w100),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+          height: Util.scaleWidthFromDesign(context, 30),
+          width: double.infinity,
+          margin: EdgeInsets.symmetric(
+              vertical: Util.scaleWidthFromDesign(context, 5), horizontal: 16),
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color(0XFFE4D8B6),
+                width: 1.0,
+              ),
+            ),
+          ),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            children: [
+              Icon(
+                FontAwesomeIcons.buildingColumns,
+                size: Util.scaleWidthFromDesign(context, 12),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                defaultFarm.name,
+                style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontWeight: FontWeight.w700,
+                    fontSize: Util.scaleWidthFromDesign(context, 14),
+                    color: Color(0XFFCE4B4B)),
+              ),
+              Spacer(),
+              Text(
+                "Location :  ",
+                style: TextStyle(
+                  fontFamily: AppConstants.defaultFont,
+                  fontWeight: FontWeight.w700,
+                  fontSize: Util.scaleWidthFromDesign(context, 10),
+                ),
+              ),
+              Text(
+                " ${Util.getPrimaryAddress(defaultFarm).city} ${Util.getPrimaryAddress(defaultFarm).street} ${Util.getPrimaryAddress(defaultFarm).state} ",
+                style: TextStyle(
+                    fontFamily: AppConstants.defaultFont,
+                    fontWeight: FontWeight.normal,
+                    fontSize: Util.scaleWidthFromDesign(context, 10),
+                    color: Color(0XFF0E76A3)),
+              ),
+            ],
+          ));
+    }
+  }
 }
 
+@Deprecated("This is going out ")
 class FarmDataSource extends DataTableSource {
   final BuildContext context;
 

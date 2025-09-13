@@ -30,7 +30,8 @@ class _ExploreState extends State<ExploreScreen>
     'Coop',
     'Flock',
     'Feeds',
-    'Health'
+    'Health',
+    // 'Community' ,// do Community work
   ]; // Dynamic list
 
   int _initialTabIndex = 0;
@@ -100,12 +101,17 @@ class _ExploreState extends State<ExploreScreen>
           isScrollable: false,
           labelColor: Colors.blue,
           unselectedLabelColor: Colors.grey,
-          indicatorColor: Colors.blue,
+          indicator: UnderlineTabIndicator(
+            borderRadius: BorderRadius.only(topRight: Radius.circular(5),topLeft: Radius.circular(5)),
+            borderSide: BorderSide(width: 5.0,  color: Colors.blue), // same as indicatorColor
+            insets: EdgeInsets.zero, // fills full tab width
+          ),
           unselectedLabelStyle: TextStyle(
             fontSize: 14,
           ),
           // padding: EdgeInsets.zero, // Remove internal padding
           // labelPadding: EdgeInsets.only(  right: 16, left: 16), // Adjust space between tabs
+          labelPadding: EdgeInsets.symmetric(horizontal: 0),
           tabs: tabTitles.map((title) => Tab(text: title)).toList(),
         ),
 // Tab Views Divider(height: 1),
@@ -117,12 +123,15 @@ class _ExploreState extends State<ExploreScreen>
               Center(child: Text('Overview content')),
               // FarmSetupScreen(),
               CoopsScreen(loginResponse: loginResponse),
-              FlockScreen(),
+              FlockScreen(loginResponse: loginResponse),
               FeedScreen(),
               HealthScreen(),
+              // CoopsScreen(loginResponse: loginResponse), //todo: work on the Community Screen. Quickly, people sharing information etc
+
             ],
           ),
         ),
+
       ],
     )));
     // ));
