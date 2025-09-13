@@ -1,12 +1,9 @@
 import 'dart:async';
 
 
-import 'package:Cooply/screens/verification_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/AppConstants.dart';
 import '../widgets/footerWidget.dart';
-import '../widgets/simpleTextWidget.dart';
 import '../widgets/splashImageWidget.dart';
 import 'home_screen.dart';
 

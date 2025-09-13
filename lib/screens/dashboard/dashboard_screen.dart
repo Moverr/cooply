@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/messages_screen.dart';
@@ -7,12 +6,10 @@ import 'package:Cooply/screens/dashboard/MainScreens/reports_screen.dart';
 import 'package:Cooply/screens/dashboard/MainScreens/schedule_screen.dart';
 import 'package:Cooply/screens/dashboard/farms_overview_screen.dart';
 import 'package:Cooply/screens/dashboard/overview_screen.dart';
-import 'package:Cooply/screens/home_screen.dart';
 import 'package:Cooply/screens/splash_screen.dart';
 import 'package:Cooply/services/auth_service.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +20,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../providers/auth_provider.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'MainScreens/explore_screen.dart';
 
@@ -158,7 +154,7 @@ class _DashboardState extends State<Dashboard> {
 
       setState(() {
         _mainPages = [
-          ExploreScreen(),
+          ExploreScreen(loginResponse: result),
           ReportScreen(),
           ScheduleScreen(),
           MessageScreen(),
@@ -467,7 +463,7 @@ class _DashboardState extends State<Dashboard> {
             style: const TextStyle(fontSize: 20),
           ),
         );
-        break;
+
     }
   }
 

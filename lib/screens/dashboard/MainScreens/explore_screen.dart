@@ -4,10 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../models/dtos/loginResponse.dart';
 import '../feed_screen.dart';
 import '../health_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
+  final LoginResponse? loginResponse;
+
+  const ExploreScreen({super.key, this.loginResponse});
+
   @override
   State<StatefulWidget> createState() => _ExploreState();
 }
@@ -15,6 +20,9 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late LoginResponse loginResponse;
+
+
 
   final List<String> tabTitles = [
     'Home',
@@ -27,6 +35,21 @@ class _ExploreState extends State<ExploreScreen>
 
   int _initialTabIndex = 0;
   bool _isTabControllerReady = false; // Flag to wait for async loading
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loginResponse = widget.loginResponse!;
+    _loadTabIndex();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
 
   Future<void> _loadTabIndex() async {
     SharedPreferences prefs = await getPref();
@@ -50,23 +73,11 @@ class _ExploreState extends State<ExploreScreen>
   }
 
   Future<SharedPreferences> getPref() async {
-     final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     return prefs;
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
 
-    _loadTabIndex();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +116,7 @@ class _ExploreState extends State<ExploreScreen>
             children: [
               Center(child: Text('Overview content')),
               // FarmSetupScreen(),
-              CoopsScreen(),
+              CoopsScreen(loginResponse: loginResponse),
               FlockScreen(),
               FeedScreen(),
               HealthScreen(),

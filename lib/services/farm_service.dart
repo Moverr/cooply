@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:Cooply/providers/auth_provider.dart';
 import 'package:Cooply/services/service_result.dart';
 import 'package:dio/dio.dart';
@@ -29,7 +31,22 @@ class FarmService {
     );
   }
 
-  Future<PaginatedFarmsResponse?> getFarms(
+  Future<Farm?> getDefaultFarm() async {
+
+    //todo: need to implement this backend ::
+    return null;
+  }
+
+
+  List<Farm> parseFarms(List<dynamic> data) {
+    final List<Farm> farms = (data)
+        .map((e) => e != null ? Farm.fromJson(e as Map<String, dynamic>) : null)
+        .whereType<Farm>()
+        .toList();
+    return farms;
+  }
+
+  Future< List<Farm>?> getFarms(
       {int? accountId,
       int? offset,
       int? limit,
@@ -61,7 +78,25 @@ class FarmService {
         final data = response.data;
 
         print("Data ${data}");
-        return PaginatedFarmsResponse.fromJson(data);
+
+        // final responseJson = jsonDecode(data); // responseBody is your API response string
+        /*final List<dynamic> contentJson = data['content'] ?? [];
+
+        final List<Farm> farms = parseFarms(contentJson);
+*/
+        final List<Farm> farms = (data as List<dynamic>)
+            .map((e) => Farm.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        /*
+        contentJson
+            .map((e) => Farm.fromJson(e as Map<String, dynamic>))
+            .toList();
+        */
+
+        return farms;
+
+        // return PaginatedFarmsResponse.fromJson(data);
 
         // Handle data
       } else {

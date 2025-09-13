@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 class Coop {
+
   final int id;
   final String name;
   final String reference;

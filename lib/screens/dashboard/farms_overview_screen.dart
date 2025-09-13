@@ -10,11 +10,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../cards/address_location_input.dart';
 import '../../cards/map_card.dart';
 import '../../models/dtos/address.dart';
 import '../../models/dtos/farm.dart';
+import '../../models/dtos/requests/farm_request.dart';
 import '../../services/farm_service.dart';
+import '../../services/service_result.dart';
 import '../../utils/util.dart';
+import '../../widgets/overlays.dart';
+import  '../../utils/util.dart';
 
 class FarmOverviewScreen extends StatefulWidget {
   final LoginResponse? loginResponse;
@@ -26,6 +31,14 @@ class FarmOverviewScreen extends StatefulWidget {
 }
 
 class _FarmOverviewState extends State<FarmOverviewScreen> {
+
+  final TextEditingController _farmNameController = TextEditingController();
+  final TextEditingController _farmLocationController = TextEditingController();
+  final TextEditingController _farmDetailsController = TextEditingController();
+
+
+  late Address address;
+
   late LoginResponse loginResponse;
 
   TextEditingController _searchController = TextEditingController();
@@ -60,17 +73,18 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
       loading = true;
     });
 
-    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
-        accountId: loginResponse?.defaultAccount.id,
+    List<Farm?>? farmsResponse = await fmService.getFarms(
+        accountId: loginResponse.defaultAccount.id,
         offset: 0,
         limit: 20,
         loginResponse: loginResponse); // your async fetch method
 
     setState(() {
       loading = false;
-      if (farmsResponse!.content.isNotEmpty) {
+      if (farmsResponse!.isNotEmpty) {
         existingFarms = true;
-        farms = farmsResponse.content;
+        // farms = farmsResponse??[]
+        farms = farmsResponse.whereType<Farm>().toList();
 
         // defaultFarm = farms.first;
 
@@ -165,13 +179,17 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
     return Scaffold(
       body: getFarmsWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Your action here
-        },
-        icon: Icon(Icons.add),
-        label: Text("Add"),
-      ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            showCreateFarmBottomSheet(context);
+          },
+          backgroundColor: Colors.white70,
+          icon: Icon(
+            FontAwesomeIcons.buildingColumns,
+            size: Util.scaleWidthFromDesign(context, 15),
+          ),
+          label: Text("Create Farm "),
+        ),
     );
   }
 
@@ -238,7 +256,10 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                 title: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: Icon(
+                          Icons.arrow_back,
+                        size: Util.scaleWidthFromDesign(context, 10),
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Text(
@@ -352,13 +373,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => FarmOverviewScreen(
-                              loginResponse: loginResponse,
-                            )),
-                  );
+                   //todo: implement Edit
                 },
                 icon: Icon(
                   FontAwesomeIcons.penToSquare,
@@ -425,9 +440,9 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                   width: Util.scaleWidthFromDesign(context, 70),
                   child: Tooltip(
                     message:
-                        " ${getPrimaryAddress(defaultFarm).city},${getPrimaryAddress(defaultFarm).street},${getPrimaryAddress(defaultFarm).state}, ",
+                        " ${Util.getPrimaryAddress(defaultFarm).city},${Util.getPrimaryAddress(defaultFarm).street},${Util.getPrimaryAddress(defaultFarm).state}, ",
                     child: Text(
-                      " : ${getPrimaryAddress(defaultFarm).city},${getPrimaryAddress(defaultFarm).street},${getPrimaryAddress(defaultFarm).state}, ",
+                      " : ${Util.getPrimaryAddress(defaultFarm).city},${Util.getPrimaryAddress(defaultFarm).street},${Util.getPrimaryAddress(defaultFarm).state}, ",
                       style: TextStyle(
                         fontFamily: AppConstants.defaultFont,
                         fontWeight: FontWeight.normal,
@@ -446,8 +461,8 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
 
           Expanded(
             child: MapCard(
-              location: LatLng(getPrimaryAddress(defaultFarm).latitude,
-                  getPrimaryAddress(defaultFarm).longitude),
+              location: LatLng(Util.getPrimaryAddress(defaultFarm).latitude,
+                  Util.getPrimaryAddress(defaultFarm).longitude),
             ),
           )
           // MapCard placeholder
@@ -456,24 +471,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
     );
   }
 
-  Address getPrimaryAddress(Farm farm) {
-    final primaryAddress = farm.addresses.firstWhere(
-      (a) => a.addressLevel?.toUpperCase() == 'PRIMARY', //todo: primary address
-      orElse: () => Address(
-        latitude: 0.0,
-        longitude: 0.0,
-        addressLevel: 'PRIMARY',
-        street: ' na ',
-        city: ' na ',
-        state: ' na ',
-        zipCode: ' na ',
-        details: ' na ',
-      ),
-    );
 
-    // return LatLng(primaryAddress.latitude, primaryAddress.longitude);
-    return primaryAddress;
-  }
 
   Widget otherFarms(BuildContext context) {
     return Container(
@@ -520,9 +518,9 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                   children: [
                     Icon(
                       FontAwesomeIcons.buildingColumns,
-                      size: Util.scaleWidthFromDesign(context, 15),
+                      size: Util.scaleWidthFromDesign(context, 9),
                     ),
-                    SizedBox(width: Util.scaleWidthFromDesign(context, 10)),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 5)),
                     Text(
                       farms[index].name,
                       style: TextStyle(
@@ -535,13 +533,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                     Spacer(),
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => FarmOverviewScreen(
-                                    loginResponse: loginResponse,
-                                  )),
-                        );
+                        //todo: not yet implemented
                       },
                       icon: Icon(
                         FontAwesomeIcons.penToSquare,
@@ -556,7 +548,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: Util.scaleWidthFromDesign(context, 25)),
+                    SizedBox(width: Util.scaleWidthFromDesign(context, 15)),
                     Text(
                       "Status",
                       style: TextStyle(
@@ -609,9 +601,9 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                         width: Util.scaleWidthFromDesign(context, 70),
                         child: Tooltip(
                           message:
-                          " ${getPrimaryAddress(farms[index]).city},${getPrimaryAddress(farms[index]).street},${getPrimaryAddress(farms[index]).state}, ",
+                          " ${Util.getPrimaryAddress(farms[index]).city},${Util.getPrimaryAddress(farms[index]).street},${Util.getPrimaryAddress(farms[index]).state}, ",
                           child: Text(
-                            " : ${getPrimaryAddress(farms[index]).city},${getPrimaryAddress(farms[index]).street},${getPrimaryAddress(farms[index]).state}, ",
+                            " : ${Util.getPrimaryAddress(farms[index]).city},${Util.getPrimaryAddress(farms[index]).street},${Util.getPrimaryAddress(farms[index]).state}, ",
                             style: TextStyle(
                               fontFamily: AppConstants.defaultFont,
                               fontWeight: FontWeight.normal,
@@ -638,6 +630,192 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
       ),
     );
   }
+
+
+  void showCreateFarmBottomSheet(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.85,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+              ),
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    Center(
+                      child: Container(
+                        height: 5,
+                        width: 50,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      "Create Farm",
+                      style: TextStyle(
+                        fontFamily: AppConstants.defaultFont,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Farm Name
+                    TextFormField(
+                      controller: _farmNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Farm Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Farm name is required';
+                        }
+                        if (value.length < 3) {
+                          return 'Farm name must be at least 3 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Farm Location
+                    AddressLocationInput(
+                      controller: _farmLocationController,
+                      onLocationSelected: (selectedAddress) {
+                        address = selectedAddress;
+                      },
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Description
+                    TextFormField(
+                      controller: _farmDetailsController,
+                      decoration: InputDecoration(
+                        labelText: "Description",
+                        hintText: "Add a few details about your farm...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 30),
+
+                    // SAVE button
+                    SizedBox(
+                      height: 55,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[600],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (!formKey.currentState!.validate()) return;
+
+                          FarmRequest fr = FarmRequest(
+                            accountId: loginResponse.defaultAccount.id,
+                            name: _farmNameController.text.trim(),
+                            addresses: [address],
+                          );
+
+                          // Show loading
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) =>
+                            const Center(child: CircularProgressIndicator()),
+                          );
+
+                          try {
+                            ServiceResult result = await fmService.createFarm(
+                              farm: fr,
+                              loginResponse: loginResponse,
+                              accountId: loginResponse.defaultAccount.id,
+                            );
+
+                            Navigator.of(context).pop(); // remove loader
+
+                            if (result.success) {
+                              Navigator.pop(context, fr);
+
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                builder: (context) => const CustomOverlay(
+                                  message: "Farm saved successfully",
+                                  isSuccess: true,
+                                ),
+                              );
+                              fetchFarms();
+                            } else {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                builder: (context) => CustomOverlay(
+                                  message: result.errorMessage ??
+                                      "Failed to create a farm",
+                                  isSuccess: false,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            Navigator.of(context).pop(); // remove loader
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('An error occurred: $e')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          "SAVE",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: AppConstants.defaultFont,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
 
 class FarmDataSource extends DataTableSource {
@@ -684,9 +862,9 @@ class FarmDataSource extends DataTableSource {
           limit: rowsPerPage,
           loginResponse: loginResponse);
 
-      farms = response!.content;
-      totalRows = response.totalElements;
-      page = response.pageNumber;
+      farms = response!;
+      totalRows = response.length;
+      page = response[response.length -1].id;
       debugPrint("Reached this Part :-------");
       notifyListeners();
     } catch (e) {

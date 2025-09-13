@@ -13,7 +13,7 @@ import '../services/service_result.dart';
 import '../utils/AppConstants.dart';
 import '../utils/util.dart';
 import '../widgets/overlays.dart';
-import 'farm_location_input.dart';
+import 'address_location_input.dart';
 
 class FarmCard extends StatefulWidget {
   final LoginResponse? loginResponse;
@@ -51,7 +51,7 @@ class _FarmCardState extends State<FarmCard> {
       loading = true;
     });
 
-    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
+    List<Farm>? farmsResponse = await fmService.getFarms(
         accountId: loginResponse.defaultAccount.id,
         offset: 0,
         limit: 20,
@@ -59,9 +59,9 @@ class _FarmCardState extends State<FarmCard> {
 
     setState(() {
       loading = false;
-      if (farmsResponse!.content.isNotEmpty) {
+      if (farmsResponse!.isNotEmpty) {
         existingFarms = true;
-        farms = farmsResponse.content;
+        farms = farmsResponse;
 
         // defaultFarm = farms.first;
 
@@ -108,15 +108,32 @@ class _FarmCardState extends State<FarmCard> {
             children: [
               Container(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  "Farms",
-                  style: TextStyle(
-                      fontFamily: AppConstants.defaultFont,
-                      fontSize: Util.scaleWidthFromDesign(context, 13),
-                      fontWeight: FontWeight.bold),
-                ),
+                child: Row(
+                  children: [
 
-                //todo: create new farm button
+                    Icon(
+                      FontAwesomeIcons.buildingColumns,
+                      size: Util.scaleWidthFromDesign(context, 10),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+
+
+                    Text(
+                      "Farms",
+                      style: TextStyle(
+                          fontFamily: AppConstants.defaultFont,
+                          fontSize: Util.scaleWidthFromDesign(context, 11),
+                          fontWeight: FontWeight.bold),
+                    ),
+
+
+                  ],
+                )
+
+
+
               ),
               SizedBox(
                 height: 25,
@@ -231,12 +248,12 @@ class _FarmCardState extends State<FarmCard> {
                                       alignment: Alignment.topLeft,
                                       child: Text(
                                         //todo: default farm
-                                          defaultFarm!.name ?? "N/A",
+                                          defaultFarm.name ,
                                         style: TextStyle(
                                             fontFamily:
                                                 AppConstants.defaultFont,
                                             fontSize: Util.scaleWidthFromDesign(
-                                                context, 12),
+                                                context, 11),
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
@@ -265,7 +282,7 @@ class _FarmCardState extends State<FarmCard> {
                             style: TextStyle(
                                 fontFamily: AppConstants.defaultFont,
                                 fontSize:
-                                    Util.scaleWidthFromDesign(context, 13),
+                                    Util.scaleWidthFromDesign(context, 11),
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -304,8 +321,8 @@ class _FarmCardState extends State<FarmCard> {
 
                       },
                       icon: Icon(
-                        FontAwesomeIcons.penToSquare,
-                        size: Util.scaleWidthFromDesign(context, 15),
+                        FontAwesomeIcons.arrowRight,
+                        size: Util.scaleWidthFromDesign(context, 10),
                       )),
                 ),
               ],
@@ -553,7 +570,7 @@ class _FarmCardState extends State<FarmCard> {
                   const SizedBox(height: 12),
 
                   // Farm Location autocomplete field
-                  FarmLocationInput(
+                  AddressLocationInput(
                     controller: _farmLocationController,
                     onLocationSelected: (selectedAddress) {
                       address = selectedAddress;

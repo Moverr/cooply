@@ -253,7 +253,6 @@ class _FlockState extends State<FlockScreen> {
               expanded: _isExpanded,
               child: Column(
                 children: [
-
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
@@ -330,7 +329,6 @@ class _FlockState extends State<FlockScreen> {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -488,9 +486,9 @@ class FarmDataSource extends DataTableSource {
           limit: rowsPerPage,
           loginResponse: loginResponse);
 
-      farms = response!.content;
-      totalRows = response.totalElements;
-      page = response.pageNumber;
+      farms = response!;
+      totalRows = response.length;
+      page = response[response.length - 1].id;
       debugPrint("Reached this Part :-------");
       notifyListeners();
     } catch (e) {
@@ -604,4 +602,3 @@ class FarmDataSource extends DataTableSource {
 
   List<Map<String, String>> getData() => _data;
 }
-

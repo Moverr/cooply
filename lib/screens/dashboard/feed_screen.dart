@@ -1,12 +1,7 @@
 import 'dart:convert';
 
-import 'package:Cooply/models/dtos/accountResponse.dart';
-import 'package:Cooply/models/dtos/coop.dart';
-import 'package:Cooply/models/dtos/flock.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
-import 'package:Cooply/widgets/farmListTyle.dart';
-import 'package:Cooply/widgets/flockListTyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/dtos/farm.dart';
 import '../../models/dtos/feed_inventory.dart';
 import '../../services/farm_service.dart';
-import '../../widgets/coopListTyle.dart';
 import '../../widgets/feedListTyle.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -322,9 +316,9 @@ class FarmDataSource extends DataTableSource {
           limit: rowsPerPage,
           loginResponse: loginResponse);
 
-      farms = response!.content;
-      totalRows = response.totalElements;
-      page = response.pageNumber;
+      farms = response!;
+      totalRows = response.length;
+      page = response[response.length-1].id;
       debugPrint("Reached this Part :-------");
       notifyListeners();
     } catch (e) {
