@@ -14,8 +14,11 @@ class CoopResponse {
   final AuthorResponse? author;
   final Farm? farm;
   final String? area;
+
   final List<PowerResponse>? power;
   final List<WaterResponse>? water;
+
+
   final List<String?>? breed;
   final List<String?>? stage;
   final EmployeeResponse? employee; // made nullable

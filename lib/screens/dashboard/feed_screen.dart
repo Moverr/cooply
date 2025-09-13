@@ -316,9 +316,9 @@ class FarmDataSource extends DataTableSource {
           limit: rowsPerPage,
           loginResponse: loginResponse);
 
-      farms = response!.content;
-      totalRows = response.totalElements;
-      page = response.pageNumber;
+      farms = response!;
+      totalRows = response.length;
+      page = response[response.length-1].id;
       debugPrint("Reached this Part :-------");
       notifyListeners();
     } catch (e) {

@@ -49,11 +49,11 @@ class _CoopListTyleState extends State<CoopListTyle> {
           // Top Bar
           Container(
             height: Util.scaleWidthFromDesign(context, 22),
-            padding: EdgeInsets.symmetric(horizontal: 5),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFFE7E0EC).withValues(alpha: 0.8),
+                  const Color(0xFFE7ECAB).withValues(alpha: 0.8),
                   const Color(0xFFFDF9F9).withValues(alpha: 0.1),
                 ],
               ),
@@ -94,44 +94,43 @@ class _CoopListTyleState extends State<CoopListTyle> {
           _buildProgressRow(context, coop),
 
           if (coop.power != null && coop.power!.isNotEmpty)
-          _buildInfoRow(
+            _buildInfoRow(
             context,
             FontAwesomeIcons.lightbulb,
-            "Power : Grid(None), Solar (Active)",
-          ),
+            "Power : ${coop.power != null
+            ? coop.power!.map((p) => "${p.powerType} : ${p.status}").join(", ").toLowerCase()
+                : ""}"
+            )
 
-
+    ,
           if (coop.water != null && coop.water!.isNotEmpty)
-          _buildInfoRow(
-            context,
-            FontAwesomeIcons.droplet,
-            "Water : None",
-          ),
+            _buildInfoRow(
+                context,
+                FontAwesomeIcons.droplet,
+                "Water : ${coop.water != null
+                        ? coop.water!.map((p) => "${p.source} : ${p.status}").join(", ").toLowerCase()
+                        : ""}"
+            )
+
+          ,
           // if(coop.breed!.length > 0)
 
-          // if (coop.breed != null && coop.breed!.isNotEmpty)
+        if (coop.breed != null && coop.breed!.isNotEmpty)
           _buildInfoRow(
             context,
             FontAwesomeIcons.twitter,
-            "Breed : Local,Mixed   Stage : Grower,Laying",
+              "Breed : ${coop.breed != null
+                  ? coop.breed!.map((p) => "${p} ").join(", ").toLowerCase()
+                  : ""}"
           ),
 
-          // if(coop.status == "active")
           _buildInfoRow(
-            context,
-            FontAwesomeIcons.check,
-            "Status : Active",
-          ),
+          context,
+          FontAwesomeIcons.check,
+          "Status : ${coop.status.toLowerCase()}",
+        ),
 
-          /*
-          if(coop.status == "inactive")
-            _buildInfoRow(
-              context,
-              FontAwesomeIcons.triangleExclamation,
-              "Status : Inactive",
-            ),
-          */
-
+//todo: employee issing : employee, capacity, occupied..
           if(coop.employee != null)
           _buildInfoRow(
             context,

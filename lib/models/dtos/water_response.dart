@@ -1,12 +1,12 @@
 class WaterResponse {
-  String? waterType;
+  String? source;
   String? status;
 
-  WaterResponse({this.waterType, this.status});
+  WaterResponse({this.source, this.status});
 
   factory WaterResponse.fromJson(Map<String, Object?> json) {
     return WaterResponse(
-        waterType: json['water_type'] as String?,
+        source: json['source'] as String?,
         status: json['status'] as String?);
   }
 

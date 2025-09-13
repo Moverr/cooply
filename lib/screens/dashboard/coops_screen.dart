@@ -1,16 +1,19 @@
-
 import 'package:Cooply/models/dtos/coop_response.dart';
 import 'package:Cooply/models/dtos/loginResponse.dart';
+import 'package:Cooply/models/dtos/requests/coop_request.dart';
 import 'package:Cooply/services/coop_service.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../cards/address_location_input.dart';
+import '../../models/dtos/address.dart';
 import '../../models/dtos/farm.dart';
 import '../../models/dtos/requests/farm_request.dart';
 import '../../services/farm_service.dart';
 import '../../services/service_result.dart';
+import '../../utils/coop_calculator.dart';
 import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
 import '../../widgets/overlays.dart';
@@ -25,11 +28,41 @@ class CoopsScreen extends StatefulWidget {
 }
 
 class _CoopState extends State<CoopsScreen> {
-  final TextEditingController _farmNameController = TextEditingController();
-  final TextEditingController _farmLocationController = TextEditingController();
+  // Define state map for power options
+  Map<String, bool> _powerOptions = {
+    "NATIONAL": false,
+    "SOLAR": false,
+    "BATTERY": false,
+    "OTHER": false,
+  };
+
+  // Define state map for water options
+  final Map<String, bool> _waterOptions = {
+    "NATIONAL": false,
+    "BORE": false,
+    "UNDERGROUND": false,
+    "OTHER": false,
+  };
+
+  // Power checkboxes
+  bool _powerGrid = false;
+  bool _powerSolar = false;
+
+  // Water checkboxes
+  bool _waterGrid = false;
+  bool _waterUnderground = false;
+
+  late Address address;
+
+  final TextEditingController _coopNameController = TextEditingController();
+  final TextEditingController _coopGroundAreaController =
+      TextEditingController();
+  final TextEditingController _coopCapacityController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _farmDetailsController = TextEditingController();
 
   TextEditingController _searchController = TextEditingController();
+  String? selectedType = "DEEP_LITTER";
 
   List<Map<String, String>> _filteredData = [];
 
@@ -43,6 +76,9 @@ class _CoopState extends State<CoopsScreen> {
   FarmService fmService = FarmService();
   CoopService cpService = CoopService();
 
+  int offset = 0;
+  int limit = 3;
+
   late List<Farm> farms = [];
   late List<CoopResponse> coops = [];
 
@@ -54,6 +90,21 @@ class _CoopState extends State<CoopsScreen> {
     loginResponse = widget.loginResponse!;
 
     getDefaultFarm();
+  }
+
+  void handleGroundArea() {
+    setState(() {
+      // Parse the ground area safely
+      double groundArea =
+          double.tryParse(_coopGroundAreaController.text) ?? 0.0;
+
+      // Calculate capacity
+      double capacity = CoopCalculator.calculateCapacityByType(
+          groundArea, selectedType! ?? "");
+
+      // Update the capacity controller
+      _coopCapacityController.text = "$capacity";
+    });
   }
 
   Future<void> getDefaultFarm() async {
@@ -73,12 +124,12 @@ class _CoopState extends State<CoopsScreen> {
             offset: 0,
             limit: 20,
             loginResponse: loginResponse)
-        .then((PaginatedFarmsResponse? farmsResponse) {
+        .then((List<Farm>? farmsResponse) {
       setState(() {
         loading = false;
-        if (farmsResponse!.content.isNotEmpty) {
+        if (farmsResponse!.isNotEmpty) {
           existingFarms = true;
-          farms = farmsResponse.content;
+          farms = farmsResponse;
 
           if (farms.isNotEmpty) {
             farms.forEach((farm) {
@@ -109,14 +160,16 @@ class _CoopState extends State<CoopsScreen> {
     cpService
         .getList(
       farmId: farm.id,
-      offset: 0,
-      limit: 20,
+      offset: offset,
+      limit: limit,
       loginResponse: loginResponse,
     )
         .then((List<CoopResponse> coopResponseList) {
       setState(() {
         if (coopResponseList.isNotEmpty) {
           this.coops = coopResponseList;
+
+          this.offset = 0;
         }
       });
 
@@ -131,9 +184,6 @@ class _CoopState extends State<CoopsScreen> {
   }
 
   bool _isLoading = true;
-
-  String selectedValue = 'Apple';
-  final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
 
   @override
   Widget build(BuildContext context) {
@@ -195,30 +245,24 @@ class _CoopState extends State<CoopsScreen> {
           children: [
             getHeaderWidget(context),
             Expanded(
-                child:
-               coops.length == 0 ?
-                getGhostWidget(context)
-                // ListView.builder(
-                //   itemCount: 5,
-                //   itemBuilder: (context, index){
-                //     getGhostWidget(context);
-                //   },
-                // )
+                child: coops.length == 0
+                    ? getGhostWidget(context)
 
-                    :
-                ListView.builder(
-              itemCount: coops.length,
-              itemBuilder: (context, index) {
-                return CoopListTyle(
-                  coop: coops[index],
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Tapped ${coops[index].name}')),
-                    );
-                  },
-                );
-              },
-            )),
+                    : ListView.builder(
+                        itemCount: coops.length,
+                        itemBuilder: (context, index) {
+                          return CoopListTyle(
+                            coop: coops[index],
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content:
+                                        Text('Tapped ${coops[index].name}')),
+                              );
+                            },
+                          );
+                        },
+                      )),
           ],
         ),
       ),
@@ -318,173 +362,447 @@ class _CoopState extends State<CoopsScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return FractionallySizedBox(
-          heightFactor: 0.85,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-              ),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  children: [
-                    Center(
-                      child: Container(
-                        height: 5,
-                        width: 50,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+            heightFactor: 0.85,
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
+                  border: Border(
+                    top: BorderSide(
+                      color: Color(0XFFB6ECBF), // border color
+                      width: Util.scaleWidthFromDesign(
+                          context, 15.0), // border thickness/height
                     ),
-                    const Text(
-                      "Create Coop",
-                      style: TextStyle(
-                        fontFamily: AppConstants.defaultFont,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Farm Name
-                    TextFormField(
-                      controller: _farmNameController,
-                      decoration: InputDecoration(
-                        labelText: 'Farm Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Farm name is required';
-                        }
-                        if (value.length < 3) {
-                          return 'Farm name must be at least 3 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 14),
-
-                    // Description
-                    TextFormField(
-                      controller: _farmDetailsController,
-                      decoration: InputDecoration(
-                        labelText: "Description",
-                        hintText: "Add a few details about your farm...",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                      ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 30),
-
-                    // SAVE button
-                    SizedBox(
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green[600],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () async {
-                          if (!formKey.currentState!.validate()) return;
-
-                          FarmRequest fr = FarmRequest(
-                            accountId: loginResponse.defaultAccount.id,
-                            name: _farmNameController.text.trim(),
-                            addresses: [],
-                          );
-
-                          // Show loading
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) => const Center(
-                                child: CircularProgressIndicator()),
-                          );
-
-                          try {
-                            ServiceResult result = await fmService.createFarm(
-                              farm: fr,
-                              loginResponse: loginResponse,
-                              accountId: loginResponse.defaultAccount.id,
-                            );
-
-                            Navigator.of(context).pop(); // remove loader
-
-                            if (result.success) {
-                              Navigator.pop(context, fr);
-
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                barrierColor: Colors.black.withOpacity(0.5),
-                                builder: (context) => const CustomOverlay(
-                                  message: "Farm saved successfully",
-                                  isSuccess: true,
-                                ),
-                              );
-                              fetchFarms();
-                            } else {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                barrierColor: Colors.black.withOpacity(0.5),
-                                builder: (context) => CustomOverlay(
-                                  message: result.errorMessage ??
-                                      "Failed to create a farm",
-                                  isSuccess: false,
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            Navigator.of(context).pop(); // remove loader
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('An error occurred: $e')),
-                            );
-                          }
-                        },
-                        child: const Text(
-                          "SAVE",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: AppConstants.defaultFont,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        );
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 20,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+                  ),
+                  child: Form(
+                    key: formKey,
+                    child: ListView(
+                      children: [
+                        Center(
+                          child: Container(
+                            height: 5,
+                            width: 50,
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        const Text(
+                          "Create Coop ",
+                          style: TextStyle(
+                            fontFamily: AppConstants.defaultFont,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 20),
+                        Text("Name"),
+                        const SizedBox(height: 5),
+                        TextFormField(
+                          controller: _coopNameController,
+                          decoration: InputDecoration(
+                            labelText: 'Enter Coop Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            //Colors.grey[100],
+                            prefixIcon: const Padding(
+                              padding:
+                                  EdgeInsets.all(12.0), // adjust for spacing
+                              child: FaIcon(
+                                FontAwesomeIcons.house, // choose your icon
+                                size: 20,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Coop name is required';
+                            }
+                            if (value.length < 3) {
+                              return 'Coop  name must be at least 3 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        Text("Type"),
+                        const SizedBox(height: 5),
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                            labelText: 'Select Coop Type',
+                            border: OutlineInputBorder(),
+                          ),
+                          value: selectedType,
+                          items: CoopCalculator.CoopType.entries.map((entry) {
+                            return DropdownMenuItem<String>(
+                              value: entry.value, // e.g. "DEEP_LITTER"
+                              child: Text(entry.key), // e.g. "deepLitter"
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedType = value;
+                              handleGroundArea();
+                            });
+
+                            if (value != null) {
+                              final capacity =
+                                  CoopCalculator.calculateCapacityByType(
+                                      100, value);
+                              debugPrint(
+                                  "Capacity for $value = $capacity birds");
+                            }
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 160,
+                              //Util.scaleWidthFromDesign(context, 160),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: _coopGroundAreaController,
+                                onChanged: (value) {
+                                  handleGroundArea();
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Ground Area [M Sqrd] ',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+
+                                  //Colors.grey[100],
+                                  prefixIcon: const Padding(
+                                    padding: EdgeInsets.all(
+                                        12.0), // adjust for spacing
+                                    child: FaIcon(
+                                      FontAwesomeIcons
+                                          .squareFontAwesome, // choose your icon
+                                      size: 20,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Field is required';
+                                  }
+
+                                  if (double.tryParse(value.trim()) == null) {
+                                    return 'Enter  number';
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            SizedBox(
+                              width: 160,
+                              //Util.scaleWidthFromDesign(context, 160),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: _coopCapacityController,
+                                decoration: InputDecoration(
+                                  labelText: 'Bird Capacity',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  //Colors.grey[100],
+                                  prefixIcon: const Padding(
+                                    padding: EdgeInsets.all(
+                                        12.0), // adjust for spacing
+                                    child: FaIcon(
+                                      FontAwesomeIcons
+                                          .circleCheck, // choose your icon
+                                      size: 20,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Bird Capacity Required';
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Power Section
+                        ExpansionTile(
+                          title: Row(
+                            children: [
+                              const FaIcon(
+                                FontAwesomeIcons.bolt, // Power icon
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                "Power",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          collapsedBackgroundColor: Colors.blueGrey[200],
+                          backgroundColor: Colors.green[50],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          collapsedShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          children: _powerOptions.keys.map((key) {
+                            return CheckboxListTile(
+                              title: Text(
+                                key[0] +
+                                    key
+                                        .substring(1)
+                                        .toLowerCase(), // pretty label
+                              ),
+                              value: _powerOptions[key],
+                              onChanged: (val) {
+                                setState(() {
+                                  _powerOptions[key] = val ?? false;
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+
+                        SizedBox(
+                          height: 20,
+                        ),
+// Water Section
+
+                        // Define state map for water options
+
+                        ExpansionTile(
+                          title: Row(
+                            children: [
+                              const FaIcon(
+                                FontAwesomeIcons.droplet, // Water icon
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                "Water",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          collapsedBackgroundColor: Colors.lightBlue[200],
+                          backgroundColor: Colors.green[50],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          collapsedShape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          children: _waterOptions.keys.map((key) {
+                            return CheckboxListTile(
+                              title: Text(
+                                key[0] +
+                                    key
+                                        .substring(1)
+                                        .toLowerCase(), // pretty label
+                              ),
+                              value: _waterOptions[key],
+                              onChanged: (val) {
+                                setState(() {
+                                  _waterOptions[key] = val ?? false;
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+
+                        SizedBox(
+                          height: 20,
+                        ),
+
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 200,
+                              height: 55,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black26,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text(
+                                  "CANCEL",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: AppConstants.defaultFont,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            SizedBox(
+                              width: 200,
+                              height: 55,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green[600],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (!formKey.currentState!.validate()) return;
+
+                                  CoopRequest coopRequest = CoopRequest(
+                                    farmId: defaultFarm.id,
+                                    name: _coopNameController.text.trim(),
+                                    area:_coopGroundAreaController.text,
+                                    capacity: double.parse(_coopCapacityController.text),
+                                    type: selectedType!,
+                                    power: _powerOptions.entries
+                                        .where((entry) => entry.value) // only selected
+                                        .map((entry) => PowerRequest(
+                                      name: entry.key,    // use the key as the name
+                                      status: "PENDING",  // optional, default status
+                                      // details: "",        // optional details
+                                    ))
+                                        .toList(),
+                                    water: _waterOptions.entries
+                                        .where((e) => e.value)
+                                        .map((e) => WaterRequest(
+                                      source: e.key,
+                                      status: "PENDING",
+                                    ))
+                                        .toList(),
+
+
+                                  );
+
+                                  // Show loading
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (_) => const Center(
+                                        child: CircularProgressIndicator()),
+                                  );
+
+                                  try {
+                                    ServiceResult result =
+                                        await cpService.create(
+                                      coopRequest: coopRequest,
+                                      loginResponse: loginResponse,
+                                      farmId:defaultFarm.id,
+                                    );
+
+                                    Navigator.of(context)
+                                        .pop(); // remove loader
+
+                                    if (result.success) {
+                                      Navigator.pop(context, coopRequest);
+
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: true,
+                                        barrierColor:
+                                            Colors.black.withOpacity(0.5),
+                                        builder: (context) =>
+                                            const CustomOverlay(
+                                          message: "Coop saved successfully",
+                                          isSuccess: true,
+                                        ),
+                                      );
+                                      fetchFarms();
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: true,
+                                        barrierColor:
+                                            Colors.black.withOpacity(0.5),
+                                        builder: (context) => CustomOverlay(
+                                          message: result.errorMessage ??
+                                              "Failed to create a coop",
+                                          isSuccess: false,
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    Navigator.of(context)
+                                        .pop(); // remove loader
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('An error occurred: $e')),
+                                    );
+                                  }
+                                },
+                                child: const Text(
+                                  "SAVE",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: AppConstants.defaultFont,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                        // SAVE button
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }));
       },
     );
   }
-
-
 
   Widget getGhostWidget(BuildContext context) {
     return Container(
@@ -526,5 +844,4 @@ class _CoopState extends State<CoopsScreen> {
       ),
     );
   }
-
 }

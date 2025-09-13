@@ -4,27 +4,31 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../models/dtos/address.dart';
 import '../services/nominatim_service.dart';
 
-class FarmLocationInput extends StatefulWidget{
+class AddressLocationInput extends StatefulWidget{
   final TextEditingController controller;
   final void Function(Address address)? onLocationSelected;
+  final String labelText;
+  final String validationText;
 
-
-  const FarmLocationInput({
+  const AddressLocationInput({
     Key? key,
     required this.controller,
     this.onLocationSelected,
+    this.labelText = 'Address',
+    this.validationText = 'Enter address',
   }) : super(key: key);
 
 
   @override
-  State<StatefulWidget> createState() =>   _FarmLocationInputState();
+  State<StatefulWidget> createState() =>   _AddressLocationInputState();
 
 }
-class _FarmLocationInputState extends State<FarmLocationInput> {
+class _AddressLocationInputState extends State<AddressLocationInput> {
 
   List<Map<String, dynamic>> _suggestions = [];
   Timer? _debounce;
@@ -106,24 +110,35 @@ class _FarmLocationInputState extends State<FarmLocationInput> {
         TextFormField(
           controller: widget.controller,
           decoration: InputDecoration(
-            labelText: 'Farm Location',
+            labelText: widget.labelText,
             border: const OutlineInputBorder(),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: FaIcon(
+                FontAwesomeIcons.locationDot, // place/location icon
+                color: Colors.green,
+                size: 20,
+              ),
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Enter farm location';
+              return widget.validationText;
             }
             return null;
           },
           onChanged: _onChanged,
         ),
+
+
+
         if (_suggestions.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(top: 4),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade400),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(10),
               color: Colors.white,
             ),
             height: 150,

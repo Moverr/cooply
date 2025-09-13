@@ -10,7 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../cards/farm_location_input.dart';
+import '../../cards/address_location_input.dart';
 import '../../cards/map_card.dart';
 import '../../models/dtos/address.dart';
 import '../../models/dtos/farm.dart';
@@ -73,17 +73,18 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
       loading = true;
     });
 
-    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
-        accountId: loginResponse?.defaultAccount.id,
+    List<Farm?>? farmsResponse = await fmService.getFarms(
+        accountId: loginResponse.defaultAccount.id,
         offset: 0,
         limit: 20,
         loginResponse: loginResponse); // your async fetch method
 
     setState(() {
       loading = false;
-      if (farmsResponse!.content.isNotEmpty) {
+      if (farmsResponse!.isNotEmpty) {
         existingFarms = true;
-        farms = farmsResponse.content;
+        // farms = farmsResponse??[]
+        farms = farmsResponse.whereType<Farm>().toList();
 
         // defaultFarm = farms.first;
 
@@ -703,7 +704,7 @@ class _FarmOverviewState extends State<FarmOverviewScreen> {
                     const SizedBox(height: 14),
 
                     // Farm Location
-                    FarmLocationInput(
+                    AddressLocationInput(
                       controller: _farmLocationController,
                       onLocationSelected: (selectedAddress) {
                         address = selectedAddress;
@@ -861,9 +862,9 @@ class FarmDataSource extends DataTableSource {
           limit: rowsPerPage,
           loginResponse: loginResponse);
 
-      farms = response!.content;
-      totalRows = response.totalElements;
-      page = response.pageNumber;
+      farms = response!;
+      totalRows = response.length;
+      page = response[response.length -1].id;
       debugPrint("Reached this Part :-------");
       notifyListeners();
     } catch (e) {

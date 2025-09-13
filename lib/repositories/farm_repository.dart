@@ -21,10 +21,10 @@ class FarmRepository {
 
   }) async {
     if (isOnline) {
-      PaginatedFarmsResponse? response =   await remote.getFarms(accountId: accountId, offset: offset, limit: limit, loginResponse: loginResponse);
+      List<Farm>? response =   await remote.getFarms(accountId: accountId, offset: offset, limit: limit, loginResponse: loginResponse);
 
 
-      return response?.content;
+      return response;
     } else {
       return local.getQueuedFarms();
     }

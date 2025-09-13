@@ -13,7 +13,7 @@ import '../services/service_result.dart';
 import '../utils/AppConstants.dart';
 import '../utils/util.dart';
 import '../widgets/overlays.dart';
-import 'farm_location_input.dart';
+import 'address_location_input.dart';
 
 class FarmCard extends StatefulWidget {
   final LoginResponse? loginResponse;
@@ -51,7 +51,7 @@ class _FarmCardState extends State<FarmCard> {
       loading = true;
     });
 
-    PaginatedFarmsResponse? farmsResponse = await fmService.getFarms(
+    List<Farm>? farmsResponse = await fmService.getFarms(
         accountId: loginResponse.defaultAccount.id,
         offset: 0,
         limit: 20,
@@ -59,9 +59,9 @@ class _FarmCardState extends State<FarmCard> {
 
     setState(() {
       loading = false;
-      if (farmsResponse!.content.isNotEmpty) {
+      if (farmsResponse!.isNotEmpty) {
         existingFarms = true;
-        farms = farmsResponse.content;
+        farms = farmsResponse;
 
         // defaultFarm = farms.first;
 
@@ -570,7 +570,7 @@ class _FarmCardState extends State<FarmCard> {
                   const SizedBox(height: 12),
 
                   // Farm Location autocomplete field
-                  FarmLocationInput(
+                  AddressLocationInput(
                     controller: _farmLocationController,
                     onLocationSelected: (selectedAddress) {
                       address = selectedAddress;

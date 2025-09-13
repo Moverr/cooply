@@ -1,3 +1,5 @@
+import 'package:Cooply/models/dtos/requests/coop_request.dart';
+import 'package:Cooply/services/service_result.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -27,6 +29,80 @@ class CoopService {
     );
   }
 
+  /**
+    Create Coop
+   */
+
+
+
+  Future<ServiceResult> create({
+    required CoopRequest coopRequest,
+    LoginResponse? loginResponse,
+    required int farmId,
+  }) async {
+    print('URL  : ${AppConstants.BASE_URL}v1/coop');
+    print('Farm ID  : $farmId');
+    debugPrint("logResponse ${loginResponse?.auth_token}");
+
+    final dio = initDio(AppConstants.LOCAL_BASE_URL, loginResponse?.auth_token);
+
+    try {
+
+      final response = await dio.post(
+        '/v1/coop',
+        data: {
+         "farm_id":farmId,
+          "name": coopRequest.name,
+          // "reference_id": coopRequest.referenceId, // UUID
+          // "status": coopRequest.status, // e.g. "PENDING"
+          "area": coopRequest.area,
+          "capacity": coopRequest.capacity, // fixed typo from "cpaacity"
+          "type": coopRequest.type, // e.g. "DEEP_LITTER"
+          "power": coopRequest.power.map((p) => {
+            "power_type": p.name,
+            "status": p.status,
+            // "details": p.details,
+          }).toList(),
+          "water": coopRequest.water.map((w) => {
+            "water_type": w.source,
+            "status": w.status,
+            // "details": w.details,
+          }).toList(),
+
+        },
+      );
+
+      // Optionally check response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ServiceResult(success: true);
+      } else {
+        return ServiceResult(
+          success: false,
+          errorMessage: 'Unexpected status code: ${response.statusCode}',
+        );
+      }
+    } on DioError catch (e) {
+      // Handle API errors
+      String message = 'Failed to save coop';
+      if (e.response != null && e.response?.data != null) {
+        // Try to extract server error message
+        final data = e.response?.data;
+        if (data is Map && data['message'] != null) {
+          message = data['message'];
+        } else if (data is String) {
+          message = data;
+        }
+      }
+      return ServiceResult(success: false, errorMessage: message);
+    } catch (e) {
+      // Any other error
+      return ServiceResult(success: false, errorMessage: e.toString());
+    }
+  }
+
+  /**
+   *  Get Coops
+   */
   Future<List<CoopResponse>> getList(
       {
        required int farmId,
@@ -46,6 +122,7 @@ class CoopService {
       final response = await dio.get(
         'v1/coop',
         queryParameters: {
+          'account_id':loginResponse!.defaultAccount.id,
           'farm_id':
               farmId, // the calling agent, will determine the account to choose
           'offset': '${offset}',
