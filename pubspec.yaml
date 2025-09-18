@@ -53,6 +53,7 @@ dependencies:
   latlong2: ^0.9.1
   flutter_bloc: ^9.1.1
   equatable: ^2.0.5
+  fl_chart:    ^1.1.0
 #  flutter_google_places_hoc081098: ^1.0.1 # for places autocomplete
 #  google_maps_webservice_ex: ^0.0.20-nullsafety.1
 #  geolocator: ^10.1.0 # optional if you want current location
@@ -74,6 +75,8 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
+    - assets/svg/chicken.svg
+    - assets/svg/cashin.svg
     - assets/svg/place.svg
     - assets/icon/total_stock.png
     - assets/icon/capacity_per.png

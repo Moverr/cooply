@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2025. This is a product of Khoodilabs
+ */
+
 import 'dart:convert';
 
 import 'package:Cooply/models/dtos/accountResponse.dart';
@@ -7,6 +11,7 @@ import 'package:Cooply/models/dtos/loginResponse.dart';
 import 'package:Cooply/utils/AppConstants.dart';
 import 'package:Cooply/widgets/farmListTyle.dart';
 import 'package:Cooply/widgets/flockListTyle.dart';
+import 'package:Cooply/widgets/ghost_loader_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +45,7 @@ class _FlockState extends State<FlockScreen> {
   final GlobalKey expansionTileKey = GlobalKey();
   bool _isExpanded = true;
   bool _isSearching = false;
+  bool _coopsLoaded = false;
 
   bool existingFarms = false;
   bool loading = false;
@@ -47,6 +53,7 @@ class _FlockState extends State<FlockScreen> {
 
   late List<Farm> farms = [];
   late List<CoopResponse> coops = [];
+  CoopResponse? selectedCoop; // state variable
 
   int offset = 0;
   int limit = 10;
@@ -56,7 +63,6 @@ class _FlockState extends State<FlockScreen> {
     super.initState();
     loginResponse = widget.loginResponse!;
     getDefaultFarm();
-    handleScrollEvent();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -69,18 +75,18 @@ class _FlockState extends State<FlockScreen> {
       if (_scrollController.hasClients) {
         double currentOffset = _scrollController.offset;
 
-        if (currentOffset > 10) {
+        if (currentOffset > 30) {
           if (_isScrollingUp == false && _isExpanded == true) {
             setState(() {
-              _isScrollingUp = true;
-              _isExpanded = false;
+              // _isScrollingUp = true;
+              // _isExpanded = false;
             });
           }
         } else {
-          if (_isScrollingUp == true && _isExpanded == false) {
+          if (_isScrollingUp == true ) {
             setState(() {
-              _isScrollingUp = false;
-              _isExpanded = true;
+              // _isScrollingUp = false;
+              // _isExpanded = true;
             });
           }
         }
@@ -96,32 +102,6 @@ class _FlockState extends State<FlockScreen> {
   double _lastOffset = 0;
   bool _isScrollingUp = false;
 
-  void handleScrollEvent() {
-    double currentOffset = 10;
-    if (_scrollController.hasClients) currentOffset = _scrollController.offset;
-
-    if (currentOffset < _lastOffset) {
-      // Scrolling up
-      if (!_isScrollingUp) {
-        setState(() {
-          _isScrollingUp = true;
-          _isExpanded = false;
-        });
-        print("Scrolling Up");
-      }
-    } else if (currentOffset > _lastOffset) {
-      // Scrolling down
-      if (_isScrollingUp) {
-        setState(() {
-          _isExpanded = true;
-          _isScrollingUp = false;
-        });
-        print("Scrolling Down");
-      }
-    }
-
-    _lastOffset = currentOffset;
-  }
 
   Future<void> getDefaultFarm() async {
     setState(() {
@@ -133,12 +113,13 @@ class _FlockState extends State<FlockScreen> {
             accountId: loginResponse.defaultAccount.id,
             loginResponse: loginResponse)
         .then((Farm? farmsResponse) {
-      print("Kooool");
+
       print(farmsResponse);
       setState(() {
         loading = false;
         if (farmsResponse != null) {
           defaultFarm = farmsResponse;
+          fetchCoops(defaultFarm);
         }
         //??
         // new Farm(id: 01, name: "N/A", isDefault: true, details: '');
@@ -149,6 +130,7 @@ class _FlockState extends State<FlockScreen> {
   Future<void> fetchCoops(Farm farm) async {
     setState(() {
       this.coops = [];
+      this._coopsLoaded == false;
     });
 
     cpService
@@ -162,6 +144,7 @@ class _FlockState extends State<FlockScreen> {
       setState(() {
         if (coopResponseList.isNotEmpty) {
           this.coops = coopResponseList;
+          this._coopsLoaded = true;
 
           this.offset = 0;
         }
@@ -244,9 +227,6 @@ class _FlockState extends State<FlockScreen> {
         stock: 123000),
   ];
 
-  String selectedValue = 'Apple';
-  final List<String> dropDownItems = ['Apple', 'Banana', 'Mango', 'Orange'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -321,57 +301,89 @@ class _FlockState extends State<FlockScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text(
-                              "Coops",
-                              style: TextStyle(
-                                  fontFamily: AppConstants.defaultFont,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Container(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownSearch<String>(
-                                items: dropDownItems,
-                                popupProps: PopupProps.menu(
-                                  showSearchBox: true,
-                                  searchFieldProps: TextFieldProps(
-                                    decoration: InputDecoration(
-                                      // hintText: "Search farm...",
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 8),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                          this.coops.isNotEmpty
+                              ? Wrap(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: EdgeInsets.only(left: 20),
+                                      child: Text(
+                                        "Coops",
+                                        style: TextStyle(
+                                            fontFamily:
+                                                AppConstants.defaultFont,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                  ),
-                                  fit: FlexFit.loose,
-                                  constraints: BoxConstraints(maxHeight: 300),
-                                ),
-                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                  dropdownSearchDecoration: InputDecoration(
-                                    labelText: "Select Coop",
-                                    // hintText: "Choose a farm",
-                                    filled: true,
-                                    fillColor: Colors.grey.shade100,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 16),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                    SizedBox(
+                                      height: 30,
                                     ),
-                                  ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownSearch<CoopResponse>(
+                                          items: coops,
+                                          itemAsString: (CoopResponse? coop) =>
+                                              coop?.name ??
+                                              "", // Display coop name
+                                          popupProps: PopupProps.menu(
+                                            showSearchBox: true,
+                                            searchFieldProps: TextFieldProps(
+                                              decoration: InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 8),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                            ),
+                                            fit: FlexFit.loose,
+                                            constraints:
+                                                BoxConstraints(maxHeight: 300),
+                                            // White dropdown background
+                                          ),
+                                          dropdownDecoratorProps:
+                                              DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              labelText: "Select Coop",
+                                              filled: true,
+                                              fillColor: Colors.grey.shade100,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 16),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedCoop =
+                                                  value; // store selected coop
+                                            });
+                                            print(
+                                                "You selected ${value?.name}");
+                                          },
+                                          selectedItem: selectedCoop,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(
+                                  child: this._coopsLoaded == false
+                                      ? GhostLoaderWidget(nums: 1,)
+                                      : Text("No Data"),
                                 ),
-                                onChanged: (value) =>
-                                    print("You selected $value"),
-                              ),
-                            ),
-                          ),
+
+                          // :  SizedBox.shrink()
                         ],
                       ),
                     )
@@ -487,24 +499,12 @@ class _FlockState extends State<FlockScreen> {
     );
   }
 
+
+
   Farm defaultFarm = Farm(id: 01, name: "N/A", isDefault: true, details: '');
   Widget getHeaderWidget(BuildContext context) {
     if (loading == true) {
-      return SizedBox(
-        height: 50,
-        child: Container(
-          padding: EdgeInsets.only(left: 10),
-          color: Colors.green.shade100,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Loading ... ",
-            style: TextStyle(
-                fontFamily: AppConstants.defaultFont,
-                fontSize: 12,
-                fontWeight: FontWeight.w100),
-          ),
-        ),
-      );
+      return GhostLoaderWidget(nums: 1,);
     } else {
       return Container(
           height: Util.scaleWidthFromDesign(context, 30),

@@ -16,6 +16,7 @@ import '../../services/service_result.dart';
 import '../../utils/coop_calculator.dart';
 import '../../utils/util.dart';
 import '../../widgets/coopListTyle.dart';
+import '../../widgets/ghost_loader_widget.dart';
 import '../../widgets/overlays.dart';
 
 class CoopsScreen extends StatefulWidget {
@@ -81,6 +82,7 @@ class _CoopState extends State<CoopsScreen> {
 
   late List<Farm> farms = [];
   late List<CoopResponse> coops = [];
+  late bool loadingCoops = true;
 
   late LoginResponse loginResponse;
 
@@ -155,6 +157,7 @@ class _CoopState extends State<CoopsScreen> {
   Future<void> fetchCoops(Farm farm) async {
     setState(() {
       this.coops = [];
+      this.loadingCoops = true;
     });
 
     cpService
@@ -167,6 +170,7 @@ class _CoopState extends State<CoopsScreen> {
         .then((List<CoopResponse> coopResponseList) {
       setState(() {
         if (coopResponseList.isNotEmpty) {
+          this.loadingCoops = false;
           this.coops = coopResponseList;
 
           this.offset = 0;
@@ -246,7 +250,15 @@ class _CoopState extends State<CoopsScreen> {
             getHeaderWidget(context),
             Expanded(
                 child: coops.length == 0
-                    ? getGhostWidget(context)
+                    ?
+                    this.loadingCoops == true ?
+                ListView.builder(
+                  itemCount: 6, // same as nums in GhostLoaderWidget
+                  itemBuilder: (context, index) {
+                    return GhostLoaderWidget(nums: 1,);
+                  },
+                ) : Text("No Data")
+                // GhostLoaderWidget(nums: 6)
 
                     : ListView.builder(
                         itemCount: coops.length,
@@ -283,21 +295,7 @@ class _CoopState extends State<CoopsScreen> {
 
   Widget getHeaderWidget(BuildContext context) {
     if (loading == true) {
-      return SizedBox(
-        height: 50,
-        child: Container(
-          padding: EdgeInsets.only(left: 10),
-          color: Colors.green.shade100,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Loading ... ",
-            style: TextStyle(
-                fontFamily: AppConstants.defaultFont,
-                fontSize: 12,
-                fontWeight: FontWeight.w100),
-          ),
-        ),
-      );
+      return  GhostLoaderWidget(nums: 1,);
     } else {
       return Container(
           height: Util.scaleWidthFromDesign(context, 30),
@@ -564,6 +562,7 @@ class _CoopState extends State<CoopsScreen> {
 
                         // Power Section
                         ExpansionTile(
+
                           title: Row(
                             children: [
                               const FaIcon(
@@ -804,44 +803,5 @@ class _CoopState extends State<CoopsScreen> {
     );
   }
 
-  Widget getGhostWidget(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Top bar
-          Container(
-            width: 150,
-            height: 16,
-            color: Colors.grey.shade400,
-          ),
-          const SizedBox(height: 8),
-          // Multiple lines
-          Container(
-            width: double.infinity,
-            height: 12,
-            color: Colors.grey.shade300,
-          ),
-          const SizedBox(height: 6),
-          Container(
-            width: double.infinity,
-            height: 12,
-            color: Colors.grey.shade300,
-          ),
-          const SizedBox(height: 6),
-          Container(
-            width: 100,
-            height: 12,
-            color: Colors.grey.shade300,
-          ),
-        ],
-      ),
-    );
-  }
+  
 }

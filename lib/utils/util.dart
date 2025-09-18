@@ -8,10 +8,16 @@ import '../models/dtos/schedule.dart';
 
 class Util{
 
- static  double percentOccupied(double? occupied, double? capacity) {
-    if (occupied == null || capacity == null || capacity == 0) return 0;
-    return (occupied / capacity) * 100;
-  }
+  @Deprecated("user calculateProgress")
+ static  double percentOccupied(double current, double total) =>    calculateProgress(current,total);
+  
+
+ static double calculateProgress(double current, double total) {
+   if (total == 0) return 0.0; // avoid division by zero
+   double result = current / total;
+   return result.clamp(0.0, 1.0); // ensures it stays in range
+ }
+
 
 
   static Address getPrimaryAddress(Farm farm) {
