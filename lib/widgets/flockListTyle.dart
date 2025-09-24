@@ -42,111 +42,156 @@ class FlockListTyle extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          getFeedConsumptionWidget(),
+          getFeedConsumptionWidget(context),
           SizedBox(
             height: 10,
           ),
-          getWaterConsumptionWidget(),
+          getWaterConsumptionWidget(context),
           SizedBox(
             height: 10,
           ),
-          getHealthWidget(),
+          getHealthWidget(context),
           SizedBox(
             height: 10,
           ),
-
-
           SizedBox(
             height: 30,
           ),
         ]));
   }
 
-  ExpansionTile getFeedConsumptionWidget() {
+  ExpansionTile getFeedConsumptionWidget(BuildContext context) {
     return ExpansionTile(
-            childrenPadding: EdgeInsets.all(20),
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 8),
-                const Text(
-                  "Feed Consumption  : 1.2 Tonnes ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 12,
-                  ),
+        childrenPadding: EdgeInsets.all(20),
+        title: Row(
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // align everything vertically
+          children: [
+            const SizedBox(width: 8),
+            const Expanded(
+              child: Text(
+                "Feed Consumption  : 1.2 Tonnes",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 12,
                 ),
-              ],
+              ),
             ),
-            collapsedBackgroundColor: Colors.green[50],
-            backgroundColor: Colors.green[50],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                FontAwesomeIcons.plus,
+                size: Util.scaleWidthFromDesign(context, 9),
+              ),
+              padding: EdgeInsets.zero, // remove default padding
+              constraints: BoxConstraints(), // remove default constraints
             ),
-            collapsedShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+            SizedBox(
+              width: 5,
             ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                FontAwesomeIcons.penToSquare,
+                size: Util.scaleWidthFromDesign(context, 9),
+              ),
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+            ),
+          ],
+        ),
+        collapsedBackgroundColor: Colors.green[50],
+        backgroundColor: Colors.green[50],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        recordRowItem("Total :"," 1,200 KG "),
-                        recordRowItem("Last Consumption  :"," 1000KG "),
-                        recordRowItem("Last Daily / Bird  :"," 1000KG "),
-                        recordRowItem("Average  Daily  :"," 1000KG "),
-                        recordRowItem("Average / Bird  :"," 1000KG "),
-                        recordRowItem("Daily Comsumption   :"," 1000KG "),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    // color: Colors.red,
-                    width: 220,
-                    height: 150,
-                    child: Center(
-                      child: SizedBox(
-                        height: 300,
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: LineChart(
-                              sampleData(),
-                              // swapAnimationDuration: Duration(milliseconds: 400),
-                            ),
-                          ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    recordRowItem("Total :", " 1,200 KG "),
+                    recordRowItem("Last Consumption  :", " 1000KG "),
+                    recordRowItem("Last Daily / Bird  :", " 1000KG "),
+                    recordRowItem("Average  Daily  :", " 1000KG "),
+                    recordRowItem("Average / Bird  :", " 1000KG "),
+                    recordRowItem("Daily Comsumption   :", " 1000KG "),
+                  ],
+                ),
+              ),
+              Spacer(),
+              Container(
+                // color: Colors.red,
+                width: 220,
+                height: 150,
+                child: Center(
+                  child: SizedBox(
+                    height: 300,
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: LineChart(
+                          sampleData(),
+                          // swapAnimationDuration: Duration(milliseconds: 400),
                         ),
                       ),
+                    ),
                   ),
-                  ),
-                ],
-
-              )
-            ]);
+                ),
+              ),
+            ],
+          )
+        ]);
   }
 
-  ExpansionTile getWaterConsumptionWidget() {
+  ExpansionTile getWaterConsumptionWidget(BuildContext context) {
     return ExpansionTile(
         childrenPadding: EdgeInsets.all(20),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: 8),
-            const Text(
-              "Water Consumption : 2000 LTRs ",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 12,
+            const Expanded(
+              child: Text(
+                "Water Consumption : 2000 LTRs ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 12,
+                ),
               ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                FontAwesomeIcons.plus,
+                size: Util.scaleWidthFromDesign(context, 9),
+              ),
+              padding: EdgeInsets.zero, // remove default padding
+              constraints: BoxConstraints(), // remove default constraints
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                FontAwesomeIcons.penToSquare,
+                size: Util.scaleWidthFromDesign(context, 9),
+              ),
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
             ),
           ],
         ),
@@ -167,12 +212,12 @@ class FlockListTyle extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    recordRowItem("Total :"," 1,200 LTRs "),
-                    recordRowItem("Last Consumption  :"," 1000 LTRs "),
-                    recordRowItem("Last Daily / Bird  :"," 1000 LTRs "),
-                    recordRowItem("Average  Daily  :"," 1000 LTRs "),
-                    recordRowItem("Average / Bird  :"," 1000 LTRs"),
-                    recordRowItem("Daily Comsumption   :"," 1000 LTRs "),
+                    recordRowItem("Total :", " 1,200 LTRs "),
+                    recordRowItem("Last Consumption  :", " 1000 LTRs "),
+                    recordRowItem("Last Daily / Bird  :", " 1000 LTRs "),
+                    recordRowItem("Average  Daily  :", " 1000 LTRs "),
+                    recordRowItem("Average / Bird  :", " 1000 LTRs"),
+                    recordRowItem("Daily Comsumption   :", " 1000 LTRs "),
                   ],
                 ),
               ),
@@ -181,43 +226,50 @@ class FlockListTyle extends StatelessWidget {
                 // color: Colors.red,
                 width: 220,
                 height: 160,
-                child: Center(
-                  child: SizedBox(
-                    height: 300,
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: LineChart(
-                          sampleData(),
-                          // swapAnimationDuration: Duration(milliseconds: 400),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                child: WeeklyWaterConsumptionChart(),
               ),
             ],
-
           )
         ]);
   }
 
-  ExpansionTile getHealthWidget() {
+  ExpansionTile getHealthWidget(BuildContext context) {
     return ExpansionTile(
         childrenPadding: EdgeInsets.all(20),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(width: 8),
-            const Text(
-              "Health   ",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 12,
+            const Expanded(
+              child: Text(
+                "Health   ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 12,
+                ),
               ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                FontAwesomeIcons.plus,
+                size: Util.scaleWidthFromDesign(context, 9),
+              ),
+              padding: EdgeInsets.zero, // remove default padding
+              constraints: BoxConstraints(), // remove default constraints
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                FontAwesomeIcons.penToSquare,
+                size: Util.scaleWidthFromDesign(context, 9),
+              ),
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
             ),
           ],
         ),
@@ -240,80 +292,73 @@ class FlockListTyle extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text("Vacc : ", style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),),
-                        Text("80%", style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),),
-
-                        Text(" Mor : ", style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),),
-                        Text("70", style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),),
-
-
-                        Text(" Sick : ", style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),),
-                        Text("12", style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),),
-
-
+                        Text(
+                          "Vacc : ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          "80%",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          " Mor : ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          "70",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          " Sick : ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          "12",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                        ),
                       ],
-                    )
-                    ,
-                    recordRowItem(" General Health :"," OK "),
-                    recordRowItem(" Treatments :"," Herbal,Coryza .. "),
-                    recordRowItem(" Next Vacc  :"," Mareks , 12th.05 "),
-                    recordRowItem(" Missed Vacc  :"," Coryza"),
+                    ),
+                    recordRowItem(" General Health :", " OK "),
+                    recordRowItem(" Treatments :", " Herbal,Coryza .. "),
+                    recordRowItem(" Next Vacc  :", " Mareks , 12th.05 "),
+                    recordRowItem(" Missed Vacc  :", " Coryza"),
                   ],
                 ),
               ),
               Spacer(),
               Container(
-                // color: Colors.red,
-                width: 200,
-                height: 100,
-                child: Center(
-                  child: SizedBox(
-                    height: 300,
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: LineChart(
-                          sampleData(),
-                          // swapAnimationDuration: Duration(milliseconds: 400),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                  // color: Colors.red,
+                  width: 200,
+                  height: 100,
+                  child: getHealthStackBarChart(context)),
             ],
-
           )
         ]);
   }
-
-
 
   Container getSummaryContainer(BuildContext context) {
     return Container(
@@ -478,12 +523,12 @@ class FlockListTyle extends StatelessWidget {
         ));
   }
 
-
   Container getBreedStageSummaryContainer(BuildContext context) {
-    return     Container(
+    return Container(
       alignment: Alignment.topLeft,
       child: Row(
         children: [
+
           Text(
             "Breed : ",
             style: TextStyle(
@@ -498,9 +543,26 @@ class FlockListTyle extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.normal),
           ),
-
-          SizedBox(width: 10,),
-
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Type : ",
+            style: TextStyle(
+                fontFamily: AppConstants.defaultFont,
+                fontSize: 15,
+                fontWeight: FontWeight.normal),
+          ),
+          Text(
+            "  Layers ",
+            style: TextStyle(
+                fontFamily: AppConstants.defaultFont,
+                fontSize: 15,
+                fontWeight: FontWeight.normal),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           Text(
             "Stage : ",
             style: TextStyle(
@@ -515,8 +577,9 @@ class FlockListTyle extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.normal),
           ),
-          SizedBox(width: 10,),
-
+          SizedBox(
+            width: 10,
+          ),
           Text(
             "Week : ",
             style: TextStyle(
@@ -531,17 +594,10 @@ class FlockListTyle extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.normal),
           ),
-
-
-
-
-
-
         ],
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -570,8 +626,8 @@ class FlockListTyle extends StatelessWidget {
           ),
           alignment: Alignment.centerLeft,
           child:
-          
-          
+
+
          Wrap(
             children: [
 
@@ -705,7 +761,6 @@ class FlockListTyle extends StatelessWidget {
            */
   }
 
-
   LineChartData sampleData() {
     return LineChartData(
       gridData: FlGridData(
@@ -751,7 +806,7 @@ class FlockListTyle extends StatelessWidget {
       minX: 0,
       maxX: 6,
       minY: 0,
-      maxY: 10,
+      maxY: 8,
 
       /// ✨ Touch + Tooltip configuration (new API)
       lineTouchData: LineTouchData(
@@ -765,7 +820,7 @@ class FlockListTyle extends StatelessWidget {
           getTooltipItems: (touchedSpots) {
             return touchedSpots.map((spot) {
               return LineTooltipItem(
-                'Day ${spot.x.toInt()} : ${spot.y}',
+                ' ${spot.y} G/Bird Avg',
                 const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -812,26 +867,128 @@ class FlockListTyle extends StatelessWidget {
     );
   }
 
+  Widget WeeklyWaterConsumptionChart() {
+    // Sample weekly data
+    final data = [
+      {'week': 1, 'daily': 700, 'average': 100, 'total': 700},
+      {'week': 2, 'daily': 750, 'average': 107, 'total': 1450},
+      {'week': 3, 'daily': 720, 'average': 103, 'total': 2170},
+    ];
 
-  Container recordRowItem(String title, String record) {
-    return Container(
-      padding: EdgeInsets.only(top: 3,bottom: 3),
-        child: Row(
-          children: [
-            Text(title, style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontSize: 12,
-            ),),
-            Text(record, style: TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.black,
-              fontSize: 12,
-            ),)
-          ],
-        )
+    final metrics = [
+      {'key': 'daily', 'color': Colors.blue},
+      {'key': 'average', 'color': Colors.orange},
+      {'key': 'total', 'color': Colors.green},
+    ];
 
+    return SizedBox(
+      height: 250,
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: 2500, // adjust according to your highest total
+          barGroups: data.asMap().entries.map((entry) {
+            int index = entry.key;
+            var value = entry.value;
+
+            List<BarChartRodData> rods = [];
+            for (var metric in metrics) {
+              rods.add(
+                BarChartRodData(
+                  toY: value[metric['key']]!.toDouble(),
+                  width: 12,
+                  color: metric['color'] as Color,
+                ),
+              );
+            }
+
+            return BarChartGroupData(
+              x: index,
+              barRods: rods,
+              barsSpace: 4, // space between bars in a group
+            );
+          }).toList(),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) => Text(' ${value.toInt() + 1}'),
+              ),
+            ),
+          ),
+          gridData: FlGridData(show: true),
+          borderData: FlBorderData(show: false),
+        ),
+      ),
     );
   }
 
+  Container recordRowItem(String title, String record) {
+    return Container(
+        padding: EdgeInsets.only(top: 3, bottom: 3),
+        child: Row(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 12,
+              ),
+            ),
+            Text(
+              record,
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 12,
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget getHealthStackBarChart(BuildContext context) {
+    final data = {
+      // 'Vaccinated': 80,
+      'SickTreatment': 5,
+      'Mortality': 2,
+      'Recovered': 3,
+    };
+
+    final colors = {
+      // 'Vaccinated': Colors.green,
+      'SickTreatment': Colors.orange,
+      'Mortality': Colors.red,
+      'Recovered': Colors.blue,
+    };
+
+    return SizedBox(
+      height: 250,
+      child: PieChart(
+        PieChartData(
+          sections: data.entries.map((entry) {
+            final value = entry.value.toDouble();
+            final title = '${entry.key}\n${entry.value}';
+            return PieChartSectionData(
+              value: value,
+              title: title,
+              color: colors[entry.key],
+              radius: 60,
+              titleStyle: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            );
+          }).toList(),
+          sectionsSpace: 2,
+          centerSpaceRadius: 30,
+        ),
+      ),
+    );
+  }
 }
