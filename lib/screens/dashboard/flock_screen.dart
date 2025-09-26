@@ -40,7 +40,6 @@ class _FlockState extends State<FlockScreen> {
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, String>> _filteredData = [];
-  late FarmDataSource _farmDataSource;
   final FarmService fmService = FarmService();
   final GlobalKey expansionTileKey = GlobalKey();
   bool _isExpanded = true;
@@ -50,13 +49,21 @@ class _FlockState extends State<FlockScreen> {
   bool existingFarms = false;
   bool loading = false;
   CoopService cpService = CoopService();
+  // CoopService cpService = CoopService();
+
 
   late List<Farm> farms = [];
   late List<CoopResponse> coops = [];
+  late List<Flock> _flocks = [];
+
   CoopResponse? selectedCoop; // state variable
 
   int offset = 0;
   int limit = 10;
+
+  late LoginResponse loginResponse;
+  bool _isLoading = true;
+
 
   @override
   void initState() {
@@ -95,8 +102,7 @@ class _FlockState extends State<FlockScreen> {
       }
     });
 
-    _farmDataSource = FarmDataSource(context);
-    _farmDataSource.fetchPage(0);
+
   }
 
   double _lastOffset = 0;
@@ -154,6 +160,37 @@ class _FlockState extends State<FlockScreen> {
     }); // your async fetch method
   }
 
+  late bool loadingFlock = true;
+
+  Future<void> fetchFlock(Farm farm) async {
+    setState(() {
+      this.coops = [];
+      this.loadingFlock = true;
+    });
+
+    cpService
+        .getList(
+      farmId: farm.id,
+      offset: offset,
+      limit: limit,
+      loginResponse: loginResponse,
+    )
+        .then((List<CoopResponse> coopResponseList) {
+      setState(() {
+        if (coopResponseList.isNotEmpty) {
+          this.loadingFlock = false;
+          this.coops = coopResponseList;
+
+          this.offset = 0;
+        }
+      });
+
+      //set the data
+    }); // your async fetch method
+  }
+
+
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -161,12 +198,9 @@ class _FlockState extends State<FlockScreen> {
     super.dispose();
   }
 
-  FarmDataSource Function(BuildContext, LoginResponse) initFarmDataSource =
-      (context, loginResponse) => FarmDataSource(context);
 
-  late LoginResponse loginResponse;
 
-  bool _isLoading = true;
+
 
   final List<Flock> items = [
     Flock(
@@ -561,164 +595,3 @@ class _FlockState extends State<FlockScreen> {
   }
 }
 
-@Deprecated("This is going out ")
-class FarmDataSource extends DataTableSource {
-  final BuildContext context;
-
-  List<Farm> farms = [];
-  int totalRows = 0;
-  int rowsPerPage = 2;
-  int page = 0;
-
-  FarmDataSource(this.context);
-
-  Future<LoginResponse?> getLoginResponse() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString('login_response');
-
-      if (jsonString == null || jsonString.isEmpty) {
-        debugPrint('⚠️ No login_response found.');
-        return null;
-      }
-
-      final Map<String, dynamic> json = jsonDecode(jsonString);
-      final loginResponse = LoginResponse.fromJson(json);
-
-      debugPrint('✅ Loaded LoginResponse: $loginResponse');
-      return loginResponse;
-    } catch (e, stack) {
-      debugPrint('❌ Failed to load LoginResponse: $e\n$stack');
-      return null;
-    }
-  }
-
-  Future<void> fetchPage(int pageIndex) async {
-    LoginResponse? loginResponse = await getLoginResponse();
-
-    FarmService farmService = FarmService();
-
-    final offset = pageIndex * rowsPerPage;
-    try {
-      final response = await farmService.getFarms(
-          accountId: 16,
-          offset: offset,
-          limit: rowsPerPage,
-          loginResponse: loginResponse);
-
-      farms = response!;
-      totalRows = response.length;
-      page = response[response.length - 1].id;
-      debugPrint("Reached this Part :-------");
-      notifyListeners();
-    } catch (e) {
-      farms = [];
-      totalRows = 0;
-      notifyListeners();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error fetching farms: $e")),
-      );
-    }
-  }
-
-  final List<Map<String, String>> _data = List.empty();
-
-  @override
-  DataRow? getRow(int index) {
-    if (index >= farms.length) return null;
-    final farm = farms[index];
-    return DataRow.byIndex(index: index, cells: [
-      DataCell(Text(farm.name.toString())),
-      DataCell(Text(farm.status.toString())),
-      DataCell(Text(farm.modifiedOn.toString())),
-      getActionCell(farm.id)
-    ]);
-  }
-
-  DataCell getActionCell(int index) {
-    return DataCell(Row(
-      children: [
-        // Edit Button
-        IconButton(
-          icon: const Icon(Icons.edit, color: Colors.blue),
-          onPressed: () {
-            print('Edit clicked for row $index');
-            // Handle Edit action
-          },
-        ),
-        // Delete Button
-        IconButton(
-          icon: const Icon(Icons.delete, color: Colors.red),
-          onPressed: () {
-            print('Delete clicked for row $index');
-            // Handle Delete action
-          },
-        ),
-        // View Button
-        IconButton(
-          icon: const Icon(Icons.visibility, color: Colors.green),
-          onPressed: () {
-            print('View clicked for row $index');
-            // Handle View action
-          },
-        ),
-      ],
-    ));
-  }
-
-  /*
-  @override
-  DataRow? getRow(int index) {
-    if (index >= _data.length) return null;
-    final row = _data[index];
-    return DataRow(cells: [
-      // DataCell(Text(row['account']!)),
-      DataCell(Text(row['name']!)),
-      DataCell(Text(row['status']!)),
-      // DataCell(Text(row['author']!)),
-      DataCell(Text(row['dateCreated']!)),
-      DataCell(
-        Row(
-          children: [
-            // Edit Button
-            IconButton(
-              icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed: () {
-                print('Edit clicked for row $index');
-                // Handle Edit action
-              },
-            ),
-            // Delete Button
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () {
-                print('Delete clicked for row $index');
-                // Handle Delete action
-              },
-            ),
-            // View Button
-            IconButton(
-              icon: const Icon(Icons.visibility, color: Colors.green),
-              onPressed: () {
-                print('View clicked for row $index');
-                // Handle View action
-              },
-            ),
-          ],
-        )
-      ),
-    ]);
-  }
-  */
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => totalRows;
-
-  @override
-  int get selectedRowCount => 0;
-
-  List<Map<String, String>> getData() => _data;
-}
